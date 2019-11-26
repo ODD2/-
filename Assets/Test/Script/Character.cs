@@ -32,8 +32,8 @@ public class Character : ZDObject, IPunObservable
 
     private void FixedUpdate()
     {
-        var Destination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Debug.Log("Mouse Pos:" + Destination.ToString());
+        //var Destination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //Debug.Log("Mouse Pos:" + Destination.ToString());
     }
 
     private void OnMouseDown()
@@ -48,16 +48,11 @@ public class Character : ZDObject, IPunObservable
 
     private void OnMouseUp()
     {
-        var Destination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Destination.z = 0;
-        Debug.Log("Mouse Up Position:" + Destination.ToString());
-        Destination = GameSetting.WorldToUnit(Destination);
-        Debug.Log("Mouse Up Unit:" + Destination.ToString());
-        if (photonView)
+        //只有擁有者可以操控這隻角色
+        if (photonView && photonView.IsMine)
         {
-            photonView.RPC("TEST", RpcTarget.AllViaServer);
-            photonView.RPC("SprintTo", RpcTarget.AllViaServer,(int)Destination.x,(int)Destination.y);
-            Debug.Log("Called Rpc");
+            var Destination = GameSetting.WorldToUnit(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            photonView.RPC("SprintTo", RpcTarget.AllViaServer,Destination);
         }        
     }
 
@@ -66,7 +61,14 @@ public class Character : ZDObject, IPunObservable
     #region Observable
     public void   OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+        }
+        else if (stream.IsReading)
+        {
+            transform.position =  (Vector3)stream.ReceiveNext();
+        }
     }
     #endregion
 
@@ -78,12 +80,16 @@ public class Character : ZDObject, IPunObservable
     }
 
     [PunRPC]
-    public void SprintTo(int x,int y,PhotonMessageInfo info)
+    public void SprintTo(Vector3  UnitLoc,PhotonMessageInfo info)
     {
-        Debug.Log("Rpc Received.");
-        if (ZDMap.UpdateLocation(new Vector2(x, y), this))
+        //所有人都可以更新他的Map
+        if (ZDMap.UpdateLocation(UnitLoc, this))
         {
-            transform.position = GameSetting.UnitToWorld(x, y, 0);
+            //只有擁有者可以更新角色的位置
+            if(photonView && photonView.IsMine)
+            {
+                transform.position = GameSetting.UnitToWorld((int)UnitLoc.x, (int)UnitLoc.y, 0);
+            }
         }
     }
     #endregion
