@@ -103,7 +103,7 @@ public class Character : ZDObject, IPunObservable
         //if there's a list
         if (HitObject != null)
         {
-            foreach (object Obj in HitObject) {
+            foreach (var Obj in HitObject) {
                 if (Obj is Character)
                 {
                     ((Character)Obj).ReceiveDamage(10);
@@ -147,7 +147,7 @@ public class Character : ZDObject, IPunObservable
     //}
 
     [PunRPC]
-    public void SimpleAttack(Vector2 Direction)
+    public void SimpleAttack(Vector2 Direction,int test)
     {
         DoSimpleAttack(Direction);
     }

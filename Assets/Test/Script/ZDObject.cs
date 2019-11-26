@@ -31,10 +31,6 @@ namespace ZoneDepict
             ZDMap.UnRegister(this);
         }
 
-        public override void OnDisconnected(DisconnectCause cause)
-        {
-            Debug.Log("asdfasdfasdf");
-        }
 
 
         public bool Registered { get; set; } = false;

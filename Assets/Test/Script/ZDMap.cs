@@ -32,12 +32,6 @@ namespace ZoneDepict
                     //if caller is not registered
                     Vector2 MapLoc = UnitToMap(UnitLoc);
 
-                    //如果這個地方還沒有List
-                    if (RecordGrid[(int)MapLoc.x, (int)MapLoc.y]==null)
-                    {
-                        RecordGrid[(int)MapLoc.x, (int)MapLoc.y] = new List<ZDObject>();
-                    }
-
                     //add caller into new location
                     AddCallerToMap(MapLoc, Caller);
                     //record map info for caller.
