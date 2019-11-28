@@ -14,9 +14,13 @@ public class Character : ZDObject, IPunObservable
     #region UNITY
     private void Awake()
     {
-        
-    }
 
+    }
+    //item 測試用
+    public void GetItem(ItemBase  i)
+    {
+        Debug.LogFormat("Player get {0} ",i);
+    }
 
     // Start is called before the first frame update
     private new void Start()
@@ -33,12 +37,37 @@ public class Character : ZDObject, IPunObservable
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Debug.Log("Current Health:"+ HP);
+            Debug.Log("Current Health:" + HP);
         }
         if (Input.GetKeyDown(KeyCode.Z) && photonView.IsMine)
         {
-            Vector2 delta =  Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            Vector2 delta = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             photonView.RPC("SimpleAttack", RpcTarget.AllViaServer, delta);
+        }
+        //滑鼠點擊道具偵測
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, 10, -1); ;
+            if (hit.collider)
+            {
+                Debug.Log(hit.collider.name);
+                if (hit.collider.gameObject.GetComponent<DropItem>())//掉落物
+                {
+                    Debug.Log("hit drop item");
+                    hit.collider.gameObject.GetComponent<DropItem>().AddToPlayer(this);
+                }
+                else if (hit.collider.gameObject.GetComponent<RandomItemContainer>()) //寶箱
+                {
+                    Debug.Log("hit random box");
+                    hit.collider.gameObject.GetComponent<RandomItemContainer>().Damaged(1000.0f);
+
+                }
+
+            }
+
+
         }
     }
 
@@ -53,12 +82,12 @@ public class Character : ZDObject, IPunObservable
 
     private void OnMouseDown()
     {
-        
+
     }
 
     private void OnMouseDrag()
     {
-        
+
     }
 
     private void OnMouseUp()
@@ -66,15 +95,15 @@ public class Character : ZDObject, IPunObservable
         //只有擁有者可以操控這隻角色
         if (photonView && photonView.IsMine)
         {
-            var MouseWorldPosition =   Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = GameSetting.WorldUnify(new Vector3(MouseWorldPosition.x,MouseWorldPosition.y,transform.position.z));
-        }        
+            var MouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = GameSetting.WorldUnify(new Vector3(MouseWorldPosition.x, MouseWorldPosition.y, transform.position.z));
+        }
     }
     #endregion
 
     #region Observable
     //Synchronize Health/Position
-    public void   OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
@@ -83,7 +112,7 @@ public class Character : ZDObject, IPunObservable
         }
         else if (stream.IsReading)
         {
-            transform.position =  (Vector3)stream.ReceiveNext();
+            transform.position = (Vector3)stream.ReceiveNext();
             HP = (float)stream.ReceiveNext();
         }
     }
@@ -95,7 +124,7 @@ public class Character : ZDObject, IPunObservable
 
         Vector2 UnitOffset = GameSetting.QuadDirection(Direction);
         //search in the ZDMap whom was hit.
-        List<ZDObject> HitObject =  ZDMap.HitAt(UnitOffset, this);
+        List<ZDObject> HitObject = ZDMap.HitAt(UnitOffset, this);
 
         Debug.Log("DoSimpleAttack - PlayerLocation: " + MapLocX + "," + MapLocY);
         Debug.Log("DoSimpleAttack - HitDirection: " + UnitOffset.x + "," + UnitOffset.y);
@@ -103,7 +132,8 @@ public class Character : ZDObject, IPunObservable
         //if there's a list
         if (HitObject != null)
         {
-            foreach (var Obj in HitObject) {
+            foreach (var Obj in HitObject)
+            {
                 if (Obj is Character)
                 {
                     ((Character)Obj).ReceiveDamage(10);
@@ -147,7 +177,7 @@ public class Character : ZDObject, IPunObservable
     //}
 
     [PunRPC]
-    public void SimpleAttack(Vector2 Direction,int test)
+    public void SimpleAttack(Vector2 Direction, int test)
     {
         DoSimpleAttack(Direction);
     }
