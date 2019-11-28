@@ -60,6 +60,7 @@ namespace Photon.Pun.Demo.Asteroids
         public override void OnConnectedToMaster()
         {
             this.SetActivePanel(SelectionPanel.name);
+            
         }
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
