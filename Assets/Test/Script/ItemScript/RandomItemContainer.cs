@@ -28,18 +28,17 @@ public class RandomItemContainer : ItemContainerBase
     public override void Broken()
     {
         //產生道具
-        Debug.LogFormat("Container broken! Instantiate obj in {0}", transform.position);
+        //Debug.LogFormat("Container broken! Instantiate obj in {0}", transform.position);
         Instantiate(DropPrefabs[randomNum], transform.position, Quaternion.identity);
-       
+        OnDestroy();
         Destroy(this.gameObject);
-       
     }
     public override void Damaged(float damaged)
     {
         Durability -= damaged;
         if (Durability < 1.0)
         {
-            Debug.Log("RandomItemContainer Broken!");
+            //Debug.Log("RandomItemContainer Broken!");
             Broken();
         }
     }

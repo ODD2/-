@@ -13,11 +13,7 @@ public class ReusableItem : ItemBase
     //下次可使用時間
     protected float NextUseTime;
 
-    public void Start()
-    {
-        NextUseTime = 0.0f;
 
-    }
     public override bool IsGarbage()
     {
         if (itemCD <= 0)
@@ -37,12 +33,13 @@ public class ReusableItem : ItemBase
     }
 
     public override void ItemEffect(Character _player)
-    {   
-
+    {
+       
     }
 
     public override void Use(Character _player)
     {
+        //Debug.Log("Reusable item  use");
         if (itemCD>0)
         {
             itemCD--;

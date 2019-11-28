@@ -16,11 +16,9 @@ public class Character : ZDObject, IPunObservable
     {
 
     }
-    //item 測試用
-    public void GetItem(ItemBase  i)
-    {
-        Debug.LogFormat("Player get {0} ",i);
-    }
+    
+
+
 
     // Start is called before the first frame update
     private new void Start()
@@ -37,6 +35,7 @@ public class Character : ZDObject, IPunObservable
 
         if (Input.GetKeyDown(KeyCode.X))
         {
+            Use();
             Debug.Log("Current Health:" + HP);
         }
         if (Input.GetKeyDown(KeyCode.Z) && photonView.IsMine)
@@ -44,23 +43,24 @@ public class Character : ZDObject, IPunObservable
             Vector2 delta = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             photonView.RPC("SimpleAttack", RpcTarget.AllViaServer, delta);
         }
+
+
         //滑鼠點擊道具偵測
         if (Input.GetMouseButtonDown(0))
         {
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, 10, -1); ;
             if (hit.collider)
             {
-                Debug.Log(hit.collider.name);
+                //Debug.Log(hit.collider.name);
                 if (hit.collider.gameObject.GetComponent<DropItem>())//掉落物
                 {
-                    Debug.Log("hit drop item");
+                    //Debug.Log("hit drop item");
                     hit.collider.gameObject.GetComponent<DropItem>().AddToPlayer(this);
                 }
                 else if (hit.collider.gameObject.GetComponent<RandomItemContainer>()) //寶箱
                 {
-                    Debug.Log("hit random box");
+                    //Debug.Log("hit random box");
                     hit.collider.gameObject.GetComponent<RandomItemContainer>().Damaged(1000.0f);
 
                 }
@@ -182,4 +182,32 @@ public class Character : ZDObject, IPunObservable
         DoSimpleAttack(Direction);
     }
     #endregion
+
+
+    #region testitem
+    //item 測試用
+    List<ItemBase> bag = new List<ItemBase>();
+    public void GetItem(ItemBase i)
+    {
+        bag.Add(i);
+        Debug.LogFormat("Player get {0} ", i);
+
+    }
+
+    //item 測試用
+    public void Use()
+    {
+
+        if (bag.Count > 0)
+        {
+            //Debug.Log("player bag use()");
+            bag[0].Use(this.GetComponent<Character>());
+            bag.Remove(bag[0]);
+        }
+       
+    }
+
+    #endregion
+
+
 }

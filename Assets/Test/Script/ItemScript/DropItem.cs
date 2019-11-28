@@ -27,14 +27,15 @@ public class DropItem : ZDObject
     }
     public void AddToPlayer(Character _player)
     {
-        Debug.Log("DropItems: add to player");
+        //Debug.Log("DropItems: add to player");
         foreach (ItemBase i in contains)
         {
-            Debug.Log("play pick dropitem");
+          
+            i.Initial();
            // Debug.Log("Player now have {0} items",_player.inv);
             _player.GetItem(i);
         }
-        
+        OnDestroy();
         Destroy(this.gameObject);        
     }
 }
