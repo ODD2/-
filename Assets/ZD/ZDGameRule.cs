@@ -94,7 +94,6 @@ namespace ZoneDepict.Rule
         // Given QuadDirection and Angle , return new offset
         static public Vector2 RotaVector(Vector2 input,float degree)
         {
-            degree = degree < 0 ? degree + 360 : degree;
             int x_ = (int)(Mathf.Cos(degree) * input.x - Mathf.Sin(degree) * input.y);
             int y_ = (int)(Mathf.Sin(degree) * input.x + Mathf.Cos(degree) * input.y);
             return new Vector2(x_, y_);

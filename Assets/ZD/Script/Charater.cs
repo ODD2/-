@@ -21,7 +21,7 @@ public class Charater : ZDObject,IPunObservable
     {
 
     }
-    public virtual void AddDamage(List<ZDObject>[] Hits, AttackType Type)
+    public virtual void AddDamage(List<List<ZDObject>> Hits, AttackType Type)
     {
 
     }
@@ -72,6 +72,7 @@ public class Charater : ZDObject,IPunObservable
         if (photonView.IsMine)
         {
             HP = Damage > HP ? 0 : HP - Damage;
+            Debug.Log("Hurt~~~~~!!!");
         }
     }
 
@@ -114,8 +115,10 @@ public class Charater : ZDObject,IPunObservable
     {
         Attack(Direction,type);
     }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);

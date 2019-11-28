@@ -18,6 +18,7 @@ public class GameRoomManager : MonoBehaviourPunCallbacks
 
     private void JoinRoom()
     {
+        Debug.Log("JoingRoom...");
         PhotonNetwork.JoinRoom(RoomName, null);
     }
     private void CreatRoom()
@@ -28,6 +29,8 @@ public class GameRoomManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         Create.onClick.AddListener(() => {
+            //PhotonNetwork.JoinRandomRoom();
+            //return;
             RoomLock_New = true;
             CreatRoom();
         });

@@ -49,7 +49,7 @@ public class ZDGameManager : MonoBehaviourPunCallbacks
         // If ur Server , u have to build box in scene
         if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(SpwanBox());
+            //StartCoroutine(SpwanBox());
         }
         
     }

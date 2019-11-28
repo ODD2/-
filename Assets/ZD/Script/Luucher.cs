@@ -44,6 +44,7 @@ public class Luucher : MonoBehaviourPunCallbacks
 
 	public void onClick()
 	{
+        PhotonNetwork.GameVersion = "1";
 		PhotonNetwork.ConnectUsingSettings();
 
 	}
@@ -55,9 +56,12 @@ public class Luucher : MonoBehaviourPunCallbacks
 	public override void OnConnectedToMaster()
 	{
 		Debug.Log("Connecting...");
+        //PhotonNetwork.JoinRandomRoom();
+        
 		PhotonNetwork.JoinLobby(TypedLobby.Default);
 	}
-	public override void OnJoinedLobby()
+    
+    public override void OnJoinedLobby()
 	{
 		if (disconnect.activeSelf)
 			disconnect.SetActive(true);

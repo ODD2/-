@@ -72,6 +72,8 @@ public class Ruso : Charater
     {
         if (photonView.IsMine)
         {
+            Destination = ZDGameRule.WorldToUnit(Destination);
+            Debug.Log(Destination);
             Sprint(Destination);
         }
     }
@@ -80,28 +82,29 @@ public class Ruso : Charater
     #region Charater Override
     public override void Attack(Vector2 Direction,AttackType Type)
     {
-        Debug.Log("Attack flow is True !");
+        //Debug.Log("Attack flow is True !");
         AttackDirection = Direction;
         switch (Type)
         {
             case AttackType.N:
                 // Play clip and Trigger notify
-                Debug.LogFormat("Attack with 'N' at {0}", Direction);
+                AttackEventN(0);
+                //Debug.LogFormat("Attack with 'N' at {0}", Direction);
                 // Anims[(int)AttackType.N].Play(Anims[(int)AttackType.N].name);
                 break;
             case AttackType.A:
                 // Play clip and Trigger notify
-                Debug.LogFormat("Attack with 'A' at {0}", Direction);
+                //Debug.LogFormat("Attack with 'A' at {0}", Direction);
                 //Anims[(int)AttackType.A].Play();
                 break;
             case AttackType.B:
                 // Play clip and Trigger notify
-                Debug.LogFormat("Attack with 'B' at {0}", Direction);
+                //Debug.LogFormat("Attack with 'B' at {0}", Direction);
                 //Anims[(int)AttackType.B].Play();
                 break;
             case AttackType.R:
                 // Play clip and Trigger notify
-                Debug.LogFormat("Attack with 'R' at {0}", Direction);
+                //Debug.LogFormat("Attack with 'R' at {0}", Direction);
                 //Anims[(int)AttackType.R].Play();
                 break;
             default:
@@ -112,20 +115,24 @@ public class Ruso : Charater
     public override void Sprint(Vector2 Destination)
     {
         // Do movement
-
+        this.transform.position = Destination * 2;
         // MoveEffect
     }
-    public override void AddDamage(List<ZDObject>[] Hits,AttackType Type)
+    public override void AddDamage(List<List<ZDObject>> Hits,AttackType Type)
     {
+        Debug.Log("Len : " + Hits.Count);
         if (Hits != null)
         {
-            for (int i = 0; i < Hits.Length; ++i)
+            foreach (var i in Hits)
             {
-                foreach (var Obj in Hits[i])
+                if (i == null)
+                    continue;
+                foreach (var Obj in i)
                 {
                     if (Obj is Charater)
                     {
                         ((Charater)Obj).Hurt(AttackDamage[(int)Type]);
+                        
                     }
                     //else if(Obj is ItemContainer)
                     //{
@@ -140,16 +147,18 @@ public class Ruso : Charater
     #region Attack Notify
     public void AttackEventN(int Phase)
     {
+        
         Vector2 UnitOffset = ZDGameRule.QuadDirection(AttackDirection);
-        List<ZDObject>[] AllHitObject;
+        Debug.Log(UnitOffset);
+        List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();
         // Really do attack
         switch (Phase)
         {
             case 0:
-                AllHitObject = new List<ZDObject>[3];
-                AllHitObject[0] = ZDMap.HitAt(UnitOffset, this);
-                AllHitObject[1] = ZDMap.HitAt(ZDGameRule.RotaVector(UnitOffset, 90), this);
-                AllHitObject[1] = ZDMap.HitAt(ZDGameRule.RotaVector(UnitOffset, -90), this);
+                
+                AllHitObject.Add(ZDMap.HitAt(UnitOffset, this));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotaVector(UnitOffset, (90 * Mathf.PI)/180), this));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotaVector(UnitOffset, (-90 * Mathf.PI) / 180), this));
                 AddDamage(AllHitObject,this.Type);
                 break;
             case 1:

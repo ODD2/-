@@ -8,13 +8,12 @@ public class ZDInput : MonoBehaviour
     private Charater ZDcontroller = null;
     private Transform ZDTransform;
     private Vector2 AttackDirection;
+    private bool IsClickOn = false;
     void Start()
     {
         ZDcontroller = GetComponent<Charater>();
         ZDTransform = GetComponent<Transform>();
-
-
-
+        
     }
    
     
@@ -43,8 +42,30 @@ public class ZDInput : MonoBehaviour
         {
             AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - ZDTransform.position;
             ZDcontroller.InputAttack(AttackDirection, AttackType.R);
+            
         }
         #endregion
+    }
+    void OnMouseUp()
+    {
+        
+        if (IsClickOn)
+        {
+            ZDcontroller.InputSprint(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        }
+    }
+    void OnMouseDown()
+    {
+        Vector2 Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 ChrPos = ZDTransform.position;
+        if (Mathf.Sqrt(Mathf.Pow(Position.x - ChrPos.x, 2) + Mathf.Pow(Position.y - ChrPos.y, 2)) < ZDGameRule.UNITINWORLD)
+        {
+            IsClickOn = true;
+        }
+        else
+        {
+            IsClickOn = false;
+        }
     }
     
 }

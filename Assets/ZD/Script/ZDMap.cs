@@ -150,9 +150,12 @@ namespace ZoneDepict
 
         static public List<ZDObject> HitAt(int x,int y,ZDObject Caller)
         {
+            //Debug.Log("Offset : " + x + " , " + y);
             x += Caller.MapLocX;
             y += Caller.MapLocY;
             Debug.Log("ZDMap - HitAt: " + x + ", " + y);
+            
+            //Debug.Log("UnitWorld : " + ZDGameRule.WorldToUnit(x,y,0));
             if(x < 0 || y < 0 || !(x< ZDGameRule.MAP_WIDTH && y < ZDGameRule.MAP_HEIGHT))
             {
                 return null;
