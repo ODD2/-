@@ -16,28 +16,12 @@ public class Luucher : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
 	{
-        
-	}
+        PhotonNetwork.GameVersion = "1";
+        PhotonNetwork.ConnectUsingSettings();
+    }
 
 	void Update()
 	{
-		if (Input.touchCount > 0)
-		{
-			Touch touch = Input.GetTouch(0);
-			if (touch.phase == TouchPhase.Began)
-			{
-				if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-				{
-					onClick();
-
-				}
-			}
-		}
-
-        if (Input.GetKey(KeyCode.P))
-        {
-            onClick();
-        }
 
         state.text = connectionStatusMessage + PhotonNetwork.NetworkClientState;
 	}
@@ -53,9 +37,10 @@ public class Luucher : MonoBehaviourPunCallbacks
 	{
 		disconnect.SetActive(true);
 	}
+
 	public override void OnConnectedToMaster()
 	{
-		Debug.Log("Connecting...");
+		//Debug.Log("Connecting...");
         //PhotonNetwork.JoinRandomRoom();
         
 		PhotonNetwork.JoinLobby(TypedLobby.Default);
