@@ -14,7 +14,7 @@ public class Ruso : Character
     public Animator[] Anims;
     
     #region UNITY
-    private new void Start()
+    protected new void Start()
     {
         Debug.Log("Debug !!!");
         base.Start();
@@ -51,7 +51,7 @@ public class Ruso : Character
         #endregion
     }
 
-    private new void Update()
+    protected new void Update()
     {
         base.Update();        
     }
@@ -119,7 +119,7 @@ public class Ruso : Character
         // MoveEffect Below.
     }
 
-    public override void AddDamage(List<List<ZDObject>> Hits,AttackType Type)
+    public override void ApplyDamage(List<List<ZDObject>> Hits,AttackType Type)
     {
         Debug.Log("Damaged Object Lists: " + Hits.Count);
         if (Hits != null)
@@ -129,15 +129,10 @@ public class Ruso : Character
                 if (i == null) continue;
                 foreach (var Obj in i)
                 {
-                    if (Obj is Character)
+                    if (Obj is IADamageObject)
                     {
-                        ((Character)Obj).Hurt(AttackDamage[(int)Type]);
-                        
+                        ((IADamageObject)Obj).Hurt(AttackDamage[(int)Type]);
                     }
-                    //else if(Obj is ItemContainer)
-                    //{
-
-                    //}
                 }
             }
         }
@@ -155,7 +150,7 @@ public class Ruso : Character
                 AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRadius), this));
                 AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 1), AttackRadius), this));
                 AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0,-1), AttackRadius), this));
-                AddDamage(AllHitObject,this.Type);
+                ApplyDamage(AllHitObject,this.Type);
                 break;
             case 1:
                 break;
@@ -202,9 +197,5 @@ public class Ruso : Character
                 break;
         }
     }
-
     #endregion
-
-    
-
 }

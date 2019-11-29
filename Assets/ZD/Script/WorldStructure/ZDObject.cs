@@ -12,7 +12,7 @@ namespace ZoneDepict
         protected void Start()
         {
             ZDMap.Register(this);
-            if (!Registered)
+            if (!IsRegistered())
             {
                 Debug.Log("Error! Cannot Register ZDObject, Object Out of Bound!");
             }
@@ -20,10 +20,7 @@ namespace ZoneDepict
 
         protected void Update()
         {
-            if (Registered)
-            {
-                ZDMap.UpdateLocation(this);
-            }
+            ZDMap.UpdateLocation(this);
         }
 
         protected void OnDestroy()
@@ -32,11 +29,10 @@ namespace ZoneDepict
         }
 
 
-
-        public bool Registered { get; set; } = false;
-        public bool ValidInMap { get; set; } = false;
-        public int MapLocX { get; set; } = -1;
-        public int MapLocY { get; set; } = -1;
+        public bool IsRegistered()
+        {
+            return ZDMap.IsRegistered(this);
+        }
     }
 }
 

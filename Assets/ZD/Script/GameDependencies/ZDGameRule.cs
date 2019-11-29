@@ -11,11 +11,13 @@ namespace ZoneDepict.Rule
     {
         
         // Const Game Variable declare
-        public const uint MAP_WIDTH = 15;
-        public const uint MAP_HEIGHT = 11;
+        public const uint MAP_WIDTH_UNIT = 15;
+        public const uint MAP_HEIGHT_UNIT = 11;
         public const int MAX_PLAYERS = 4;
-        public const float UNITINWORLD = 2;
+        public const float UnitInWorld = 2;
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
+        public const float MAP_WIDTH_WORLD = MAP_WIDTH_UNIT * UnitInWorld;
+        public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UnitInWorld;
 
         // Some 
         // transform th input position from zonedepict unit to world unit.(z axis is remained the same)
@@ -23,7 +25,7 @@ namespace ZoneDepict.Rule
         {
             Vector3 ret = new Vector3(x, y, 0);
             //只對x,y縮放
-            ret = ret * UNITINWORLD;
+            ret  *= UnitInWorld;
             ret.z = z;
             return ret;
         }
@@ -42,14 +44,14 @@ namespace ZoneDepict.Rule
                 float pos = ret[i];
                 bool neg = pos < 0;
                 pos = Mathf.Abs(pos);
-                if (pos < UNITINWORLD / 2)
+                if (pos < UnitInWorld / 2)
                 {
                     ret[i] = 0;
                 }
                 else
                 {
-                    pos -= UNITINWORLD / 2;
-                    ret[i] = (neg ? -1 : 1) * (int)(pos / UNITINWORLD + 1);
+                    pos -= UnitInWorld / 2;
+                    ret[i] = (neg ? -1 : 1) * (int)(pos / UnitInWorld + 1);
                 }
             }
 
@@ -133,10 +135,9 @@ namespace ZoneDepict.Rule
         // Given QuadDirection and Angle , return new offset
         static public Vector2 RotateVector2(Vector2 input,float degree)
         {
-            int x_ = (int)(Mathf.Cos(degree) * input.x - Mathf.Sin(degree) * input.y);
-            int y_ = (int)(Mathf.Sin(degree) * input.x + Mathf.Cos(degree) * input.y);
-            return new Vector2(x_, y_);
-
+            int x = (int)(Mathf.Cos(degree) * input.x - Mathf.Sin(degree) * input.y);
+            int y = (int)(Mathf.Sin(degree) * input.x + Mathf.Cos(degree) * input.y);
+            return new Vector2(x, y);
         }
     }
 }

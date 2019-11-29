@@ -7,36 +7,32 @@ using System;
 using ZoneDepict;
 // This class is basic of Charater, and all infos are
 // in this class
-public class Character : ZDObject,IPunObservable
+public class Character : ZDObject,IPunObservable,IADamageObject
 {
 
-    #region Virtual Function
+    #region Input Wrappers
     public virtual void InputAttack(Vector2 AttackDirection, AttackType Type)
     {
         
     }
+
     public virtual void InputSprint(Vector2 Destination)
     {
 
     }
-    public virtual void AddDamage(List<List<ZDObject>> Hits, AttackType Type)
-    {
-
-    }
     #endregion
 
-    #region Basic Attributes
+    #region Character Attributes
     private float HP = 100;
     private float MP = 100;
-    private float RegHp;
+    private float RegHP;
     private float RegMP;
-    private const float MaxHp = 100;
-    private const float MaxMp = 100;
-    
+    private const float MaxHP = 100;
+    private const float MaxMP = 100;
+    List<ItemBase> Inventory = new List<ItemBase>();
     #endregion
 
-    #region Attributes function
-
+    #region Getters/Setters
     public float GetHP()
     {
         return HP;
@@ -45,65 +41,90 @@ public class Character : ZDObject,IPunObservable
     {
         return MP;
     }
-    private void SetHP(float NewHP)
+    public void SetHP(float NewHP)
     {
-        HP = NewHP;
+        if (NewHP > MaxHP) HP = MaxHP;
+        else if (NewHP < 0) HP = 0;
+        else HP = NewHP;
     }
-    private void SetMP(float NewMP)
+    public void SetMP(float NewMP)
     {
-        MP = NewMP;
+        if (NewMP > MaxMP) MP = MaxMP;
+        else if (NewMP < 0) MP = 0;
+        else MP = NewMP;
     }
+    #endregion
+
+    #region Character Interfaces
     // This virtual function
     public virtual void Attack(Vector2 Direction, AttackType Type)
     {
-        Debug.Log("Supper !");
     }
-  
+
+    public virtual void ApplyDamage(List<List<ZDObject>> Hits, AttackType Type)
+    {
+    }
+
     public virtual void Sprint(Vector2 Destination)
     {
-
     }
 
     public void Hurt(float Damage)
     {
+        Debug.LogFormat("Player Received {0} Damage.", Damage);
         if (photonView.IsMine)
         {
-            HP = Damage > HP ? 0 : HP - Damage;
-            Debug.Log("Hurt~~~~~!!!");
+            SetHP(HP - Damage);
         }
     }
 
-
-    public void UseItem(uint ItemID)
+    public bool UseItem(int InventoryIndex)
     {
+        Debug.LogFormat("Character Use Item in Inventory[{0}].", InventoryIndex);
+        if (Inventory.Count > InventoryIndex)
+        {
+            //Use the selected item
+            Inventory[InventoryIndex].Use(this);
+            if (Inventory[InventoryIndex].IsGarbage())
+            {
+                //Destroy item if it's a garbage.
+                Inventory.RemoveAt(InventoryIndex);
+            }
+            return true;
+        }
+        else
+        {
+            Debug.LogFormat("Cannot Use Item in Inventory Index: {0}",InventoryIndex);
+        }
+        return false;
 
     }
-    public void GetItem() // GetItem(ItemBase Item)
-    {
 
+    public void GetItem(ItemBase i)
+    {
+        Debug.LogFormat("Inventory Add: {0} ", i);
+        Inventory.Add(i);
     }
     #endregion
 
     #region UNITY
-    private new  void Start()
+    protected new  void Start()
     {
-        // By ZDObj start()
+        //Calls ZDObject Start()
         base.Start();
-        
     }
 
-    private new void Update()
+    protected new void Update()
     {
+        //Calls ZDObject Update()
         base.Update();
     }
 
     private new void OnDestroy()
     {
+        //Calls ZDObject OnDestroy()
         base.OnDestroy();
     }
-    #region PlayerInput
-
-    #endregion
     #endregion
 
     #region PUN CallBack
@@ -128,8 +149,16 @@ public class Character : ZDObject,IPunObservable
         }
     }
 
-    
+
     #endregion
 
-
+    #region Testing
+    public void PrintStatus()
+    {
+        Debug.LogFormat("HP: {0}\n" +
+                        "MP: {1}\n" +
+                        "ItemNum: {2}\n",
+                        HP,MP,Inventory.Count);
+    }
+    #endregion
 }
