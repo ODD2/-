@@ -6,8 +6,8 @@
 [Ll]ogs/
 
 # ignore photon network settings
-Assets/Photon/PhotonUnityNetworking/Resources/
 Assets/ZD/Plugins/
+Assets/Photon/
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # [Aa]ssets/AssetStoreTools*
 
