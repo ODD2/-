@@ -7,26 +7,81 @@ using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
 using ZoneDepict.Rule;
 
+enum GameState
+{
+    Initialize,
+    Prepare,
+    Play,
+    End,
+    Close,
+};
+
 public class ZDGameManager : MonoBehaviourPunCallbacks
 {
+    
     public static ZDGameManager Instance = null;
-
+    GameState gameState = GameState.Initialize;
     #region Unity
     public void Awake()
     {
-        Instance = this;
+        if (Instance)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
+
     void Start()
     {
-        StartGame();
+        Initialize();
+        gameState = GameState.Prepare;
     }
-    #endregion
 
     void Update()
     {
-        
+
     }
-    #region StartCoroutine
+    #endregion
+
+    void Initialize()
+    {
+        int Team;
+        Vector3 Position = new Vector3(0, 0, 0);
+        Quaternion Rotation = Quaternion.Euler(0, 0, 0);
+        //設定主相機要跟著這隻角色
+        if (!PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("Team")) 
+        {
+            Team = 0;
+        }
+        else
+        {
+            Team = (int)PhotonNetwork.LocalPlayer.CustomProperties["Team"];
+        }
+
+        CameraController.SetTarget(PhotonNetwork.Instantiate("Ruso", Position, Rotation, 0));
+
+        // If server , build scene objects.
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(SpwanBox());
+        }
+    }
+
+    void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+
+    }
+
+    #region Game Procedures
+    private void StartGame()
+    {
+    }
+    #endregion
+
+    #region Coroutines
     private IEnumerator SpwanBox()
     {
         System.Random rnd = new System.Random();
@@ -43,42 +98,4 @@ public class ZDGameManager : MonoBehaviourPunCallbacks
         }
     }
     #endregion
-
-    private void StartGame()
-    {
-
-        //Spwan the player
-        //Vector3 Position = new Vector3(Random.Range(-2, 2), Random.Range(-2, 2), 0);
-        Vector3 Position = new Vector3(0, 0, 0);
-        Quaternion Rotation = Quaternion.Euler(0, 0, 0);
-        PhotonNetwork.Instantiate("Ruso", Position, Rotation, 0);
-
-        // If ur Server , u have to build box in scene
-        if (PhotonNetwork.IsMasterClient)
-        {
-            StartCoroutine(SpwanBox());
-        }
-        
-    }
-    
-    private bool CheckAllPlayerLoadedLevel()
-    {
-        // This check for everyone is in room
-        foreach (Player p in PhotonNetwork.PlayerList)
-        {
-            object playerLoadedLevel;
-            if (p.CustomProperties.TryGetValue(ZDGameRule.PLAYER_LOADED_LEVEL, out playerLoadedLevel))
-            {
-                if ((bool)playerLoadedLevel)
-                {
-                    continue;
-                }
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
 }

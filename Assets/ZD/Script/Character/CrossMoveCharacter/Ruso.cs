@@ -7,8 +7,6 @@ using Photon.Pun;
 public class Ruso : CrossMoveCharacter
 {
     private float[] AttackDamage = { 5, 10, 15, 20 };
-    private float AttackRadius;
-    private AttackType Type;
     //private Vector2 AttackDirection;
     public AnimationClip[] Clips;
     public Animator[] Anims;
@@ -57,59 +55,7 @@ public class Ruso : CrossMoveCharacter
     }
     #endregion
 
-    #region ZD Input Call
-    public override void InputAttack(Vector2 AttackDirection,AttackType Type)
-    {
-        this.Type = Type;
-        if (photonView.IsMine)
-        {
-            photonView.RPC("RPCAttack", RpcTarget.AllViaServer, AttackDirection, this.Type);
-        }
-    }
-
-    //public override void InputSprint(Vector2 Destination)
-    //{
-    //    if (photonView.IsMine)
-    //    {
-    //        Sprint(Destination);
-    //    }
-    //}
-    #endregion
-
     #region Charater Override
-    protected override void Attack(Vector2 Direction,AttackType Type)
-    {
-        //Debug.Log("Attack flow is True !");
-        AttackRadius = ZDGameRule.QuadRadius(Direction);
-        switch (Type)
-        {
-            case AttackType.N:
-                // Play clip and Trigger notify
-                AttackEventN(0);
-                //Debug.LogFormat("Attack with 'N' at {0}", Direction);
-                // Anims[(int)AttackType.N].Play(Anims[(int)AttackType.N].name);
-                break;
-            case AttackType.A:
-                // Play clip and Trigger notify
-                //Debug.LogFormat("Attack with 'A' at {0}", Direction);
-                //Anims[(int)AttackType.A].Play();
-                break;
-            case AttackType.B:
-                // Play clip and Trigger notify
-                //Debug.LogFormat("Attack with 'B' at {0}", Direction);
-                //Anims[(int)AttackType.B].Play();
-                break;
-            case AttackType.R:
-                // Play clip and Trigger notify
-                //Debug.LogFormat("Attack with 'R' at {0}", Direction);
-                //Anims[(int)AttackType.R].Play();
-                break;
-            default:
-
-                break;
-        }
-    }
-
     protected override void ApplyDamage(List<List<ZDObject>> Hits,AttackType Type)
     {
         Debug.Log("Damaged Object Lists: " + Hits.Count);
@@ -130,18 +76,18 @@ public class Ruso : CrossMoveCharacter
     }
     #endregion
 
-    #region Attack Notify
-    public void AttackEventN(int Phase)
+    #region  CrossMoveCharacter Override
+    public override void AttackEventN(int Phase)
     {
         List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();
         // Really do attack
         switch (Phase)
         {
             case 0:
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRadius), this));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 1), AttackRadius), this));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0,-1), AttackRadius), this));
-                ApplyDamage(AllHitObject,this.Type);
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 1), AttackRad), this));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0,-1), AttackRad), this));
+                ApplyDamage(AllHitObject,AttackType.N);
                 break;
             case 1:
                 break;
@@ -149,8 +95,7 @@ public class Ruso : CrossMoveCharacter
         
     }
 
-    // Not implment yet , same as AttackEventN
-    public void AttackEventA(int Phase)
+    public override void AttackEventA(int Phase)
     {
         List<ZDObject>[] HitObject;
         // Really do attack
@@ -163,7 +108,7 @@ public class Ruso : CrossMoveCharacter
         }
     }
 
-    public void AttackEventB(int Phase)
+    public override void AttackEventB(int Phase)
     {
         List<ZDObject>[] HitObject;
         // Really do attack
@@ -176,7 +121,7 @@ public class Ruso : CrossMoveCharacter
         }
     }
 
-    public void AttackEventR(int Phase)
+    public override void AttackEventR(int Phase)
     {
         List<ZDObject>[] HitObject;
         // Really do attack

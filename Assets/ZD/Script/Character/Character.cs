@@ -15,7 +15,6 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #region Input Wrappers
     public virtual void InputAttack(Vector2 AttackDirection, AttackType Type)
     {
-        
     }
 
     public virtual void InputSprint(Vector2 Destination)
@@ -32,7 +31,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected float MaxHP = 100;
     protected float MaxMP = 100;
     protected Vector2 Velocity;
-    protected float MaxVelocity = 50;
+    protected float MaxVelocity = 30;
     List<ItemBase> Inventory = new List<ItemBase>();
     #endregion
 
@@ -154,12 +153,6 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #endregion
 
     #region PUN CallBack
-    [PunRPC]
-    public void RPCAttack(Vector2 Direction,AttackType type)
-    {
-        Attack(Direction,type);
-    }
-
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         
@@ -172,7 +165,6 @@ public class Character : ZDObject,IPunObservable, IADamageObject
             stream.SendNext(MaxHP);
             stream.SendNext(MaxMP);
             stream.SendNext(MaxVelocity);
-            stream.SendNext(Velocity);
         }
         else if (stream.IsReading)
         {
@@ -185,8 +177,6 @@ public class Character : ZDObject,IPunObservable, IADamageObject
             MaxVelocity = (float)stream.ReceiveNext();
         }
     }
-
-
     #endregion
 
     #region Testing

@@ -56,6 +56,7 @@ public class GameRoomManager : MonoBehaviourPunCallbacks
         }
 
     }
+ 
     // Photon CallBack
     public override void OnJoinedRoom()
     {
@@ -63,6 +64,7 @@ public class GameRoomManager : MonoBehaviourPunCallbacks
         Debug.Log("Join Room Sucessed ! :) ");
         PhotonNetwork.LoadLevel(1);
     }
+
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.Log("Join Room Failed :( ");
