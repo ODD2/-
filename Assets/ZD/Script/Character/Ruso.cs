@@ -104,6 +104,8 @@ public class Ruso : Character
                 //Debug.LogFormat("Attack with 'R' at {0}", Direction);
                 //Anims[(int)AttackType.R].Play();
                 break;
+            case AttackType.Cancel:
+                break;
             default:
 
                 break;

@@ -5,7 +5,7 @@ namespace ZoneDepict.Rule
 {
     public enum AttackType
     {
-        N, A, B, R
+        N, A, B, R, Cancel
     }
     public class ZDGameRule : MonoBehaviour
     {
@@ -18,6 +18,7 @@ namespace ZoneDepict.Rule
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
         public const float MAP_WIDTH_WORLD = MAP_WIDTH_UNIT * UnitInWorld;
         public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UnitInWorld;
+        public const int TOUCH_TAP_BOUND_FRAMES = 20;
 
         // Some 
         // transform th input position from zonedepict unit to world unit.(z axis is remained the same)
@@ -157,7 +158,7 @@ namespace ZoneDepict.Rule
                     Type = AttackType.A;
                     break;
                 case 90:
-                    Type = AttackType.N;
+                    Type = AttackType.Cancel;
                     break;
                 case 180:
                     Type = AttackType.B;
@@ -166,7 +167,7 @@ namespace ZoneDepict.Rule
                     Type = AttackType.R;
                     break;
                 default:
-                    Type = AttackType.N;
+                    Type = AttackType.Cancel;
                     break;
             }
             return Type;
