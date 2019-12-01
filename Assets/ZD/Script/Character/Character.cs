@@ -7,9 +7,11 @@ using System;
 using ZoneDepict;
 // This class is basic of Charater, and all infos are
 // in this class
-public class Character : ZDObject,IPunObservable,IADamageObject
+public class Character : ZDObject,IPunObservable, IADamageObject
 {
-
+    #region Components
+    protected Animator animator;
+    #endregion
     #region Input Wrappers
     public virtual void InputAttack(Vector2 AttackDirection, AttackType Type)
     {
@@ -23,12 +25,14 @@ public class Character : ZDObject,IPunObservable,IADamageObject
     #endregion
 
     #region Character Attributes
-    private float HP = 100;
-    private float MP = 100;
-    private float RegHP;
-    private float RegMP;
-    private const float MaxHP = 100;
-    private const float MaxMP = 100;
+    protected float HP = 100;
+    protected float MP = 100;
+    protected float RegHP;
+    protected float RegMP;
+    protected float MaxHP = 100;
+    protected float MaxMP = 100;
+    protected Vector2 Velocity;
+    protected float MaxVelocity = 50;
     List<ItemBase> Inventory = new List<ItemBase>();
     #endregion
 
@@ -57,15 +61,15 @@ public class Character : ZDObject,IPunObservable,IADamageObject
 
     #region Character Interfaces
     // This virtual function
-    public virtual void Attack(Vector2 Direction, AttackType Type)
+    protected virtual void Attack(Vector2 Direction, AttackType Type)
     {
     }
 
-    public virtual void ApplyDamage(List<List<ZDObject>> Hits, AttackType Type)
+    protected virtual void ApplyDamage(List<List<ZDObject>> Hits, AttackType Type)
     {
     }
 
-    public virtual void Sprint(Vector2 Destination)
+    protected virtual void Sprint(Vector2 Destination)
     {
     }
 
@@ -107,11 +111,15 @@ public class Character : ZDObject,IPunObservable,IADamageObject
     }
     #endregion
 
+    #region Character Helpers
+    #endregion
+
     #region UNITY
     protected new  void Start()
     {
         //Calls ZDObject Start()
         base.Start();
+        animator = GetComponent<Animator>();
     }
 
     protected new void Update()
@@ -120,10 +128,28 @@ public class Character : ZDObject,IPunObservable,IADamageObject
         base.Update();
     }
 
+    protected void FixedUpdate()
+    {
+        UpdateAnimParams();
+    }
+
     private new void OnDestroy()
     {
         //Calls ZDObject OnDestroy()
         base.OnDestroy();
+    }
+
+    private void UpdateAnimParams()
+    {
+        animator.SetBool("Sprinting", Velocity.magnitude > 0);
+
+        if (Velocity.x.Equals(0)) animator.SetInteger("FaceHorizontal", 0);
+        else if (Velocity.x > float.Epsilon) animator.SetInteger("FaceHorizontal", 1);
+        else animator.SetInteger("FaceHorizontal", -1);
+
+        if (Velocity.y.Equals(0)) animator.SetInteger("FaceVertical", 0);
+        else if (Velocity.y > float.Epsilon) animator.SetInteger("FaceVertical", 1);
+        else animator.SetInteger("FaceVertical", -1);
     }
     #endregion
 
@@ -140,12 +166,23 @@ public class Character : ZDObject,IPunObservable,IADamageObject
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
+            stream.SendNext(transform.localScale);
             stream.SendNext(HP);
+            stream.SendNext(MP);
+            stream.SendNext(MaxHP);
+            stream.SendNext(MaxMP);
+            stream.SendNext(MaxVelocity);
+            stream.SendNext(Velocity);
         }
         else if (stream.IsReading)
         {
             transform.position = (Vector3)stream.ReceiveNext();
+            transform.localScale = (Vector3)stream.ReceiveNext();
             HP = (float)stream.ReceiveNext();
+            MP = (float)stream.ReceiveNext();
+            MaxHP = (float)stream.ReceiveNext();
+            MaxMP = (float)stream.ReceiveNext();
+            MaxVelocity = (float)stream.ReceiveNext();
         }
     }
 

@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class Luucher : MonoBehaviourPunCallbacks
 {
-    
+    public bool RandomEnter;
     public Text state;
 	public GameObject connect;
 	public GameObject disconnect;
@@ -18,6 +18,7 @@ public class Luucher : MonoBehaviourPunCallbacks
 	{
         PhotonNetwork.GameVersion = "1";
         PhotonNetwork.ConnectUsingSettings();
+       
     }
 
 	void Update()
@@ -40,12 +41,16 @@ public class Luucher : MonoBehaviourPunCallbacks
 
 	public override void OnConnectedToMaster()
 	{
-		//Debug.Log("Connecting...");
-        //PhotonNetwork.JoinRandomRoom();
-        
-		PhotonNetwork.JoinLobby(TypedLobby.Default);
-	}
-    
+        Debug.Log("Connecting...");
+        PhotonNetwork.JoinLobby(TypedLobby.Default);
+        if (RandomEnter) PhotonNetwork.JoinRandomRoom();
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+      if(RandomEnter)PhotonNetwork.CreateRoom("ASDASD");
+    }
+
     public override void OnJoinedLobby()
 	{
 		if (disconnect.activeSelf)

@@ -100,6 +100,8 @@ namespace ZoneDepict.Rule
             //        return new Vector2(0, 0);
             //}
         }
+
+        //Constraint the input vector to the four directions.
         static public Vector2 QuadrifyDirection(Vector2 input)
         {
             if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
@@ -111,7 +113,13 @@ namespace ZoneDepict.Rule
                 return new Vector2(0, input.y);
             }
         }
-        
+
+        //Constraint the input vector to the four directions according to the given pivot.
+        static public Vector2 QuadrifyDirection(Vector2 input, Vector2 pivot)
+        {
+            return pivot + QuadrifyDirection(input - pivot);
+        }
+
         static public float QuadAngle(float input)
         {
             float degree = (input + 45) % 360;

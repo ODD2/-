@@ -4,7 +4,7 @@ using UnityEngine;
 using ZoneDepict.Rule;
 using ZoneDepict;
 using Photon.Pun; 
-public class Ruso : Character
+public class Ruso : CrossMoveCharacter
 {
     private float[] AttackDamage = { 5, 10, 15, 20 };
     private float AttackRadius;
@@ -67,17 +67,17 @@ public class Ruso : Character
         }
     }
 
-    public override void InputSprint(Vector2 Destination)
-    {
-        if (photonView.IsMine)
-        {
-            Sprint(Destination);
-        }
-    }
+    //public override void InputSprint(Vector2 Destination)
+    //{
+    //    if (photonView.IsMine)
+    //    {
+    //        Sprint(Destination);
+    //    }
+    //}
     #endregion
 
     #region Charater Override
-    public override void Attack(Vector2 Direction,AttackType Type)
+    protected override void Attack(Vector2 Direction,AttackType Type)
     {
         //Debug.Log("Attack flow is True !");
         AttackRadius = ZDGameRule.QuadRadius(Direction);
@@ -110,16 +110,7 @@ public class Ruso : Character
         }
     }
 
-    public override void Sprint(Vector2 Destination)
-    {
-        //Constraint the directions.
-        Vector2 Delta = ZDGameRule.QuadrifyDirection(Destination - (Vector2)transform.position);
-        // Do movement
-        this.transform.position += ZDGameRule.WorldUnify(Delta.x,Delta.y,transform.position.z);
-        // MoveEffect Below.
-    }
-
-    public override void ApplyDamage(List<List<ZDObject>> Hits,AttackType Type)
+    protected override void ApplyDamage(List<List<ZDObject>> Hits,AttackType Type)
     {
         Debug.Log("Damaged Object Lists: " + Hits.Count);
         if (Hits != null)
