@@ -2,12 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict.Rule;
+using ZoneDepict.UI;
 using ZoneDepict;
 
 public class ZDController : MonoBehaviour
 {
     private Character TargetCharacter = null; 
-    private bool IsClickOn = false;
+    private bool IsHitOn = false; // To judge if do click/touch on target
+    private bool IsTouchMove = false; // To judge if did "Drag" or not
+    private bool IsTouchHeld = false; // To judge if Touch for some time or not
+    private bool IsDidMovePhase = false;
+    private float ClickOnFix = 0.7f; // To fix the radius of "TochOn Circle"
+    private float TouchMoveFix = 1.7f; // To fix what is "Move"
+    private List<Touch> ZDTouchs; // To support multiTouchs
+    private Vector2 TouchPosRecord;
+
+    private ZDUI ZDUIClass;
+    private int Frame;
+
     void Start()
     {
         TargetCharacter = GetComponent<Character>();
@@ -15,6 +27,7 @@ public class ZDController : MonoBehaviour
         {
             Destroy(this);
         }
+        ZDUIClass = GameObject.Find("ZDUI").GetComponent<ZDUI>();
     }
    
     
@@ -68,7 +81,7 @@ public class ZDController : MonoBehaviour
         {
            
             Vector3 UnitPos = ZDGameRule.WorldToUnit(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            Debug.Log("Hit At Position: " + UnitPos.x + "," + UnitPos.y);
+            //Debug.Log("Hit At Position: " + UnitPos.x + "," + UnitPos.y);
             var TargetList = ZDMap.HitAtUnit(UnitPos);
             if (TargetList != null)
             {
@@ -83,30 +96,82 @@ public class ZDController : MonoBehaviour
             
         }
         #endregion
-    }
-
-    void OnMouseUp()
-    {
-        if (IsClickOn)
+        #region Touch Input
+        if (Input.touchCount == 1)
         {
-            TargetCharacter.InputSprint(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-        }
-    }
 
-    void OnMouseDown()
-    {
+            Touch TouchTemp = Input.GetTouch(0);
+            Vector2 TouchPos = Camera.main.ScreenToWorldPoint(TouchTemp.position);
+            
+            if (TouchTemp.phase == TouchPhase.Began)
+            {
+                if (ZDGameRule.CalculateDistance(TouchPos, TargetCharacter.transform.position) < ZDGameRule.UnitInWorld * ClickOnFix)
+                {
+                    IsHitOn = true;
+                }
+                else
+                {
+                    IsHitOn = false;
+                    ZDUIClass.SetAttackIndicator(TouchPos);
+                    TouchPosRecord = TouchPos;
+                    
+                }
+                
+            }
+
+            else if (TouchTemp.phase == TouchPhase.Moved || TouchTemp.phase == TouchPhase.Stationary)
+            {
+                IsDidMovePhase = true;
+                Frame++;
+            }
+            else if (TouchTemp.phase == TouchPhase.Ended )
+            {
+                
+                // Check if really do "Drag"
+                if ((ZDGameRule.CalculateDistance(TouchTemp.deltaPosition) >= TouchMoveFix) && IsDidMovePhase)
+                {
+                    IsTouchMove = true;
+                }
+                else
+                {
+                    IsTouchMove = false;
+                }
+                if (IsHitOn && IsTouchMove) // DoMove
+                {
+                    TargetCharacter.InputSprint(Camera.main.ScreenToWorldPoint(TouchTemp.position));
+                    IsTouchMove = false;
+                }
+                else if (!IsHitOn)
+                {
+                    Vector2 Direction =  new Vector3(TouchPos.x, TouchPos.y,0) - TargetCharacter.transform.position;
+                    TargetCharacter.InputAttack(Direction, ZDGameRule.DirectionToType(TouchPos - TouchPosRecord));
+                }
+                ZDUIClass.CancelAttackIndicator();
+                ZDUIClass.CancelMoveIndicator();
+                IsHitOn = false;
+                IsDidMovePhase = false;
+                Frame = 0;
+            }
+            if (IsHitOn)
+            {
+                Vector2 Direction = new Vector3(TouchPos.x, TouchPos.y, 0) - TargetCharacter.transform.position;
+                float Degree = ZDGameRule.QuadAngle(Direction);
+                float Distance = ZDGameRule.CalculateDistance(Direction);
+                ZDUIClass.GetComponent<ZDUI>().SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance);
+            }
+            else
+            {
+                ZDUIClass.SetAttackOpacity(Frame);
+            }
+            
+
+
+        }
         
-        Vector2 Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Debug.Log("Mouse Down Received:" + TargetCharacter.transform.position.ToString());
-        Vector2 ChrPos = TargetCharacter.transform.position;
-        if (Mathf.Sqrt(Mathf.Pow(Position.x - ChrPos.x, 2) + Mathf.Pow(Position.y - ChrPos.y, 2)) < ZDGameRule.UnitInWorld)
-        {
-            IsClickOn = true;
-        }
-        else
-        {
-            IsClickOn = false;
-        }
+        
+        #endregion
     }
-    
+
+
+
 }

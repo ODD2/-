@@ -27,8 +27,8 @@ public class Character : ZDObject,IPunObservable,IADamageObject
     private float MP = 100;
     private float RegHP;
     private float RegMP;
-    private const float MaxHP = 100;
-    private const float MaxMP = 100;
+    private float MaxHP = 100;
+    private float MaxMP = 100;
     List<ItemBase> Inventory = new List<ItemBase>();
     #endregion
 

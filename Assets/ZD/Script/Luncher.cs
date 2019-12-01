@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class Luucher : MonoBehaviourPunCallbacks
+public class Luncher : MonoBehaviourPunCallbacks
 {
     
     public Text state;
@@ -28,8 +28,8 @@ public class Luucher : MonoBehaviourPunCallbacks
 
 	public void onClick()
 	{
-        PhotonNetwork.GameVersion = "1";
-		PhotonNetwork.ConnectUsingSettings();
+        //PhotonNetwork.GameVersion = "1";
+		//PhotonNetwork.ConnectUsingSettings();
 
 	}
 
