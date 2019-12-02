@@ -190,7 +190,7 @@ namespace ZoneDepict
             (uint, uint) MapLoc = RecordLocation[Caller];
             x += (int)MapLoc.Item1;
             y += (int)MapLoc.Item2;
-            Debug.Log("ZDMap - HitAt: " + x + ", " + y);
+//            Debug.Log("ZDMap - HitAt: " + x + ", " + y);
             if(x < 0 || y < 0 || !(x< ZDGameRule.MAP_WIDTH_UNIT && y < ZDGameRule.MAP_HEIGHT_UNIT))
             {
                 return null;
@@ -205,7 +205,7 @@ namespace ZoneDepict
         static public List<ZDObject> HitAtUnit(int x, int y)
         {
             (uint, uint) MapLoc = UnitToMap(x, y);
-            Debug.Log("ZDMap - HitAt: " + MapLoc.Item1 + ", " + MapLoc.Item2);
+            //Debug.Log("ZDMap - HitAt: " + MapLoc.Item1 + ", " + MapLoc.Item2);
             if (MapLoc.Item1 < 0 || MapLoc.Item2 < 0 ||
                 !(MapLoc.Item1 < ZDGameRule.MAP_WIDTH_UNIT && MapLoc.Item2 < ZDGameRule.MAP_HEIGHT_UNIT))
             {

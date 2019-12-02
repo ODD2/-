@@ -5,7 +5,7 @@ namespace ZoneDepict.Rule
 {
     public enum AttackType
     {
-        N, A, B, R
+        N, A, B, R, Cancel
     }
     public class ZDGameRule : MonoBehaviour
     {
@@ -18,6 +18,7 @@ namespace ZoneDepict.Rule
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
         public const float MAP_WIDTH_WORLD = MAP_WIDTH_UNIT * UnitInWorld;
         public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UnitInWorld;
+        public const int TOUCH_TAP_BOUND_FRAMES = 20;
 
         // Some 
         // transform th input position from zonedepict unit to world unit.(z axis is remained the same)
@@ -147,7 +148,38 @@ namespace ZoneDepict.Rule
             int y = (int)(Mathf.Sin(degree) * input.x + Mathf.Cos(degree) * input.y);
             return new Vector2(x, y);
         }
+        static public float CalculateDistance(Vector2 ThisPos,Vector2 Target)
+        {
+            return Mathf.Sqrt(Mathf.Pow(ThisPos.x - Target.x, 2) + Mathf.Pow(ThisPos.y - Target.y, 2));
+        }
+        static public float CalculateDistance(Vector2 ThisPos)
+        {
+            return CalculateDistance(ThisPos, new Vector2(0, 0));
+        }
+        static public AttackType DirectionToType(Vector2 Direction)
+        {
+            // Customer to set where should be N,A,B or R
+            AttackType Type;
+            switch (QuadAngle(Direction))
+            {
+                case 0:
+                    Type = AttackType.A;
+                    break;
+                case 90:
+                    Type = AttackType.Cancel;
+                    break;
+                case 180:
+                    Type = AttackType.B;
+                    break;
+                case 270:
+                    Type = AttackType.R;
+                    break;
+                default:
+                    Type = AttackType.Cancel;
+                    break;
+            }
+            return Type;
+        }
     }
 }
 
- 
