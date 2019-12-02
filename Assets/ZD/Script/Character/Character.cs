@@ -39,6 +39,10 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #endregion
 
     #region Getters/Setters
+    public List<ItemBase>  GetInventory()
+    {
+        return Inventory;
+    }
     public float GetHP()
     {
         return HP;

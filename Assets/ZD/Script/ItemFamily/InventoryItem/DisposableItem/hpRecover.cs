@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class hpRecover : DisposableItem
 {
+    
     //初始化道具
     public hpRecover()
     {
+        id = 0;
         ItemCD = 1.0f;
         Amount = Random.Range(1, 2);
     }
