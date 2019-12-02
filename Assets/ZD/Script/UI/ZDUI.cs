@@ -27,15 +27,18 @@ namespace ZoneDepict.UI
         {
             
         }
+
         public void SetAttackIndicator(Vector2 Position)
         {
             Attack.position = Position;
             AttackIndicator.SetActive(true);
         }
+
         public void CancelAttackIndicator()
         {
             AttackIndicator.SetActive(false);
         }
+
         public void SetMoveIndicator(Vector2 Pos, float Degree, float Scale)
         {
             Move.rotation = Quaternion.Euler(0, 0, Degree - 90); // Fix Assets's 90 degree
@@ -45,11 +48,13 @@ namespace ZoneDepict.UI
             MoveIndicator.SetActive(true);
 
         }
+
         public void CancelMoveIndicator()
         {
             MoveIndicator.SetActive(false);
             
         }
+
         public void SetAttackOpacity(int Frame)
         {
             AttackIndicator.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, Frame * FrameFix);

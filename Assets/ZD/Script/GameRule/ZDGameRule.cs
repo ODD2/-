@@ -11,17 +11,16 @@ namespace ZoneDepict.Rule
     {
         
         // Const Game Variable declare
-        public const uint MAP_WIDTH_UNIT = 15;
+        public const uint MAP_WIDTH_UNIT = 13;
         public const uint MAP_HEIGHT_UNIT = 11;
         public const int MAX_PLAYERS = 4;
-        public const float UnitInWorld = 2;
+        public const float UnitInWorld = 2.5f;
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
         public const float MAP_WIDTH_WORLD = MAP_WIDTH_UNIT * UnitInWorld;
         public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UnitInWorld;
         public const int TOUCH_TAP_BOUND_FRAMES = 20;
 
-        // Some 
-        // transform th input position from zonedepict unit to world unit.(z axis is remained the same)
+        // transform the input position from zonedepict unit to world unit.(z axis is remained the same)
         static public Vector3 UnitToWorld(int x, int y, float z)
         {
             Vector3 ret = new Vector3(x, y, 0);

@@ -7,7 +7,7 @@ using Photon.Pun;
 public class Ruso : CrossMoveCharacter
 {
 
-    private float[] AttackDamage = { 5, 10, 15, 20 };
+    private float[] AttackDamage = { 200, 10, 15, 20 };
     
     #region UNITY
     protected new void Start()
