@@ -5,12 +5,14 @@ using Photon.Pun;
 using ZoneDepict.Rule;
 using System;
 using ZoneDepict;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 // This class is basic of Charater, and all infos are
 // in this class
 public class Character : ZDObject,IPunObservable, IADamageObject
 {
     #region Components
     protected Animator animator;
+    protected SpriteRenderer sprite;
     #endregion
     #region Input Wrappers
     public virtual void InputAttack(Vector2 AttackDirection, AttackType Type)
@@ -24,6 +26,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #endregion
 
     #region Character Attributes
+    public int TeamID {get; protected set; } = 0;
     protected float HP = 100;
     protected float MP = 100;
     protected float RegHP;
@@ -72,16 +75,31 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
     }
 
-    public void Hurt(float Damage)
+    public virtual void Hurt(float Damage)
     {
         Debug.LogFormat("Player Received {0} Damage.", Damage);
         if (photonView.IsMine)
         {
             SetHP(HP - Damage);
+            if (HP.Equals(0))
+            {
+                Dead();
+            }
         }
     }
 
-    public bool UseItem(int InventoryIndex)
+    public virtual void Dead()
+    {
+        if (photonView.IsMine)
+        {
+            Hashtable NewSetting = new Hashtable();
+            NewSetting.Add("Alive", false);
+            PhotonNetwork.SetPlayerCustomProperties(NewSetting);
+            photonView.RPC("DeadRPC", RpcTarget.AllViaServer);
+        }
+    }
+
+    public virtual bool UseItem(int InventoryIndex)
     {
         Debug.LogFormat("Character Use Item in Inventory[{0}].", InventoryIndex);
         if (Inventory.Count > InventoryIndex)
@@ -118,7 +136,15 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         //Calls ZDObject Start()
         base.Start();
+        //Cache Components.
         animator = GetComponent<Animator>();
+        sprite = GetComponent<SpriteRenderer>();
+
+        //Setup TeamID.
+        if (photonView.Owner.CustomProperties.ContainsKey("Team"))
+        {
+            TeamID = (int)photonView.Owner.CustomProperties["Team"];
+        }
     }
 
     protected new void Update()
@@ -179,6 +205,14 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     }
     #endregion
 
+    #region RPC
+    [PunRPC]
+    public void DeadRPC()
+    {
+        StartCoroutine(Vanish());
+    }
+    #endregion
+
     #region Testing
     public void PrintStatus()
     {
@@ -186,6 +220,19 @@ public class Character : ZDObject,IPunObservable, IADamageObject
                         "MP: {1}\n" +
                         "ItemNum: {2}\n",
                         HP,MP,Inventory.Count);
+    }
+    #endregion
+
+    #region Routines
+    private IEnumerator Vanish()
+    {
+        Color currentColor = sprite.color;
+        while(currentColor.a > 0)
+        {
+            yield return new WaitForSeconds(0.2f);
+            currentColor.a -= 0.1f;
+            sprite.color = currentColor;
+        }
     }
     #endregion
 }

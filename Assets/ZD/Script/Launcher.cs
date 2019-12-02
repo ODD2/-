@@ -25,6 +25,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         ExitGames.Client.Photon.Hashtable PlayerProps = new ExitGames.Client.Photon.Hashtable();
         PlayerProps.Add("Team", Convert.ToInt32(TeamInput.text));
+        PlayerProps.Add("Alive", true);
         PhotonNetwork.SetPlayerCustomProperties(PlayerProps);
         PhotonNetwork.JoinRandomRoom();
     }
@@ -41,6 +42,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-      if(RandomEnter)PhotonNetwork.CreateRoom("ASDASD");
+        PhotonNetwork.CreateRoom("ASDASD");
+    }
+
+    public override void OnJoinedRoom()
+    {
+
+        Debug.Log("Join Room Sucessed ! :) ");
+        PhotonNetwork.LoadLevel(1);
     }
 }
