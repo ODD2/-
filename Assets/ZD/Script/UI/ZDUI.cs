@@ -23,7 +23,7 @@ namespace ZoneDepict.UI
             Move = MoveIndicator.GetComponent<Transform>();
             // To fix ArrowScale
             
-            for (int i = 1; i < 6; i++)
+            for (int i = 0; i < 6; i++)
             {
                 ArrowScale[i] = ((ZDGameRule.UnitInWorld / 3) * i);
             }
