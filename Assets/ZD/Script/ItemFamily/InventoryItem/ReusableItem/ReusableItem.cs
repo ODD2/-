@@ -43,4 +43,13 @@ public class ReusableItem : ItemBase
     {
         Amount = MaxAmount;
     }
+
+    public override int ItemState()
+    {
+        if (NextValidTime>Time.time)
+        {
+            return (int)(NextValidTime - Time.time);
+        }
+        return 1;
+    }
 }

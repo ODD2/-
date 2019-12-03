@@ -6,6 +6,7 @@ public class mpRecover:ReusableItem
 {
     public mpRecover()
     {
+        id = 1;
         ItemCD = 1.5f;
         MaxAmount = -1;
         Amount = MaxAmount;

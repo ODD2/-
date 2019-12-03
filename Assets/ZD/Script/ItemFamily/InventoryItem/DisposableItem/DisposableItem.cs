@@ -6,6 +6,7 @@ public class DisposableItem : ItemBase
 {
     protected int Amount;
 
+
     public override bool IsGarbage()
     {
         if (!(Amount > 0))
@@ -14,7 +15,7 @@ public class DisposableItem : ItemBase
         }
         return false;
     }
-
+   
     public override bool IsUsable()
     {
         if (Amount > 0 &&   Time.time > NextValidTime) return true;
@@ -23,6 +24,12 @@ public class DisposableItem : ItemBase
 
     public override void ItemEffect(Character Caller)
     {
+    }
+
+    public override int ItemState()
+    {
+       
+        return (int)Amount;
     }
 
     public override void Use(Character Caller)

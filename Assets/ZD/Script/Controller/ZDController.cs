@@ -28,6 +28,7 @@ public class ZDController : MonoBehaviour
         }
         ZDUIClass = GameObject.Find("ZDUI").GetComponent<ZDUI>();
     }
+
     void Update()
     {
         #region Debugger

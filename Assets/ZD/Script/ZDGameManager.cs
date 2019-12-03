@@ -32,6 +32,8 @@ namespace ZoneDepict
         Dictionary<Player, int> TeamList = new Dictionary<Player, int>();
         public static ZDGameManager Instance = null;
         ZDGameState gameState = ZDGameState.Initialize;
+        public static GameObject PlayerObject { get; set; } = null;
+
         #region Unity
         public void Awake()
         {
@@ -57,8 +59,6 @@ namespace ZoneDepict
         }
         #endregion
 
-
-
         #region Game Procedures
         void Initialize()
         {
@@ -75,7 +75,8 @@ namespace ZoneDepict
                 Team = (int)PhotonNetwork.LocalPlayer.CustomProperties["Team"];
             }
             //Setup Camera
-            CameraController.SetTarget(PhotonNetwork.Instantiate("Ruso", Position, Rotation, 0));
+            PlayerObject = PhotonNetwork.Instantiate("Ruso", Position, Rotation, 0);
+            CameraController.SetTarget(PlayerObject);
 
             //Update TeamList
             foreach (var player in PhotonNetwork.PlayerList)
