@@ -34,8 +34,6 @@ public class DropItem : ZDStaticTransient, IPunObservable, IACollectObject
         if (collected) return;
         collected = true;
 
-       
-
         Debug.Log("Item Collected By: " + Collecter.name );
         foreach (ItemBase i in contains)
         {

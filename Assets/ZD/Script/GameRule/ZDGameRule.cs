@@ -34,6 +34,8 @@ namespace ZoneDepict.Rule
             return UnitToWorld((int)input.x, (int)input.y, input.z);
         }
 
+       
+
         //transform the input position from world unit to zonedepict unit.(z axis is remained the same)
         static public Vector3 WorldToUnit(float x, float y, float z)
         {
@@ -60,6 +62,11 @@ namespace ZoneDepict.Rule
         static public Vector3 WorldToUnit(Vector3 input)
         {
             return WorldToUnit(input.x, input.y, input.z);
+        }
+        static public Vector2 WorldToUnit(Vector2 input)
+        {
+            Vector3 Result = WorldToUnit(input.x, input.y, 0);
+            return (Vector2)Result;
         }
 
         //transform the input position into a scale of zonedepict unit in the world.(z axis is remained the same)

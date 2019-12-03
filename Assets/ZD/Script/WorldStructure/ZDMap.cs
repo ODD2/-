@@ -4,7 +4,7 @@ using UnityEngine;
 using ZoneDepict.Rule;
 namespace ZoneDepict
 {
-    public enum TypeZDO
+    public enum ETypeZDO
     {
         Obstacle,
         Transient,
@@ -13,7 +13,7 @@ namespace ZoneDepict
 
     public class ZDGridBlock
     {
-        private List<ZDObject>[] Record = new List<ZDObject>[(int)TypeZDO.Total];
+        private List<ZDObject>[] Record = new List<ZDObject>[(int)ETypeZDO.Total];
         private ZDObject test;
 
         public ZDGridBlock()
@@ -44,8 +44,8 @@ namespace ZoneDepict
     
         private ref List<ZDObject> GetListForObject(ZDObject TypeObject)
         {
-            if (TypeObject is ZDObstacle) return  ref Record[(int)TypeZDO.Obstacle];
-            else return ref Record[(int)TypeZDO.Transient];
+            if (TypeObject is ZDObstacle) return  ref Record[(int)ETypeZDO.Obstacle];
+            else return ref Record[(int)ETypeZDO.Transient];
         }
         
         public bool Remove(ZDObject TargetObj)
@@ -64,7 +64,7 @@ namespace ZoneDepict
             TargetList.Add(TargetObj);
         }
 
-        public List<ZDObject> GetTypeList(TypeZDO Type)
+        public List<ZDObject> GetTypeList(ETypeZDO Type)
         {
             return Record[(int)Type];
         }
@@ -272,7 +272,7 @@ namespace ZoneDepict
         {
             return HitAtUnit((int)UnitLoc.x, (int)UnitLoc.y);
         }
-        static public List<ZDObject> HitAtUnit(int x, int y, TypeZDO Type)
+        static public List<ZDObject> HitAtUnit(int x, int y, ETypeZDO Type)
         {
             (uint, uint) MapLoc = UnitToMap(x, y);
             Debug.Log("ZDMap - HitAt: " + MapLoc.Item1 + ", " + MapLoc.Item2);
@@ -283,7 +283,7 @@ namespace ZoneDepict
             }
             return RecordGrid[MapLoc.Item1, MapLoc.Item2].GetTypeList(Type);
         }
-        static public List<ZDObject> HitAtUnit(Vector2 UnitLoc, TypeZDO Type)
+        static public List<ZDObject> HitAtUnit(Vector2 UnitLoc, ETypeZDO Type)
         {
             return HitAtUnit((int)UnitLoc.x, (int)UnitLoc.y,Type);
         }

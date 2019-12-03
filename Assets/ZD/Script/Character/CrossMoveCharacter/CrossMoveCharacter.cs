@@ -20,7 +20,7 @@ public class CrossMoveCharacter : Character
     #region Character Override
     public override void InputSprint(Vector2 Destination)
     {
-        if (photonView.IsMine)
+        if (photonView.IsMine && !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM"))
         {
             photonView.RPC("SprintRPC", RpcTarget.All, GetValidDest(Destination));
         }
@@ -130,7 +130,7 @@ public class CrossMoveCharacter : Character
                 {
                     //Move To Currently Checking Position.
                     CurPos[i] += Delta;
-                    if (ZDMap.HitAtUnit(CurPos,TypeZDO.Obstacle)!=null)
+                    if (ZDMap.HitAtUnit(CurPos,ETypeZDO.Obstacle)!=null)
                     {
                         //Return To Last Position.
                         CurPos[i] -= Delta;

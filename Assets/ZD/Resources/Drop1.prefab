@@ -88,5 +88,9 @@ PrefabInstance:
       propertyPath: amplitude
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 387b7d6bc7a2a4341a217876b0fb5b37, type: 3}

@@ -14,6 +14,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected Animator animator;
     protected SpriteRenderer sprite;
     #endregion
+
     #region Input Wrappers
     public virtual void InputAttack(Vector2 AttackDirection, AttackType Type)
     {
