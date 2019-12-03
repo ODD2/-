@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ZD/Scenes/GameGround.unity
     guid: b019f8916de12487685225adbebaaa58
+  - enabled: 1
+    path: Assets/ZD/Scenes/GameStartView.unity
+    guid: fba4aa4f9a1fe48c8a1c71892c6b4869
+  - enabled: 1
+    path: Assets/ZD/Scenes/GameLobbyView.unity
+    guid: c566f656463ee4fa39e19473482f51c5
   m_configObjects: {}

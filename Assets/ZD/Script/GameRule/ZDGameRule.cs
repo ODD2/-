@@ -147,14 +147,14 @@ namespace ZoneDepict.Rule
             int y = (int)(Mathf.Sin(degree) * input.x + Mathf.Cos(degree) * input.y);
             return new Vector2(x, y);
         }
-        static public float CalculateDistance(Vector2 ThisPos,Vector2 Target)
-        {
-            return Mathf.Sqrt(Mathf.Pow(ThisPos.x - Target.x, 2) + Mathf.Pow(ThisPos.y - Target.y, 2));
-        }
-        static public float CalculateDistance(Vector2 ThisPos)
-        {
-            return CalculateDistance(ThisPos, new Vector2(0, 0));
-        }
+        //static public float CalculateDistance(Vector2 ThisPos,Vector2 Target)
+        //{
+        //    return Mathf.Sqrt(Mathf.Pow(ThisPos.x - Target.x, 2) + Mathf.Pow(ThisPos.y - Target.y, 2));
+        //}
+        //static public float CalculateDistance(Vector2 ThisPos)
+        //{
+        //    return CalculateDistance(ThisPos, new Vector2(0, 0));
+        //}
         static public AttackType DirectionToType(Vector2 Direction)
         {
             // Customer to set where should be N,A,B or R

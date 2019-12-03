@@ -337,7 +337,7 @@ GameObject:
   - component: {fileID: 1028843529}
   - component: {fileID: 1028843528}
   m_Layer: 5
-  m_Name: Text
+  m_Name: DebugText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -599,7 +599,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackIndicator: {fileID: 3073239615737243702, guid: 24511427de02f41e5bffbc73aa6e15f9,
     type: 3}
-  MoveIndicator: {fileID: 3864500571154724212, guid: 8c5007d31bafc4de1b0ee2944e35536e,
+  MoveIndicator: {fileID: 7522360215691881654, guid: ba3803af5cce147c4a677392984215bf,
     type: 3}
 --- !u!114 &1959215432
 MonoBehaviour:
