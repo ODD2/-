@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using ZoneDepict.Rule;
 namespace ZoneDepict.UI
 {
@@ -11,6 +12,21 @@ namespace ZoneDepict.UI
         private Transform Attack;
         private Transform Move;
         private float FrameFix = 0.008f;
+
+        #region BagUI
+        //控制UI
+        public List<GameObject> showItem;
+        //腳色參考
+        GameObject player;
+        //塞圖片
+        public List<Sprite> icons;
+        //道具欄數量
+        int Bagsize;
+        //拷貝player的道具包
+        List<ItemBase> inventory;
+        #endregion
+
+
         // Start is called before the first frame update
         void Start()
         {
@@ -20,12 +36,38 @@ namespace ZoneDepict.UI
             AttackIndicator.SetActive(false);
             Attack = AttackIndicator.GetComponent<Transform>();
             Move = MoveIndicator.GetComponent<Transform>();
+
+            //Bag initial
+            Bagsize = 3;
+            if (player = ZDGameManager.PlayerObject)
+            {
+                Debug.Log("UI connect to player");
+            }
+            foreach (GameObject i in showItem)
+            {
+                i.SetActive(false);
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
-            
+            inventory = player.GetComponent<Character>().GetInventory();
+            for (int i = 0; i < Bagsize; i++)
+            {
+                if (i < inventory.Count)
+                {
+                    showItem[i].SetActive(true);
+                    int id = inventory[i].id;
+                    showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];
+                    showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState().ToString();
+
+                }
+                else
+                {
+                    showItem[i].SetActive(false);
+                }
+            }
         }
 
         public void SetAttackIndicator(Vector2 Position)
@@ -43,8 +85,8 @@ namespace ZoneDepict.UI
         {
             Move.rotation = Quaternion.Euler(0, 0, Degree - 90); // Fix Assets's 90 degree
             Move.position = Pos;
-            int DoScale = (int)(Scale / ZDGameRule.UnitInWorld)+1; // Fix index 0 to 1
-            Move.localScale = new Vector3(DoScale,DoScale,0);
+            int DoScale = (int)(Scale / ZDGameRule.UnitInWorld) + 1; // Fix index 0 to 1
+            Move.localScale = new Vector3(DoScale, DoScale, 0);
             MoveIndicator.SetActive(true);
 
         }
@@ -52,13 +94,30 @@ namespace ZoneDepict.UI
         public void CancelMoveIndicator()
         {
             MoveIndicator.SetActive(false);
-            
+
         }
 
         public void SetAttackOpacity(int Frame)
         {
             AttackIndicator.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, Frame * FrameFix);
         }
+        public void Useitem0()
+        {
+            Debug.Log("click item 0");
+            player.GetComponent<Character>().UseItem(0);
+        }
+        public void Useitem1()
+        {
+            Debug.Log("click item 1");
+            player.GetComponent<Character>().UseItem(1);
+
+        }
+        public void Useitem2()
+        {
+            Debug.Log("click item 2");
+            player.GetComponent<Character>().UseItem(2);
+        }
+
     }
 }
 
