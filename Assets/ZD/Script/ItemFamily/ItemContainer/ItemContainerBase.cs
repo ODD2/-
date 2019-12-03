@@ -4,7 +4,7 @@ using UnityEngine;
 using ZoneDepict;
 using Photon.Pun;
 
-public abstract class ItemContainerBase : ZDObject, IADamageObject, IPunObservable
+public abstract class ItemContainerBase : ZDStaticObstacle, IADamageObject, IPunObservable
 {
     #region Private Field
     public float Durability;

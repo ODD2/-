@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict;
 using Photon.Pun;
-public class DropItem : ZDObject, IPunObservable, IACollectObject
+public class DropItem : ZDStaticTransient, IPunObservable, IACollectObject
 {
     bool collected = false;
 
