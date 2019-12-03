@@ -33,7 +33,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected float RegMP;
     protected float MaxHP = 100;
     protected float MaxMP = 100;
-    protected Vector2 Velocity;
+    protected Vector2 Velocity = new Vector2(0,0);
     protected float MaxVelocity = 30;
     List<ItemBase> Inventory = new List<ItemBase>();
     #endregion

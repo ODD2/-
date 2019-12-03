@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using ZoneDepict.Rule;
+using ZoneDepict;
 
 //Characters Derived from this class is restrict to move and attack on the four directions.
 public class CrossMoveCharacter : Character
@@ -21,7 +22,7 @@ public class CrossMoveCharacter : Character
     {
         if (photonView.IsMine)
         {
-            photonView.RPC("SprintRPC", RpcTarget.All, Destination);
+            photonView.RPC("SprintRPC", RpcTarget.All, GetValidDest(Destination));
         }
     }
 
@@ -111,6 +112,36 @@ public class CrossMoveCharacter : Character
             NewScale.x *= -1;
             transform.localScale = NewScale;
         }
+    }
+
+    Vector2 GetValidDest(Vector2 Destination)
+    {
+        
+        Vector2 PosInUnit = ZDGameRule.WorldToUnit(transform.position);
+        Vector2 DesInUnit = ZDGameRule.WorldToUnit(ZDGameRule.QuadrifyDirection(Destination, transform.position));
+        for(int i = 0; i < 2; ++i)
+        {
+            if (!PosInUnit[i].Equals(DesInUnit[i]))
+            {
+                int Delta = (PosInUnit[i] < DesInUnit[i] ? 1 : -1);
+                Vector2 CurPos = PosInUnit;
+
+                while (true)
+                {
+                    //Move To Currently Checking Position.
+                    CurPos[i] += Delta;
+                    if (ZDMap.HitAtUnit(CurPos,TypeZDO.Obstacle)!=null)
+                    {
+                        //Return To Last Position.
+                        CurPos[i] -= Delta;
+                        return ZDGameRule.UnitToWorld(CurPos);
+                    }
+                    if (CurPos[i].Equals(DesInUnit[i])) break;
+                }
+                return ZDGameRule.UnitToWorld(DesInUnit);
+            }
+        }
+        return transform.position;
     }
     #endregion
 

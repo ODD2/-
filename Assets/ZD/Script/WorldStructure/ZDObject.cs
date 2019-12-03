@@ -7,6 +7,7 @@ using Photon.Realtime;
 
 namespace ZoneDepict
 {
+
     public class ZDObject : MonoBehaviourPunCallbacks
     {
         protected void Start()
@@ -27,7 +28,6 @@ namespace ZoneDepict
         {
             ZDMap.UnRegister(this);
         }
-
 
         public bool IsRegistered()
         {
