@@ -8,7 +8,10 @@ public class DropItem : ZDObject, IPunObservable, IACollectObject
     bool collected = false;
 
     public List<ItemBase> contains;
-  
+
+    //撿起特效
+    public UnityEngine.GameObject pickedFX;
+
     // Start is called before the first frame update
     protected new void Start()
     {
@@ -27,8 +30,11 @@ public class DropItem : ZDObject, IPunObservable, IACollectObject
 
     public void Collect(Character Collecter)
     {
+       
         if (collected) return;
         collected = true;
+
+       
 
         Debug.Log("Item Collected By: " + Collecter.name );
         foreach (ItemBase i in contains)
@@ -46,6 +52,8 @@ public class DropItem : ZDObject, IPunObservable, IACollectObject
     [PunRPC]
     private void OnCollected(PhotonMessageInfo info)
     {
+        Vector3 FXpos = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
+        PhotonNetwork.InstantiateSceneObject(pickedFX.name, FXpos, Quaternion.identity);
         if (photonView.IsMine)
         {
             PhotonNetwork.Destroy(photonView);

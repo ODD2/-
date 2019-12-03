@@ -12,6 +12,9 @@ public class RandomItemContainer : ItemContainerBase
     //隨機道具的index
     private int randomNum;
 
+    //破壞特效
+    public UnityEngine.GameObject brokenFX;
+
     public new void Start()
     {
         base.Start();
@@ -36,8 +39,12 @@ public class RandomItemContainer : ItemContainerBase
         //產生道具
         if (photonView.IsMine)
         {
+            Vector3 FXpos = new Vector3(transform.position.x, transform.position.y, transform.position.z-1);
+            
             //Debug.LogFormat("Container broken! Instantiate obj in {0}", transform.position);
             PhotonNetwork.InstantiateSceneObject(DropPrefabs[randomNum].name, transform.position, Quaternion.identity);
+
+            PhotonNetwork.InstantiateSceneObject(brokenFX.name, FXpos, Quaternion.identity);
             PhotonNetwork.Destroy(photonView);
         }
     }

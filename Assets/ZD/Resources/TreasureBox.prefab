@@ -121,3 +121,4 @@ MonoBehaviour:
   - {fileID: 3131298710924717987, guid: ae299f1c8df1d4a0183539dc273cfb5b, type: 3}
   - {fileID: 3487458280625231940, guid: 387b7d6bc7a2a4341a217876b0fb5b37, type: 3}
   - {fileID: 4317635750542974899, guid: 2b2f3be8c3501744e8adab9179d960ad, type: 3}
+  brokenFX: {fileID: 100000, guid: 83cd9cc9f9c88824ba18dc59b05ae328, type: 3}
