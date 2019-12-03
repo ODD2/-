@@ -11,7 +11,7 @@ namespace ZoneDepict.UI
         private Transform Attack;
         private Transform Move;
         private float FrameFix = 0.008f;
-        private float[] ArrowScale = { 0.0f,0.1f, 0.25f, 0.4f, 0.53f, 0.67f };
+        private float[] ArrowScale = { 0,0, 0, 0, 0, 0 };
         // Start is called before the first frame update
         void Start()
         {
@@ -21,6 +21,13 @@ namespace ZoneDepict.UI
             AttackIndicator.SetActive(false);
             Attack = AttackIndicator.GetComponent<Transform>();
             Move = MoveIndicator.GetComponent<Transform>();
+            // To fix ArrowScale
+            
+            for (int i = 1; i < 6; i++)
+            {
+                ArrowScale[i] = ((ZDGameRule.UnitInWorld / 3) * i);
+            }
+            MoveIndicator.transform.localScale = new Vector3(ZDGameRule.UnitInWorld, ZDGameRule.UnitInWorld, 1);
         }
 
         // Update is called once per frame
@@ -44,9 +51,9 @@ namespace ZoneDepict.UI
         {
             Move.rotation = Quaternion.Euler(0, 0, Degree - 90); // Fix Assets's 90 degree
             Move.position = Pos;
-
-            float DoScale = ArrowScale[(int)Scale]; // Fix 
-            Move.localScale = new Vector3(0.5f,DoScale,0);
+            
+            float DoScale = ArrowScale[(int)Scale ]; // Fix 
+            Move.localScale = new Vector3(ZDGameRule.UnitInWorld, DoScale,0);
             MoveIndicator.SetActive(true);
 
         }

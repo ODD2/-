@@ -599,7 +599,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackIndicator: {fileID: 3073239615737243702, guid: 24511427de02f41e5bffbc73aa6e15f9,
     type: 3}
-  MoveIndicator: {fileID: 7522360215691881654, guid: ba3803af5cce147c4a677392984215bf,
+  MoveIndicator: {fileID: 4230767625700393350, guid: 6153e91dd70bc40e6bef2bed8e26ce09,
     type: 3}
 --- !u!114 &1959215432
 MonoBehaviour:
