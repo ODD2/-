@@ -76,6 +76,7 @@ namespace ZoneDepict.UI
 
         public void SetAttackIndicator(Vector2 Position)
         {
+            // World Position
             Attack.position = Position;
             AttackIndicator.SetActive(true);
         }

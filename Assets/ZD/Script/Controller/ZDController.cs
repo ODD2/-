@@ -15,7 +15,7 @@ public class ZDController : MonoBehaviour
     private float ClickOnFix = 1.2f; // To fix the radius of "TochOn Circle"
     private float TouchMoveFix = 1.7f; // To fix what is "Move"
     private List<Touch> ZDTouchs; // To support multiTouchs
-    private Vector2 TouchPosRecord;
+    private Vector2 TouchPosRecord; // To record the attack start pos (to calculate direction)
 
     private ZDUI ZDUIClass;
     private int Frame;
@@ -32,7 +32,7 @@ public class ZDController : MonoBehaviour
 
     void Update()
     {
-        #region Debugger
+        #region Debugger with hotkeys
         Vector2 AttackDirection;
         if (Input.GetKeyDown(KeyCode.V))
         {
@@ -80,6 +80,7 @@ public class ZDController : MonoBehaviour
         {
 
             Touch TouchTemp = Input.GetTouch(0);
+            // TouchPos is world Position
             Vector2 TouchPos = Camera.main.ScreenToWorldPoint(TouchTemp.position);
             
             if (TouchTemp.phase == TouchPhase.Began)
@@ -91,8 +92,15 @@ public class ZDController : MonoBehaviour
                 else
                 {
                     IsMovingCharacter = false;
-                    ZDUIClass.SetAttackIndicator(TouchPos);
-                    TouchPosRecord = TouchPos;
+                    //
+                    List<ZDObject> PosObjects = ZDMap.HitAtUnit(ZDGameRule.WorldToUnit(TouchPos));
+                    //Debug.Log("Objs : " + PosObjects.Count);
+                    if (PosObjects == null)
+                    {
+                        ZDUIClass.SetAttackIndicator(TouchPos);
+                        TouchPosRecord = TouchPos;
+                    }
+                    
                 }
                 
             }
@@ -153,6 +161,7 @@ public class ZDController : MonoBehaviour
 
         #endregion
 
+        #region Just for Fun and Debug
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 HitLoc = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -176,7 +185,13 @@ public class ZDController : MonoBehaviour
             else
             {
                 IsSelectingAttack = true;
-                ZDUIClass.SetAttackIndicator(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                Vector2 Tempp = ZDGameRule.WorldToUnit(new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y));
+                List<ZDObject> PosObjects = ZDMap.HitAtUnit(Tempp);
+                if (PosObjects == null)
+                {
+                    ZDUIClass.SetAttackIndicator(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                }
+                
                 TouchPosRecord = HitLoc;
             }
         }
@@ -219,7 +234,7 @@ public class ZDController : MonoBehaviour
             
             ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
         }
-        
+        #endregion
     }
-    
+
 }

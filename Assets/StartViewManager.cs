@@ -13,10 +13,13 @@ public class StartViewManager : MonoBehaviourPunCallbacks
     public Button StartButton;
     public Text DebugText;
     public GameObject Connecting;
-
+    
+    
     void Start()
     {
         StartButton.onClick.AddListener(() => StartGame());
+
+        
     }
 
     protected void Update()
