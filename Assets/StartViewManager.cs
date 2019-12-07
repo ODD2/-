@@ -15,7 +15,9 @@ public class StartViewManager : MonoBehaviourPunCallbacks
     public Button StartButton;
     public Text DebugText;
     public GameObject Connecting;
+    // [0] = BGM , [1] = start , [2] = but sound
     private AudioSource[] StartViewAudio;
+    
     
     void Start()
     {
@@ -30,9 +32,11 @@ public class StartViewManager : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        
         // int Serverindex = ChooseServer.value;
         int ServerIndex = 0;
         StartViewAudio[0].Stop();
+        StartViewAudio[2].PlayOneShot(StartViewAudio[2].clip);
         StartViewAudio[1].Play();
         switch (ServerIndex)
         {
@@ -79,6 +83,7 @@ public class StartViewManager : MonoBehaviourPunCallbacks
 
         StartCoroutine(WaitConnect());
     }
+    
 
     public override void OnJoinedRoom()
     {

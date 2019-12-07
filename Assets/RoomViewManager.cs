@@ -17,6 +17,8 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     private RoomPlayerState State;
     private string CharacterName;
     private int ChooseTimes = 1;
+    // [0] = BGM , [1] = Get choose but , [2] = get Ready but , [3] = readywaiting
+    private AudioSource[] RoomViewAudio;
     public RoomPlayerState GetState()
     {
         return State;
@@ -29,10 +31,10 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        RoomViewAudio = GetComponents<AudioSource>();
         ReadyButton.onClick.AddListener(() => Ready());
         
         State = RoomPlayerState.Casting;
-        
         Hashtable NewState = new Hashtable();
         NewState.Add("RoomState", RoomPlayerState.Casting);
         PhotonNetwork.SetPlayerCustomProperties(NewState);
@@ -55,8 +57,11 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     {
         if(!(ChooseTimes > 0))
         {
+            RoomViewAudio[3].Stop();
+            RoomViewAudio[2].Play();
+            StartCoroutine(ReadyWait());
             ReadyButton.enabled = false;
-
+            State = RoomPlayerState.Ready;
             Hashtable NewState = new Hashtable();
             NewState.Add("RoomState", RoomPlayerState.Ready);
             NewState.Add("CharacterName", CharacterName);
@@ -67,16 +72,22 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     
     public void ImgOnClick(string name)
     {
-        CharacterName = name;
-        
+        if(ChooseTimes > 0)
+        {
+            CharacterName = name;
+        }
     }
     public void ImgReadyLock(Image Img)
     {
         if(ChooseTimes > 0)
         {
+            RoomViewAudio[1].Play();
             Img.enabled = true;
             Img.color = new Vector4(1, 1, 1, 1);
             ChooseTimes--;
+            RoomViewAudio[0].Stop();
+            RoomViewAudio[1].Play();
+            StartCoroutine(ReadyWait());
         }
     }
 
@@ -105,7 +116,9 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
         }
     }
 
-    #region Photon Callback
-
-    #endregion
+    IEnumerator ReadyWait()
+    {
+        yield return new WaitUntil(() => !RoomViewAudio[1].isPlaying);
+        RoomViewAudio[3].Play();
+    }
 }
