@@ -7,6 +7,10 @@ namespace ZoneDepict.Rule
     {
         N, A, B, R, Cancel
     }
+    public enum RoomPlayerState
+    {
+        Enter , Casting, Ready
+    }
     public class ZDGameRule : MonoBehaviour
     {
         
@@ -169,16 +173,16 @@ namespace ZoneDepict.Rule
             switch (QuadAngle(Direction))
             {
                 case 0:
-                    Type = AttackType.A;
-                    break;
-                case 90:
-                    Type = AttackType.Cancel;
-                    break;
-                case 180:
                     Type = AttackType.B;
                     break;
-                case 270:
+                case 90:
                     Type = AttackType.R;
+                    break;
+                case 180:
+                    Type = AttackType.A;
+                    break;
+                case 270:
+                    Type = AttackType.Cancel;
                     break;
                 default:
                     Type = AttackType.Cancel;

@@ -23,6 +23,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void JoinRandom()
     {
+        
         ExitGames.Client.Photon.Hashtable PlayerProps = new ExitGames.Client.Photon.Hashtable();
         PlayerProps.Add("Team", Convert.ToInt32(TeamInput.text));
         PlayerProps.Add("Alive", true);

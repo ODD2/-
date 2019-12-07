@@ -75,7 +75,8 @@ namespace ZoneDepict
                 Team = (int)PhotonNetwork.LocalPlayer.CustomProperties["Team"];
             }
             //Setup Camera
-            PlayerObject = PhotonNetwork.Instantiate("Ruso", Position, Rotation, 0);
+            string CharacterName = (string)PhotonNetwork.LocalPlayer.CustomProperties["CharacterName"];
+            PlayerObject = PhotonNetwork.Instantiate(CharacterName, Position, Rotation, 0);
             CameraController.SetTarget(PlayerObject);
 
             //Update TeamList
