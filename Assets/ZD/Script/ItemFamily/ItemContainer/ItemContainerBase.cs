@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict;
 using Photon.Pun;
+using ZoneDepict.Rule;
 
 public abstract class ItemContainerBase : ZDStaticObstacle, IADamageObject, IPunObservable
 {
@@ -15,6 +16,9 @@ public abstract class ItemContainerBase : ZDStaticObstacle, IADamageObject, IPun
     {
         base.Start();
         Durability = 10;
+        Vector3 NewPos = transform.position;
+        NewPos.z = (int)TypeDepth.ItemContainer;
+        transform.position = NewPos;
     }
     protected new void Update()
     {

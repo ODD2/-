@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace ZoneDepict.Rule
 {
+    public enum TypeDepth
+    {
+
+        MapObject = 1,
+        Effect,
+        DroppedItem,
+        ItemContainer,
+        RemoteCharacter,
+        LocalCharacter,    
+        Map,
+    }
     public enum AttackType
     {
         N, A, B, R, Cancel

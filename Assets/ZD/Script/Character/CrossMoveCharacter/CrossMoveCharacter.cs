@@ -82,7 +82,9 @@ public class CrossMoveCharacter : Character
             //Check if we are at destination this frame
             if (Delta.magnitude <= MoveDelta.magnitude)
             {
-                transform.position = SprintDestination;
+                transform.position = new Vector3(SprintDestination.x,
+                                                 SprintDestination.y,
+                                                 transform.position.z);
                 Velocity = Vector2.zero;
                 NewDestination = false;
             }

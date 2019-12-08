@@ -36,7 +36,7 @@ public class SimpleLauncher
 
     public override void OnJoinedRoom()
     {
-        Vector3 Position = new Vector3(0, 0, 0);
+        Vector3 Position = new Vector3(0, 0, 20);
         Quaternion Rotation = Quaternion.Euler(0, 0, 0);
         PhotonNetwork.Instantiate("Ruso", Position, Rotation, 0);
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict;
 using Photon.Pun;
+using ZoneDepict.Rule;
 public class DropItem : ZDStaticTransient, IPunObservable, IACollectObject
 {
     bool collected = false;
@@ -20,6 +21,9 @@ public class DropItem : ZDStaticTransient, IPunObservable, IACollectObject
         {
             new hpRecover(), new mpRecover()
         };
+        Vector3 NewPos = transform.position;
+        NewPos.z = (int)TypeDepth.DroppedItem;
+        transform.position = NewPos;
     }
 
     // Update is called once per frame

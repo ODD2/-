@@ -14,11 +14,6 @@ namespace ZoneDepict
     public class ZDGridBlock
     {
         private List<ZDObject>[] Record = new List<ZDObject>[(int)ETypeZDO.Total];
-        private ZDObject test;
-
-        public ZDGridBlock()
-        {
-        }
 
         public bool IsEmpty()
         {

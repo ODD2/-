@@ -150,12 +150,19 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         {
             TeamID = (int)photonView.Owner.CustomProperties["Team"];
         }
+        //Setup Depth Layer
+        Vector3 NewPos = transform.position;
+        if (photonView.IsMine) NewPos.z = (int)TypeDepth.LocalCharacter;
+        else NewPos.z = (int)TypeDepth.RemoteCharacter;
+        transform.position = NewPos;
     }
 
     protected new void Update()
     {
         //Calls ZDObject Update()
         base.Update();
+
+
     }
 
     protected void FixedUpdate()

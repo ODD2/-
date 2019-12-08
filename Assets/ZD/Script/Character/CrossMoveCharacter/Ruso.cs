@@ -6,7 +6,8 @@ using ZoneDepict;
 using Photon.Pun; 
 public class Ruso : CrossMoveCharacter
 {
-
+    [SerializeField]
+    private GameObject[] HitEffects;
     private float[] AttackDamage = { 200, 10, 15, 20 };
     
     #region UNITY
@@ -38,10 +39,24 @@ public class Ruso : CrossMoveCharacter
                             continue;
                         }
                         HitObj.Hurt(AttackDamage[(int)Type]);
+                        CreateHitEffectAt(Obj.transform.position);
                     }
                 }
             }
         }
+    }
+    #endregion
+
+    #region Helpers
+    void CreateHitEffectAt(Vector3 pos, int nums = 1,bool rand= true,int which= 0)
+    {
+        pos.z = (int)TypeDepth.Effect;
+ 
+        Quaternion rot = new Quaternion
+        {
+            eulerAngles = new Vector3(0, 0, Random.Range(0, 180))
+        };
+        Instantiate(HitEffects[Random.Range(0, HitEffects.Length)],pos,rot);
     }
     #endregion
 
