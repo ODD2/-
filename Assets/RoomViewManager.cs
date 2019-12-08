@@ -13,6 +13,7 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
 {
     
     public Button ReadyButton;
+    public GameObject WaitingImg;
     public Text DebugTxt;
     private RoomPlayerState State;
     private string CharacterName;
@@ -57,6 +58,7 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     {
         if(!(ChooseTimes > 0))
         {
+            WaitingImg.SetActive(true);
             RoomViewAudio[3].Stop();
             RoomViewAudio[2].Play();
             StartCoroutine(ReadyWait());
@@ -118,7 +120,10 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
 
     IEnumerator ReadyWait()
     {
-        yield return new WaitUntil(() => !RoomViewAudio[1].isPlaying);
+        yield return new WaitForSeconds(0.3f);
+        // Have to fix the origin audio 
+        //yield return new WaitUntil(() => !RoomViewAudio[1].isPlaying);
+        
         RoomViewAudio[3].Play();
     }
 }
