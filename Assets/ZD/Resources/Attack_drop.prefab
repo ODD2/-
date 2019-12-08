@@ -10,11 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 5515893662058523896}
   - component: {fileID: 3904350701160959935}
-  - component: {fileID: 1733674147625081146}
   - component: {fileID: -9149770667474357400}
   - component: {fileID: 8550517602610813534}
+  - component: {fileID: -7038300265114972891}
+  - component: {fileID: -7031260435382509015}
   m_Layer: 0
-  m_Name: Drop2
+  m_Name: Attack_drop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,8 +29,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3487458280625231940}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.189, y: 1.189, z: 1}
+  m_LocalPosition: {x: -2.501, y: 0.062, z: 0}
+  m_LocalScale: {x: 1.5361881, y: 1.476738, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -72,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 38d2ae11a5117d642b4703df56249521, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5e5d4a18ed76c2b4cb5408c8aa9dbb06, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,19 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1733674147625081146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3487458280625231940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a70a3d829b78dfc4fb776ed80d6aaf21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pickedFX: {fileID: 100000, guid: 979632a27455af442bd2d8f36eb0ffce, type: 3}
 --- !u!114 &-9149770667474357400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +102,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1733674147625081146}
+  - {fileID: -7031260435382509015}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -132,3 +120,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   amplitude: 0.1
   frequency: 1
+--- !u!114 &-7038300265114972891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487458280625231940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb6050ff8759e6f4ba76073c4badca02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickedFX: {fileID: 100000, guid: a809762a0c12a4e46abbc1f56add3508, type: 3}
+--- !u!114 &-7031260435382509015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487458280625231940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0

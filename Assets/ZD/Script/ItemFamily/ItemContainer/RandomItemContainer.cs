@@ -26,7 +26,8 @@ public class RandomItemContainer : ItemContainerBase
 
     public new void Update()
     {
-        base.Update();    
+        base.Update();
+        
     }
 
     public new void OnDestroy()
@@ -36,13 +37,14 @@ public class RandomItemContainer : ItemContainerBase
 
     public override void Broken()
     {
+
         //產生道具
         if (photonView.IsMine)
         {
             Vector3 FXpos = new Vector3(transform.position.x, transform.position.y, transform.position.z-1);
             
             //Debug.LogFormat("Container broken! Instantiate obj in {0}", transform.position);
-            PhotonNetwork.InstantiateSceneObject(DropPrefabs[randomNum].name, transform.position, Quaternion.identity);
+             PhotonNetwork.InstantiateSceneObject(DropPrefabs[randomNum].name, transform.position, Quaternion.identity);
 
             PhotonNetwork.InstantiateSceneObject(brokenFX.name, FXpos, Quaternion.identity);
             PhotonNetwork.Destroy(photonView);
