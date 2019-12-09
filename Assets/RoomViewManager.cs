@@ -96,9 +96,9 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
             Img.enabled = true;
             Img.color = new Vector4(1, 1, 1, 1);
             ChooseTimes--;
-            RoomViewAudio[0].Stop();
+            //RoomViewAudio[0].Stop();
             RoomViewAudio[1].Play();
-            StartCoroutine(ReadyWait());
+            //StartCoroutine(ReadyWait());
         }
     }
 
@@ -133,6 +133,6 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
         // Have to fix the origin audio 
         //yield return new WaitUntil(() => !RoomViewAudio[1].isPlaying);
         
-        RoomViewAudio[3].Play();
+        //RoomViewAudio[3].Play();
     }
 }

@@ -1312,6 +1312,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da42afb12f2240078de4c40f2c24940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FuckingBug: {fileID: 21300000, guid: 5e5d4a18ed76c2b4cb5408c8aa9dbb06, type: 3}
+  AttackSources:
+  - {fileID: 21300000, guid: e7390ab4f8cc9497bbf05cf27b19814d, type: 3}
+  - {fileID: 21300000, guid: 1a80a6df67be740f0bd1954d3e9ec040, type: 3}
+  - {fileID: 21300000, guid: 2c56400356bff4d36af69065ad51ca85, type: 3}
+  - {fileID: 21300000, guid: c3966525e0e714f5bb7e405968a2a773, type: 3}
+  - {fileID: 21300000, guid: 82d68b380d8474ca2bf1dd58a85be0f3, type: 3}
   AttackIndicator: {fileID: 6103561505769857569, guid: 2bea9b3603443427392f837eb0d86a2c,
     type: 3}
   MoveIndicator: {fileID: 4230767625700393350, guid: 6153e91dd70bc40e6bef2bed8e26ce09,
