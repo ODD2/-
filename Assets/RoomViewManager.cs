@@ -34,6 +34,7 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        
         RoomViewAudio = GetComponents<AudioSource>();
         ReadyButton.onClick.AddListener(() => Ready());
         
