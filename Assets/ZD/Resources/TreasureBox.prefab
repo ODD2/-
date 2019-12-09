@@ -117,6 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Types: 0000000003000000
+  Terrain: []
   Durability: 0
   DropPrefabs:
   - {fileID: 3131298710924717987, guid: ae299f1c8df1d4a0183539dc273cfb5b, type: 3}

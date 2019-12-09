@@ -62,6 +62,12 @@ namespace ZoneDepict
         #region Game Procedures
         void Initialize()
         {
+            // If master , build scene objects.
+            if (PhotonNetwork.IsMasterClient)
+            {
+                StartCoroutine(SpawnBox());
+            }
+
             //Spawn Player Character.
             int Team;
             Vector3 Position = new Vector3(0, 0, 0);
@@ -101,12 +107,6 @@ namespace ZoneDepict
                         AddTeam((int)player.CustomProperties["Team"], player);
                     }
                 }
-            }
-
-            // If master , build scene objects.
-            if (PhotonNetwork.IsMasterClient)
-            {
-                StartCoroutine(SpawnBox());
             }
         }
 

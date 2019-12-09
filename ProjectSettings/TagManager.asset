@@ -7,6 +7,7 @@ TagManager:
   - Effect
   - Character
   - ItemContainer
+  - MapObject
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Map
   - 
   - 
   - 

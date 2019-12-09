@@ -41,7 +41,7 @@ namespace ZoneDepict
                 bool Result = true;
                 foreach (var Type in Passengers[TargetObj])
                 {
-                    List<ZDObject> TargetList = CategorizeList[(int)Type];
+                    ref List<ZDObject> TargetList = ref CategorizeList[(int)Type];
                     if (TargetList == null) return false;
                     Result &= TargetList.Remove(TargetObj);
                     if (TargetList.Count == 0) TargetList = null;
@@ -105,6 +105,7 @@ namespace ZoneDepict
                 }
             }
         }
+
         static public void Register(ZDObject Caller)
         {
             // -- Preparation --
@@ -121,16 +122,15 @@ namespace ZoneDepict
             }
             //if caller is not registered
             (uint, uint) MapLoc = WorldToMap(Caller.transform.position);
-            ZDGridBlock TargetBlock = RecordGrid[MapLoc.Item1, MapLoc.Item2];
-            //add caller into new location
-            
+
+            //Create Caller Record.
             Recorder[Caller] = new ZDObjectRecord
             {
                 Location = MapLoc,
                 Types = AuditObjTypes(Caller),
                 Owner = Caller,
             };
-            TargetBlock.Add(Recorder[Caller]);
+            AddToRecordGrids(Recorder[Caller]);
             return;
 
         }
@@ -140,9 +140,7 @@ namespace ZoneDepict
             //Chec if caller is registered
             if (IsRegistered(Caller))
             {
-                (uint, uint) MapLoc = Recorder[Caller].Location;
-                ZDGridBlock TargetBlock  = RecordGrid[MapLoc.Item1, MapLoc.Item2];
-                if (TargetBlock.Remove(Caller))
+                if (RemoveFromRecordGrids(Recorder[Caller]))
                 {
                     //clear object record.
                     Recorder.Remove(Caller);
@@ -169,7 +167,7 @@ namespace ZoneDepict
                     //location remains, no need to update.
                     return;
                 }
-                else if (!PrevBlock.Remove(Caller))
+                else if (RemoveFromRecordGrids(Recorder[Caller]))
                 {
                     //TODO: Error Log: This should not happen in general.
                     return;
@@ -178,7 +176,7 @@ namespace ZoneDepict
                 {
                     //Update Position.
                     Recorder[Caller].Location = NewMapLoc;
-                    NewBlock.Add(Recorder[Caller]);
+                    AddToRecordGrids(Recorder[Caller]);
                 }
                 return;
             }
@@ -210,6 +208,38 @@ namespace ZoneDepict
             return TrueTypes;
         }
 
+        static void AddToRecordGrids(ZDObjectRecord CallerRecord)
+        {
+            (uint, uint) Origin = CallerRecord.Location;
+            ZDObject Caller = CallerRecord.Owner;
+            (int, int) OffsetLoc;
+            foreach (var terrain in Caller.Terrain)
+            {
+                OffsetLoc = ((int)Origin.Item1 + terrain.x, (int)Origin.Item2 + terrain.y);
+                if (IsValidMapLoc(OffsetLoc.Item1, OffsetLoc.Item2))
+                {
+                    //add caller into new location
+                    RecordGrid[OffsetLoc.Item1, OffsetLoc.Item2].Add(Recorder[Caller]);
+                }
+            }
+        }
+        static bool RemoveFromRecordGrids(ZDObjectRecord CallerRecord)
+        {
+            bool Result = true;
+            (uint, uint) Origin = CallerRecord.Location;
+            ZDObject Caller = CallerRecord.Owner;
+            (int, int) OffsetLoc;
+            foreach (var terrain in Caller.Terrain)
+            {
+                OffsetLoc = ((int)Origin.Item1 + terrain.x, (int)Origin.Item2 + terrain.y);
+                if (IsValidMapLoc(OffsetLoc.Item1, OffsetLoc.Item2))
+                {
+                    //add caller into new location
+                    Result &= RecordGrid[OffsetLoc.Item1, OffsetLoc.Item2].Remove(Caller);
+                }
+            }
+            return Result;
+        }
 
         static public (uint,uint) UnitToMap(int x,int y)
         {
@@ -258,6 +288,11 @@ namespace ZoneDepict
         static public bool IsWorldInMap(Vector2 WorldLoc)
         {
             return IsWorldInMap(WorldLoc.x, WorldLoc.y);
+        }
+
+        static public bool IsValidMapLoc(int x,int y)
+        {
+            return (x >= 0) && (x < ZDGameRule.MAP_WIDTH_UNIT) && (y >= 0) && (y < ZDGameRule.MAP_HEIGHT_UNIT);
         }
 
         static public void RevisePosition(ZDObject Caller)

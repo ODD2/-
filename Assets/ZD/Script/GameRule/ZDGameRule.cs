@@ -22,12 +22,13 @@ namespace ZoneDepict.Rule
     {
         Enter , Casting, Ready
     }
+
     public class ZDGameRule : MonoBehaviour
     {
         
         // Const Game Variable declare
-        public const uint MAP_WIDTH_UNIT = 13;
-        public const uint MAP_HEIGHT_UNIT = 11;
+        public const uint MAP_WIDTH_UNIT = 21;
+        public const uint MAP_HEIGHT_UNIT = 17;
         public const int MAX_PLAYERS = 4;
         public const float UnitInWorld = 2.5f;
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";

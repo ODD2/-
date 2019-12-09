@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/ZD/Scenes/GameStartView.unity
     guid: fba4aa4f9a1fe48c8a1c71892c6b4869
-  - enabled: 0
+  - enabled: 1
     path: Assets/ZD/Scenes/GameRoomView.unity
     guid: 5d7a4eec69fa14f66a1ef28c2bd84b20
   - enabled: 1
