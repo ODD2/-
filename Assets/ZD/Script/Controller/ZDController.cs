@@ -9,6 +9,7 @@ public class ZDController : MonoBehaviour
 {
     private Character TargetCharacter = null; 
     private bool IsMovingCharacter = false; // To judge if do click/touch on target
+    private bool IsActivateAttackCircle = false;
     private bool IsSelectingAttack = false;
     private bool IsTouchMove = false; // To judge if did "Drag" or not
     private bool IsDidMovePhase = false;
@@ -97,6 +98,7 @@ public class ZDController : MonoBehaviour
                     //Debug.Log("Objs : " + PosObjects.Count);
                     if (PosObjects == null)
                     {
+                        IsActivateAttackCircle = true;
                         ZDUIClass.SetAttackIndicator(TouchPos);
                         TouchPosRecord = TouchPos;
                     }
@@ -142,6 +144,7 @@ public class ZDController : MonoBehaviour
                 ZDUIClass.CancelMoveIndicator();
                 IsMovingCharacter = false;
                 IsDidMovePhase = false;
+                IsActivateAttackCircle = false;
                 Frame = 0;
             }
             if (IsMovingCharacter)
@@ -155,6 +158,11 @@ public class ZDController : MonoBehaviour
             else
             {
                 ZDUIClass.SetAttackOpacity(Frame);
+            }
+            if (IsActivateAttackCircle)
+            {
+                Vector2 Direction = TouchPos - TouchPosRecord;
+                ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
             }
         }
 
@@ -190,6 +198,7 @@ public class ZDController : MonoBehaviour
                 if (PosObjects == null)
                 {
                     ZDUIClass.SetAttackIndicator(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                    IsActivateAttackCircle = true;
                 }
                 
                 TouchPosRecord = HitLoc;
@@ -199,7 +208,7 @@ public class ZDController : MonoBehaviour
         {
 
             Vector2 DropLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 DropDirection = DropLocation - (Vector2)TargetCharacter.transform.position;
+            
         
             if (IsMovingCharacter)
             {
@@ -211,6 +220,7 @@ public class ZDController : MonoBehaviour
             {
                 ZDUIClass.CancelAttackIndicator();
                 IsSelectingAttack = false;
+                IsActivateAttackCircle = false;
                 if((DropLocation - TouchPosRecord).magnitude < 1.0f)
                 {
                     TargetCharacter.InputAttack(DropLocation, AttackType.N);
@@ -233,6 +243,11 @@ public class ZDController : MonoBehaviour
             Vector2 Distance = new Vector2(Temp.x, Temp.y);
             
             ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
+        }
+        if (IsActivateAttackCircle)
+        {
+            Vector2 Direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - new Vector3(TouchPosRecord.x, TouchPosRecord.y, 0);
+            ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
         }
         #endregion
     }

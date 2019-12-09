@@ -7,6 +7,8 @@ namespace ZoneDepict.UI
 {
     public class ZDUI : MonoBehaviour
     {
+        public Sprite FuckingBug;
+        public Sprite[] AttackSources;
         public GameObject AttackIndicator;
         public GameObject MoveIndicator;
         private Transform Attack;
@@ -34,6 +36,7 @@ namespace ZoneDepict.UI
             AttackIndicator.SetActive(false);
             Attack = AttackIndicator.GetComponent<Transform>();
             Move = MoveIndicator.GetComponent<Transform>();
+            
             //Bag initial
             Bagsize = 3;
             if (player = ZDGameManager.PlayerObject)
@@ -88,6 +91,14 @@ namespace ZoneDepict.UI
         public void CancelAttackIndicator()
         {
             AttackIndicator.SetActive(false);
+        }
+
+        public void UpdateAttackCircle(AttackType Type)
+        {
+            //Debug.Log("Debuggggggggggggg");
+            AttackIndicator.GetComponent<SpriteRenderer>().sprite = AttackSources[(int)Type];
+            
+            Debug.Log(AttackIndicator.GetComponent<Sprite>());
         }
 
         public void SetMoveIndicator(Vector2 Pos, float Degree, float Scale)

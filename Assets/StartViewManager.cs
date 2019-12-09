@@ -48,9 +48,9 @@ public class StartViewManager : MonoBehaviourPunCallbacks
             default:
                 break;
         }
-
+        StartButton.enabled = false;
+        Connecting.SetActive(true);
         StartCoroutine(WaitAudioStop());
-
     }
 
     public override void OnConnectedToMaster()

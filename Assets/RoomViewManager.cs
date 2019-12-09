@@ -11,8 +11,11 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class RoomViewManager : MonoBehaviourPunCallbacks
 {
-    
+
+    // Debug , Demo
+    public bool BetaDemo = true;
     public Button ReadyButton;
+    public GameObject WaitingImg;
     public Text DebugTxt;
     private RoomPlayerState State;
     private string CharacterName;
@@ -31,6 +34,7 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        
         RoomViewAudio = GetComponents<AudioSource>();
         ReadyButton.onClick.AddListener(() => Ready());
         
@@ -57,6 +61,7 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     {
         if(!(ChooseTimes > 0))
         {
+            WaitingImg.SetActive(true);
             RoomViewAudio[3].Stop();
             RoomViewAudio[2].Play();
             StartCoroutine(ReadyWait());
@@ -72,6 +77,11 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     
     public void ImgOnClick(string name)
     {
+        if(BetaDemo && name == "Digeon")
+        {
+            CharacterName = "BetaDemo";
+            return;
+        }
         if(ChooseTimes > 0)
         {
             CharacterName = name;
@@ -79,15 +89,16 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     }
     public void ImgReadyLock(Image Img)
     {
-        if(ChooseTimes > 0)
+
+        if(ChooseTimes > 0 && CharacterName == "Ruso")
         {
             RoomViewAudio[1].Play();
             Img.enabled = true;
             Img.color = new Vector4(1, 1, 1, 1);
             ChooseTimes--;
-            RoomViewAudio[0].Stop();
+            //RoomViewAudio[0].Stop();
             RoomViewAudio[1].Play();
-            StartCoroutine(ReadyWait());
+            //StartCoroutine(ReadyWait());
         }
     }
 
@@ -118,7 +129,10 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
 
     IEnumerator ReadyWait()
     {
-        yield return new WaitUntil(() => !RoomViewAudio[1].isPlaying);
-        RoomViewAudio[3].Play();
+        yield return new WaitForSeconds(0.3f);
+        // Have to fix the origin audio 
+        //yield return new WaitUntil(() => !RoomViewAudio[1].isPlaying);
+        
+        //RoomViewAudio[3].Play();
     }
 }
