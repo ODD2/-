@@ -161,8 +161,6 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         //Calls ZDObject Update()
         base.Update();
-
-
     }
 
     protected void FixedUpdate()
@@ -178,15 +176,18 @@ public class Character : ZDObject,IPunObservable, IADamageObject
 
     private void UpdateAnimParams()
     {
+
         animator.SetBool("Sprinting", Velocity.magnitude > 0);
+        if (Velocity.magnitude > 0)
+        {
+            if (Velocity.x.Equals(0)) animator.SetInteger("AccHorizontal", 0);
+            else if (Velocity.x > float.Epsilon) animator.SetInteger("AccHorizontal", 1);
+            else animator.SetInteger("AccHorizontal", -1);
 
-        if (Velocity.x.Equals(0)) animator.SetInteger("FaceHorizontal", 0);
-        else if (Velocity.x > float.Epsilon) animator.SetInteger("FaceHorizontal", 1);
-        else animator.SetInteger("FaceHorizontal", -1);
-
-        if (Velocity.y.Equals(0)) animator.SetInteger("FaceVertical", 0);
-        else if (Velocity.y > float.Epsilon) animator.SetInteger("FaceVertical", 1);
-        else animator.SetInteger("FaceVertical", -1);
+            if (Velocity.y.Equals(0)) animator.SetInteger("AccVertical", 0);
+            else if (Velocity.y > float.Epsilon) animator.SetInteger("AccVertical", 1);
+            else animator.SetInteger("AccVertical", -1);
+        }
     }
     #endregion
 

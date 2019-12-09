@@ -38,6 +38,7 @@ namespace ZoneDepict.UI
             Bagsize = 3;
             if (player = ZDGameManager.PlayerObject)
             {
+                inventory = player.GetComponent<Character>().GetInventory();
                 Debug.Log("UI connect to player");
             }
             foreach (GameObject i in showItem)
@@ -56,22 +57,25 @@ namespace ZoneDepict.UI
         // Update is called once per frame
         void Update()
         {
-            inventory = player.GetComponent<Character>().GetInventory();
-            for (int i = 0; i < Bagsize; i++)
+            if (inventory!=null)
             {
-                if (i < inventory.Count)
+                for (int i = 0; i < Bagsize; i++)
                 {
-                    showItem[i].SetActive(true);
-                    int id = inventory[i].id;
-                    showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];
-                    showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState().ToString();
+                    if (i < inventory.Count)
+                    {
+                        showItem[i].SetActive(true);
+                        int id = inventory[i].id;
+                        showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];
+                        showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState().ToString();
 
-                }
-                else
-                {
-                    showItem[i].SetActive(false);
+                    }
+                    else
+                    {
+                        showItem[i].SetActive(false);
+                    }
                 }
             }
+            
         }
 
         public void SetAttackIndicator(Vector2 Position)

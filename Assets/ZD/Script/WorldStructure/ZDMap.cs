@@ -8,16 +8,18 @@ namespace ZoneDepict
     {
         Obstacle,
         Transient,
+        ACollect,
+        ADamage,
         Total,
     }
 
     public class ZDGridBlock
     {
-        private List<ZDObject>[] Record = new List<ZDObject>[(int)ETypeZDO.Total];
-
+        private List<ZDObject>[] CategorizeList = new List<ZDObject>[(int)ETypeZDO.Total];
+        private Dictionary<ZDObject, List<ETypeZDO>> Passengers = new Dictionary<ZDObject, List<ETypeZDO>>(); 
         public bool IsEmpty()
         {
-            foreach (var list in Record)
+            foreach (var list in CategorizeList)
             {
                 if(list != null && list.Count > 0)
                 {
@@ -27,47 +29,50 @@ namespace ZoneDepict
             return true;
         }
 
-        public bool Exists(ZDObject TargetObject)
+        public bool Exists(ZDObject TargetObj)
         {
-            var TypeList = GetListForObject(TargetObject);
-            if (TypeList != null && TypeList.Exists(Obj => Obj.Equals(TargetObject)))
-            {
-                return true;
-            }
-            return false;
-        }
-    
-        private ref List<ZDObject> GetListForObject(ZDObject TypeObject)
-        {
-            if (TypeObject is ZDObstacle) return  ref Record[(int)ETypeZDO.Obstacle];
-            else return ref Record[(int)ETypeZDO.Transient];
+            return Passengers.ContainsKey(TargetObj);
         }
         
         public bool Remove(ZDObject TargetObj)
         {
-            ref  List<ZDObject> TargetList = ref  GetListForObject(TargetObj);
-            if (TargetList == null) return false;
-            bool Result =   TargetList.Remove(TargetObj);
-            if (TargetList.Count == 0) TargetList = null;
-            return Result;
+            if (Passengers.ContainsKey(TargetObj))
+            {
+                bool Result = true;
+                foreach (var Type in Passengers[TargetObj])
+                {
+                    List<ZDObject> TargetList = CategorizeList[(int)Type];
+                    if (TargetList == null) return false;
+                    Result &= TargetList.Remove(TargetObj);
+                    if (TargetList.Count == 0) TargetList = null;
+                }
+                Result &= Passengers.Remove(TargetObj);
+                return Result;
+            }
+            return false;
+            
         }
 
-        public void Add(ZDObject TargetObj)
+        public void Add(ZDObjectRecord TargetRecord)
         {
-            ref List<ZDObject> TargetList = ref GetListForObject(TargetObj);
-            if (TargetList == null) TargetList = new List<ZDObject>();
-            TargetList.Add(TargetObj);
+            Passengers.Add(TargetRecord.Owner, TargetRecord.Types);
+            foreach(var Type in TargetRecord.Types)
+            {
+                ref List<ZDObject> TargetList = ref CategorizeList[(int)Type];
+                if (TargetList == null) TargetList = new List<ZDObject>();
+                TargetList.Add(TargetRecord.Owner);
+            }
         }
 
         public List<ZDObject> GetTypeList(ETypeZDO Type)
         {
-            return Record[(int)Type];
+            return CategorizeList[(int)Type];
         }
 
         public List<ZDObject> GetAll()
         {
             List<ZDObject> AllObjects = new List<ZDObject>();
-            foreach (var lists in Record)
+            foreach (var lists in CategorizeList)
             {
                 if(lists!=null)AllObjects.AddRange(lists);
             }
@@ -77,11 +82,18 @@ namespace ZoneDepict
         }
     }
 
+    public class ZDObjectRecord
+    {
+        public (uint, uint) Location;
+        public List<ETypeZDO> Types;
+        public ZDObject Owner;
+    }
+
     public class ZDMap
     {
         //Create a static 2d array to record all the ZoneDepict Objects in this game.
         static private ZDGridBlock[,] RecordGrid = new ZDGridBlock[ZDGameRule.MAP_WIDTH_UNIT, ZDGameRule.MAP_HEIGHT_UNIT];
-        static private Dictionary<ZDObject, (uint, uint)> RecordLocation = new Dictionary<ZDObject, (uint, uint)>();
+        static private Dictionary<ZDObject, ZDObjectRecord> Recorder = new Dictionary<ZDObject, ZDObjectRecord>();
         static ZDMap()
         {
             //Initilize Record Grid
@@ -111,8 +123,14 @@ namespace ZoneDepict
             (uint, uint) MapLoc = WorldToMap(Caller.transform.position);
             ZDGridBlock TargetBlock = RecordGrid[MapLoc.Item1, MapLoc.Item2];
             //add caller into new location
-            TargetBlock.Add(Caller);
-            RecordLocation[Caller] = MapLoc;
+            
+            Recorder[Caller] = new ZDObjectRecord
+            {
+                Location = MapLoc,
+                Types = AuditObjTypes(Caller),
+                Owner = Caller,
+            };
+            TargetBlock.Add(Recorder[Caller]);
             return;
 
         }
@@ -122,12 +140,12 @@ namespace ZoneDepict
             //Chec if caller is registered
             if (IsRegistered(Caller))
             {
-                (uint, uint) MapLoc = RecordLocation[Caller];
+                (uint, uint) MapLoc = Recorder[Caller].Location;
                 ZDGridBlock TargetBlock  = RecordGrid[MapLoc.Item1, MapLoc.Item2];
                 if (TargetBlock.Remove(Caller))
                 {
                     //clear object record.
-                    RecordLocation.Remove(Caller);
+                    Recorder.Remove(Caller);
                 }
                 else
                 {
@@ -143,7 +161,7 @@ namespace ZoneDepict
             if(IsWorldInMap(Caller.transform.position) && IsRegistered(Caller))
             {
                 (uint, uint) NewMapLoc = WorldToMap(Caller.transform.position);
-                (uint, uint) PrevMapLoc = RecordLocation[Caller];
+                (uint, uint) PrevMapLoc = Recorder[Caller].Location;
                 ZDGridBlock PrevBlock= RecordGrid[PrevMapLoc.Item1, PrevMapLoc.Item2];
                 ZDGridBlock NewBlock = RecordGrid[NewMapLoc.Item1, NewMapLoc.Item2];
                 if (NewMapLoc == PrevMapLoc)
@@ -159,8 +177,8 @@ namespace ZoneDepict
                 else
                 {
                     //Update Position.
-                    NewBlock.Add(Caller);
-                    RecordLocation[Caller] = NewMapLoc;
+                    Recorder[Caller].Location = NewMapLoc;
+                    NewBlock.Add(Recorder[Caller]);
                 }
                 return;
             }
@@ -168,8 +186,30 @@ namespace ZoneDepict
 
         static public bool IsRegistered(ZDObject Caller)
         {
-            return RecordLocation.ContainsKey(Caller);
+            return Recorder.ContainsKey(Caller);
         }
+
+        static List<ETypeZDO> AuditObjTypes(ZDObject Caller)
+        {
+            List<ETypeZDO> TrueTypes = new List<ETypeZDO>();
+            foreach(var AuditType in Caller.Types)
+            {
+                switch (AuditType)
+                {
+                    case ETypeZDO.ACollect:
+                        if(Caller is IACollectObject) TrueTypes.Add(ETypeZDO.ACollect);
+                    break;
+                    case ETypeZDO.ADamage:
+                        if (Caller is IADamageObject) TrueTypes.Add(ETypeZDO.ADamage);
+                    break;
+                    default:
+                        TrueTypes.Add(AuditType);
+                    break;
+                }
+            }
+            return TrueTypes;
+        }
+
 
         static public (uint,uint) UnitToMap(int x,int y)
         {
@@ -237,7 +277,7 @@ namespace ZoneDepict
         static public List<ZDObject> HitAt(int x,int y,ZDObject Caller)
         {
             //Debug.Log("Offset : " + x + " , " + y);
-            (uint, uint) MapLoc = RecordLocation[Caller];
+            (uint, uint) MapLoc = Recorder[Caller].Location;
             x += (int)MapLoc.Item1;
             y += (int)MapLoc.Item2;
 //            Debug.Log("ZDMap - HitAt: " + x + ", " + y);
@@ -250,6 +290,21 @@ namespace ZoneDepict
         static public List<ZDObject> HitAt(Vector2 input, ZDObject Caller)
         {
             return  HitAt((int)input.x,(int)input.y,Caller);
+        }
+        static public List<ZDObject> HitAt(int x, int y, ZDObject Caller,ETypeZDO Type)
+        {
+            (uint, uint) MapLoc = Recorder[Caller].Location;
+            x += (int)MapLoc.Item1;
+            y += (int)MapLoc.Item2;
+            if (x < 0 || y < 0 || !(x < ZDGameRule.MAP_WIDTH_UNIT && y < ZDGameRule.MAP_HEIGHT_UNIT))
+            {
+                return null;
+            }
+            return RecordGrid[x, y].GetTypeList(Type);
+        }
+        static public List<ZDObject> HitAt(Vector2 input, ZDObject Caller,ETypeZDO Type)
+        {
+            return HitAt((int)input.x, (int)input.y, Caller, Type);
         }
 
         static public List<ZDObject> HitAtUnit(int x, int y)

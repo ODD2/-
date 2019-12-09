@@ -68,23 +68,51 @@ public class Ruso : CrossMoveCharacter
         switch (Phase)
         {
             case 0:
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 1), AttackRad), this));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0,-1), AttackRad), this));
-                ApplyDamage(AllHitObject,AttackType.N);
-                break;
-            case 1:
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this,ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 1), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0,-1), AttackRad), this, ETypeZDO.ADamage));
+               
                 break;
         }
-        
+        ApplyDamage(AllHitObject, AttackType.N);
     }
 
     public override void AttackEventA(int Phase)
     {
+        List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();
+        // Really do attack
+        switch (Phase)
+        {
+            case 0:
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this, ETypeZDO.ADamage));
+                break;
+            case 1:
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(2, 0), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(2, 1), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(2, -1), AttackRad), this, ETypeZDO.ADamage));
+                break;
+        }
+        ApplyDamage(AllHitObject, AttackType.A);
     }
 
     public override void AttackEventB(int Phase)
     {
+        List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();
+        // Really do attack
+        switch (Phase)
+        {
+            case 0:
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 1), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 1), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, -1), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, -1), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, -1), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, 0), AttackRad), this, ETypeZDO.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, 1), AttackRad), this, ETypeZDO.ADamage));
+                break;
+        }
+        ApplyDamage(AllHitObject, AttackType.B);
     }
 
     public override void AttackEventR(int Phase)

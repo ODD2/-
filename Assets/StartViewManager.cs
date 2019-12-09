@@ -62,7 +62,7 @@ public class StartViewManager : MonoBehaviourPunCallbacks
 
     IEnumerator  WaitConnect()
     {
-        yield return new WaitUntil(()=> PhotonNetwork.NetworkClientState == ClientState.ConnectedToMaster);
+        yield return new WaitUntil(()=> PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer);
 
         //PhotonNetwork.LoadLevel("GameLobbyView");
         // Only for beta demo and add team is random if

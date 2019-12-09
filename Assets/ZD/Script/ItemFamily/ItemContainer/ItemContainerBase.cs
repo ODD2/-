@@ -5,7 +5,7 @@ using ZoneDepict;
 using Photon.Pun;
 using ZoneDepict.Rule;
 
-public abstract class ItemContainerBase : ZDStaticObstacle, IADamageObject, IPunObservable
+public abstract class ItemContainerBase : ZDRegisterObject, IADamageObject, IPunObservable
 {
     #region Private Field
     public float Durability;

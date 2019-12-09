@@ -43,7 +43,6 @@ public class CrossMoveCharacter : Character
 
     protected override void Attack(Vector2 Direction, AttackType Type)
     {
-        AttackRad = ZDGameRule.QuadRadius(Direction);
         FaceTo(Direction);
 
         switch (Type)
@@ -53,8 +52,10 @@ public class CrossMoveCharacter : Character
                 animator.SetTrigger("AttackN");
                 break;
             case AttackType.A:
+                animator.SetTrigger("AttackA");
                 break;
             case AttackType.B:
+                animator.SetTrigger("AttackB");
                 break;
             case AttackType.R:
                 break;
@@ -74,6 +75,12 @@ public class CrossMoveCharacter : Character
     protected new void Update()
     {
         base.Update();
+       
+    }
+
+    protected new void FixedUpdate()
+    {
+        base.FixedUpdate();
         if (NewDestination)
         {
             Vector2 Delta = SprintDestination - (Vector2)transform.position;
@@ -91,29 +98,31 @@ public class CrossMoveCharacter : Character
             //Move toward destination
             else
             {
-                transform.position += (Vector3)(MoveDelta);
+                Vector3 NewPos = transform.position;
+                NewPos.x += MoveDelta.x;
+                NewPos.y += MoveDelta.y;
+                transform.position = NewPos;
+                //Adjust Facing Direction
+                if (!MoveDelta.x.Equals(0)) sprite.flipX = MoveDelta.x > 0 ? true : false;
             }
 
-            //Adjust Facing Direction
-            Vector3 NewScale = transform.localScale;
-            if (MoveDelta.x * transform.localScale.x < 0)
-            {
-                NewScale.x *= -1;
-                transform.localScale = NewScale;
-            }
+           
         }
     }
     #endregion
 
     #region Helper Functions
-     void FaceTo(Vector2 Direction)
+    void FaceTo(Vector2 Direction)
     {
-        if(transform.localScale.x * Direction.x < 0)
-        {
-            Vector2 NewScale = transform.localScale;
-            NewScale.x *= -1;
-            transform.localScale = NewScale;
-        }
+        //Save Attack Direction
+        AttackRad = ZDGameRule.QuadRadius(Direction);
+
+        // Set Scale Direction
+        if(!Direction.x.Equals(0))sprite.flipX = Direction.x > 0 ? true: false;
+        Direction = ZDGameRule.QuadrifyDirection(Direction);
+        // Set Animation Direction
+        animator.SetInteger("AtkVertical",(int)Direction.y);
+        animator.SetInteger("AtkHorizontal",(int)Direction.x);
     }
 
     Vector2 GetValidDest(Vector2 Destination)

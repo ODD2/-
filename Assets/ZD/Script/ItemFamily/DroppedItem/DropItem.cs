@@ -4,7 +4,7 @@ using UnityEngine;
 using ZoneDepict;
 using Photon.Pun;
 using ZoneDepict.Rule;
-public class DropItem : ZDStaticTransient, IPunObservable, IACollectObject
+public class DropItem : ZDRegisterObject, IPunObservable, IACollectObject
 {
     bool collected = false;
 

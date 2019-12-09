@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5960998376420021819}
   m_Layer: 0
   m_Name: TreasureBox
-  m_TagString: Untagged
+  m_TagString: ItemContainer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,6 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba03d1ee1b59924e8fae01c3ebf7150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Types: 0000000003000000
   Durability: 0
   DropPrefabs:
   - {fileID: 3131298710924717987, guid: ae299f1c8df1d4a0183539dc273cfb5b, type: 3}

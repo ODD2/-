@@ -10,6 +10,8 @@ namespace ZoneDepict
 
     public class ZDObject : MonoBehaviourPunCallbacks
     {
+        public ETypeZDO[] Types;
+
         protected void Start()
         {
             ZDMap.Register(this);
