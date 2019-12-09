@@ -12,5 +12,7 @@ public class EffectBase : MonoBehaviour
         Vector3 NewPos = transform.position;
         NewPos.z = (int)TypeDepth.Effect;
         transform.position = NewPos;
+        //Disable Update Loop For This Scripts
+        enabled = false;
     }
 }

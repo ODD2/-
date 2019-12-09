@@ -50,6 +50,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
 
         Debug.Log("Join Room Sucessed ! :) ");
-        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.LoadLevel(3);
     }
 }

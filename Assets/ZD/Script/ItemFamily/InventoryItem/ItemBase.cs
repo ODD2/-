@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
+using ZoneDepict;
 public abstract class ItemBase
 {
     //用於識別道具 判斷道具欄該顯示哪張圖片
@@ -33,5 +36,16 @@ public abstract class ItemBase
     public abstract int ItemState();
     #endregion
 
+    protected void SendEffectEvent(string effectName,Vector3 Pos, Quaternion Rot)
+    {
+        if (PhotonNetwork.IsConnectedAndReady)
+        {
+            byte evCode = (byte)ZDGameEvent.SpawnEffect; 
+            object[] content = { effectName, Pos, Rot}; 
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+            SendOptions sendOptions = new SendOptions { Reliability = true };
+            PhotonNetwork.RaiseEvent(evCode, content, raiseEventOptions, sendOptions);
+        }
+    }
 }
 

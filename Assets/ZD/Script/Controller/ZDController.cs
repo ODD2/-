@@ -180,7 +180,7 @@ public class ZDController : MonoBehaviour
             {
                 IsMovingCharacter = true;
             }
-            else if ((HitObjects = ZDMap.HitAtUnit(UnitLoc,ETypeZDO.Transient) )!= null)
+            else if ((HitObjects = ZDMap.HitAtUnit(UnitLoc,ETypeZDO.ACollect) )!= null)
             {
                 foreach (var obj in HitObjects)
                 {

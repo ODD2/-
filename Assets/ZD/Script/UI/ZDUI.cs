@@ -14,19 +14,8 @@ namespace ZoneDepict.UI
         private Transform Attack;
         private Transform Move;
         private float FrameFix = 0.008f;
-     /*   #region BagUI
-        //控制UI
-        public List<GameObject> showItem;
-        //腳色參考
-        GameObject player;
-        //塞圖片
-        public List<Sprite> icons;
-        //道具欄數量
-        int Bagsize;
-        //拷貝player的道具包
-        List<ItemBase> inventory;
-        #endregion*/
         private float[] ArrowScale = { 0, 0, 0, 0, 0, 0 };
+
         // Start is called before the first frame update
         void Start()
         {
@@ -36,48 +25,12 @@ namespace ZoneDepict.UI
             AttackIndicator.SetActive(false);
             Attack = AttackIndicator.GetComponent<Transform>();
             Move = MoveIndicator.GetComponent<Transform>();
-            
-           /* //Bag initial
-            Bagsize = 3;
-            if (player = ZDGameManager.PlayerObject)
-            {
-                inventory = player.GetComponent<Character>().GetInventory();
-                Debug.Log("UI connect to player");
-            }
-            foreach (GameObject i in showItem)
-            {
-                i.SetActive(false);
-            }*/
-            // To fix ArrowScale
 
             for (int i = 0; i < 6; i++)
             {
                 ArrowScale[i] = ((ZDGameRule.UnitInWorld / 3) * i);
             }
             MoveIndicator.transform.localScale = new Vector3(ZDGameRule.UnitInWorld, ZDGameRule.UnitInWorld, 1);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            if (inventory!=null)
-            {
-                for (int i = 0; i < Bagsize; i++)
-                {
-                    if (i < inventory.Count)
-                    {
-                        showItem[i].SetActive(true);
-                        int id = inventory[i].id;
-                        showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];
-                        showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState().ToString();
-
-                    }
-                    else
-                    {
-                        showItem[i].SetActive(false);
-                    }
-                }
-            }
         }
 
         public void SetAttackIndicator(Vector2 Position)
@@ -94,9 +47,7 @@ namespace ZoneDepict.UI
 
         public void UpdateAttackCircle(AttackType Type)
         {
-            //Debug.Log("Debuggggggggggggg");
             AttackIndicator.GetComponent<SpriteRenderer>().sprite = AttackSources[(int)Type];
-            
             Debug.Log(AttackIndicator.GetComponent<Sprite>());
         }
 
@@ -113,32 +64,12 @@ namespace ZoneDepict.UI
         public void CancelMoveIndicator()
         {
             MoveIndicator.SetActive(false);
-
         }
 
         public void SetAttackOpacity(int Frame)
         {
             AttackIndicator.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, Frame * FrameFix);
         }
-      /*  #region item
-        public void use1()
-        {
-            player.GetComponent<Character>().UseItem(0);
-        }
-        public void use2()
-        {
-            player.GetComponent<Character>().UseItem(1);
-        }
-        public void use3()
-        {
-            player.GetComponent<Character>().UseItem(2);
-        }
-
-        #endregion*/
-
-
-
-
     }
 }
 

@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class ReusableItem : ItemBase
 {
-    //Available Amounts
-    protected int Amount;
-
     protected int MaxAmount;
 
     public override bool IsGarbage()
@@ -36,7 +33,7 @@ public class ReusableItem : ItemBase
             Amount -= 1;
             ItemEffect(Caller);
         }
-        Debug.LogFormat("(Item Log)Amount: {0}, NextValidTime: {1}, Time:{2}", Amount, NextValidTime, Time.time);
+        //Debug.LogFormat("(Item Log)Amount: {0}, NextValidTime: {1}, Time:{2}", Amount, NextValidTime, Time.time);
     }
 
     public void Refill()

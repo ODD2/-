@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class DisposableItem : ItemBase
 {
-    protected int Amount;
-
-
     public override bool IsGarbage()
     {
         if (!(Amount > 0))
@@ -24,6 +21,7 @@ public class DisposableItem : ItemBase
 
     public override void ItemEffect(Character Caller)
     {
+
     }
 
     public override int ItemState()
@@ -40,6 +38,6 @@ public class DisposableItem : ItemBase
             NextValidTime = Time.time + ItemCD;
             ItemEffect(Caller);
         }
-        Debug.LogFormat("(Item Log)Amount: {0}, NextValidTime: {1}, Time:{2}", Amount, NextValidTime, Time.time);
+        //Debug.LogFormat("(Item Log)Amount: {0}, NextValidTime: {1}, Time:{2}", Amount, NextValidTime, Time.time);
     }
 }

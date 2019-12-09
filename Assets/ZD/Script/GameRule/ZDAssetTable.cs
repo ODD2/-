@@ -26,6 +26,7 @@ namespace ZoneDepict
 
         private static readonly Dictionary<string, DefaultAssetObject> SampleObject = new Dictionary<string, DefaultAssetObject>
         {
+            //Map Object
             {
                 "Grass",
                 new DefaultAssetObject
@@ -60,7 +61,60 @@ namespace ZoneDepict
                 {
                     path = "MapObjects/Mountain",
                 }
+            },
+            {
+                "TreasureBox",
+                new DefaultAssetObject
+                {
+                    path = "MapObjects/TreasureBox",
+                }
+            },
+            //Character
+            //Item Effect
+            {
+                "AttackBoostEffect",
+                new DefaultAssetObject
+                {
+                    path = "Effects/AttackBoost",
+                }
+            },
+            {
+                "HpRecoveredEffect",
+                new DefaultAssetObject
+                {
+                    path = "Effects/HpRecovered",
+                }
+            },
+            {
+                "MpRecoveredEffect",
+                new DefaultAssetObject
+                {
+                    path = "Effects/MpRecovered",
+                }
+            },
+            //DropItem
+            {
+                "MpDrop",
+                new DefaultAssetObject
+                {
+                    path = "DropItems/MpDrop",
+                }
+            },
+            {
+                "HpDrop",
+                new DefaultAssetObject
+                {
+                    path = "DropItems/HpDrop",
+                }
+            },
+            {
+                "BoostAtkDrop",
+                new DefaultAssetObject
+                {
+                    path = "DropItems/BoostAtkDrop",
+                }
             }
+            //Others
         };
 
         static public GameObject GetObject(string name)
@@ -70,6 +124,15 @@ namespace ZoneDepict
                 return SampleObject[name].Get();
             }
             return null;
+        }
+
+        static public string GetPath(string name)
+        {
+            if (SampleObject.ContainsKey(name))
+            {
+                return SampleObject[name].path;
+            }
+            return "";
         }
     }
 }

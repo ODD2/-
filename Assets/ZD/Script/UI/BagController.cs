@@ -10,7 +10,6 @@ namespace ZoneDepict.UI
     {
         public void OnPointerEnter(PointerEventData eventData)
         {
-
             hover = true;
         }
 
@@ -29,8 +28,6 @@ namespace ZoneDepict.UI
         //拷貝player的道具包
         List<ItemBase> inventory;
         #endregion
-        public GameObject debugmess;
-        public List<GameObject> useEffect;
         // Start is called before the first frame update
         void Start()
         {
@@ -52,15 +49,6 @@ namespace ZoneDepict.UI
         void Update()
         {
             FreshInventory();
-
-            if (hover)
-            {
-                debugmess.GetComponent<Text>().text = "hover";
-            }
-            else
-            {
-                debugmess.GetComponent<Text>().text = "no hover";
-            }
             if (Input.touchCount == 1)
             {
                 Touch touch = Input.GetTouch(0);
@@ -110,6 +98,7 @@ namespace ZoneDepict.UI
             }
 
         }
+
         void FreshInventory()
         {
             inventory = player.GetComponent<Character>().GetInventory();
@@ -127,6 +116,7 @@ namespace ZoneDepict.UI
                 }
             }
         }
+
         void hideall()
         {
             foreach (GameObject i in showItem)
@@ -134,6 +124,7 @@ namespace ZoneDepict.UI
                 i.SetActive(false);
             }
         }
+
         void showall()
         {
             foreach (GameObject i in showItem)
@@ -141,6 +132,7 @@ namespace ZoneDepict.UI
                 i.SetActive(true);
             }
         }
+
         void useItem(int i)
         {
             

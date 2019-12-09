@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
+using ZoneDepict;
 
 public class RandomItemContainer : ItemContainerBase
 {
     //prefab 塞入
-    public UnityEngine.GameObject[] DropPrefabs;
+    public string[] DropPrefabs;
 
     //隨機道具的index
     private int randomNum;
 
     //破壞特效
-    public UnityEngine.GameObject brokenFX;
+    public GameObject BrokenEffect;
 
     public new void Start()
     {
@@ -27,7 +28,6 @@ public class RandomItemContainer : ItemContainerBase
     public new void Update()
     {
         base.Update();
-        
     }
 
     public new void OnDestroy()
@@ -37,17 +37,15 @@ public class RandomItemContainer : ItemContainerBase
 
     public override void Broken()
     {
-
         //產生道具
         if (photonView.IsMine)
         {
-            Vector3 FXpos = new Vector3(transform.position.x, transform.position.y, transform.position.z-1);
-            
             //Debug.LogFormat("Container broken! Instantiate obj in {0}", transform.position);
-             PhotonNetwork.InstantiateSceneObject(DropPrefabs[randomNum].name, transform.position, Quaternion.identity);
-
-            PhotonNetwork.InstantiateSceneObject(brokenFX.name, FXpos, Quaternion.identity);
-            PhotonNetwork.Destroy(photonView);
+            photonView.RPC("PerformBroken", RpcTarget.All);
+            PhotonNetwork.InstantiateSceneObject(ZDAssetTable.GetPath(DropPrefabs[randomNum]),
+                                                 transform.position,
+                                                 Quaternion.identity);
+            PhotonNetwork.Destroy(this.gameObject);
         }
     }
 
@@ -58,9 +56,16 @@ public class RandomItemContainer : ItemContainerBase
             Durability -= damaged;
             if (Durability < 1.0)
             {
-                //Debug.Log("RandomItemContainer Broken!");
                 Broken();
             }
         }
     }
+
+    #region RPCs
+    [PunRPC]
+    void PerformBroken()
+    {
+        Instantiate(BrokenEffect, transform.position, Quaternion.identity);
+    }
+    #endregion
 }

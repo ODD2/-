@@ -79,7 +79,7 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     {
         if(BetaDemo && name == "Digeon")
         {
-            CharacterName = "BetaDemo";
+            //CharacterName = "BetaDemo";
             return;
         }
         if(ChooseTimes > 0)

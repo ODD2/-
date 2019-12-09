@@ -12,8 +12,6 @@ public class SimpleLauncher
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.GameVersion = "1";
-        PhotonNetwork.ConnectUsingSettings();
     }
 
     void Update()
@@ -36,8 +34,5 @@ public class SimpleLauncher
 
     public override void OnJoinedRoom()
     {
-        Vector3 Position = new Vector3(0, 0, 20);
-        Quaternion Rotation = Quaternion.Euler(0, 0, 0);
-        PhotonNetwork.Instantiate("Ruso", Position, Rotation, 0);
     }
 }

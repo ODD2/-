@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict.Rule;
@@ -190,21 +191,39 @@ namespace ZoneDepict
         static List<ETypeZDO> AuditObjTypes(ZDObject Caller)
         {
             List<ETypeZDO> TrueTypes = new List<ETypeZDO>();
-            foreach(var AuditType in Caller.Types)
+            foreach(ETypeZDO types in Enum.GetValues(typeof(ETypeZDO)))
             {
-                switch (AuditType)
+                switch (types)
                 {
                     case ETypeZDO.ACollect:
-                        if(Caller is IACollectObject) TrueTypes.Add(ETypeZDO.ACollect);
-                    break;
+                        if (Caller is IACollectObject) TrueTypes.Add(ETypeZDO.ACollect);
+                        break;
                     case ETypeZDO.ADamage:
                         if (Caller is IADamageObject) TrueTypes.Add(ETypeZDO.ADamage);
-                    break;
+                        break;
                     default:
-                        TrueTypes.Add(AuditType);
-                    break;
+                        if(Array.Exists(Caller.Types, x => x ==types))
+                        {
+                            TrueTypes.Add(types);
+                        }
+                        break;
                 }
             }
+            //foreach(var AuditType in Caller.Types)
+            //{
+            //    switch (AuditType)
+            //    {
+            //        case ETypeZDO.ACollect:
+            //            if(Caller is IACollectObject) TrueTypes.Add(ETypeZDO.ACollect);
+            //        break;
+            //        case ETypeZDO.ADamage:
+            //            if (Caller is IADamageObject) TrueTypes.Add(ETypeZDO.ADamage);
+            //        break;
+            //        default:
+            //            TrueTypes.Add(AuditType);
+            //        break;
+            //    }
+            //}
             return TrueTypes;
         }
 
@@ -311,11 +330,9 @@ namespace ZoneDepict
 
         static public List<ZDObject> HitAt(int x,int y,ZDObject Caller)
         {
-            //Debug.Log("Offset : " + x + " , " + y);
             (uint, uint) MapLoc = Recorder[Caller].Location;
             x += (int)MapLoc.Item1;
             y += (int)MapLoc.Item2;
-//            Debug.Log("ZDMap - HitAt: " + x + ", " + y);
             if(x < 0 || y < 0 || !(x< ZDGameRule.MAP_WIDTH_UNIT && y < ZDGameRule.MAP_HEIGHT_UNIT))
             {
                 return null;
