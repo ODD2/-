@@ -11,7 +11,9 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class RoomViewManager : MonoBehaviourPunCallbacks
 {
-    
+
+    // Debug , Demo
+    public bool BetaDemo = true;
     public Button ReadyButton;
     public GameObject WaitingImg;
     public Text DebugTxt;
@@ -74,6 +76,11 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     
     public void ImgOnClick(string name)
     {
+        if(BetaDemo && name == "Digeon")
+        {
+            CharacterName = "BetaDemo";
+            return;
+        }
         if(ChooseTimes > 0)
         {
             CharacterName = name;
@@ -81,7 +88,8 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
     }
     public void ImgReadyLock(Image Img)
     {
-        if(ChooseTimes > 0)
+
+        if(ChooseTimes > 0 && CharacterName == "Ruso")
         {
             RoomViewAudio[1].Play();
             Img.enabled = true;
