@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3319208659773729470}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.94, y: -1.96, z: -1.9120042}
-  m_LocalScale: {x: 1.7872713, y: 2.0164702, z: 1}
+  m_LocalPosition: {x: -4.86, y: -2.55, z: -1.9120042}
+  m_LocalScale: {x: 0.6065623, y: 0.7584328, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -71,18 +71,18 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 006f010c8458bd24eb1631bca8ec8482, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b6fdc9921eaa778469309579db3f8bc2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.86, y: 0.75}
+  m_Size: {x: 3.57, y: 3.54}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-2280696937865411539
+--- !u!114 &
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,9 +118,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Types: 0000000003000000
   Terrain: []
-  Durability: 0
+  Durability: 10
   DropPrefabs:
   - {fileID: 3131298710924717987, guid: ae299f1c8df1d4a0183539dc273cfb5b, type: 3}
-  - {fileID: 3487458280625231940, guid: 387b7d6bc7a2a4341a217876b0fb5b37, type: 3}
   - {fileID: 4317635750542974899, guid: 2b2f3be8c3501744e8adab9179d960ad, type: 3}
+  - {fileID: 3487458280625231940, guid: 387b7d6bc7a2a4341a217876b0fb5b37, type: 3}
   brokenFX: {fileID: 100000, guid: 83cd9cc9f9c88824ba18dc59b05ae328, type: 3}

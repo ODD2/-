@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
 public class hpRecover : DisposableItem
 {
+
     
     //初始化道具
     public hpRecover()
@@ -15,6 +16,8 @@ public class hpRecover : DisposableItem
 
     public override void ItemEffect(Character Caller)
     {
+        Vector3 FXpos = new Vector3(Caller.transform.position.x, Caller.transform.position.y, Caller.transform.position.z - 1);
+        PhotonNetwork.Instantiate("hprecover_effect", FXpos, Quaternion.Euler(-90, 0, 0));
         Caller.SetHP(Caller.GetHP() - 10);
     }
 }

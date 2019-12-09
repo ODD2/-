@@ -13,8 +13,10 @@ GameObject:
   - component: {fileID: 2582753222172692441}
   - component: {fileID: -7938310956854798883}
   - component: {fileID: 5973965951518857146}
+  - component: {fileID: 6381028318455450468}
+  - component: {fileID: 331861022241865061}
   m_Layer: 0
-  m_Name: Drop3
+  m_Name: Mp_drop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,8 +30,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4317635750542974899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.324, y: 1.324, z: 1}
+  m_LocalPosition: {x: 0.02, y: -0.03, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -72,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0b8dec849311af44a8d5bf90f1bc71b0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fd179bd9a7ea6e9479ebe23351fbc913, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,8 +99,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Types: 
   Terrain: []
-  pickedFX: {fileID: 100000, guid: 979632a27455af442bd2d8f36eb0ffce, type: 3}
---- !u!114 &-7938310956854798883
+  pickedFX: {fileID: 100000, guid: a809762a0c12a4e46abbc1f56add3508, type: 3}
+--- !u!114 &
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,7 +118,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 2582753222172692441}
+  - {fileID: 331861022241865061}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -134,3 +136,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   amplitude: 0.1
   frequency: 1
+--- !u!114 &6381028318455450468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4317635750542974899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c678fac3440af84fb9e4041a696f7bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickedFX: {fileID: 100000, guid: a809762a0c12a4e46abbc1f56add3508, type: 3}
+--- !u!114 &331861022241865061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4317635750542974899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0

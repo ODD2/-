@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict;
 using Photon.Pun;
-using ZoneDepict.Rule;
-public class DropItem : ZDRegisterObject, IPunObservable, IACollectObject
+using System;
+
+public class attackDropItem : ZDStaticTransient, IPunObservable, IACollectObject
 {
     bool collected = false;
 
-    public List<ItemBase> contains;
+    public ItemBase contains;
+
+
 
     //撿起特效
     public UnityEngine.GameObject pickedFX;
@@ -17,15 +20,8 @@ public class DropItem : ZDRegisterObject, IPunObservable, IACollectObject
     protected new void Start()
     {
         base.Start();
-        contains = new List<ItemBase>()
-        {
-            new hpRecover(), new mpRecover()
-        };
-        Vector3 NewPos = transform.position;
-        NewPos.z = (int)TypeDepth.DroppedItem;
-        transform.position = NewPos;
+        contains = new attackUp();
     }
-
     // Update is called once per frame
     protected new void Update()
     {
@@ -34,16 +30,15 @@ public class DropItem : ZDRegisterObject, IPunObservable, IACollectObject
 
     public void Collect(Character Collecter)
     {
-       
+
         if (collected) return;
         collected = true;
 
-        Debug.Log("Item Collected By: " + Collecter.name );
-        foreach (ItemBase i in contains)
-        {
-            Collecter.GetItem(i);
-        }
-        photonView.RPC("OnCollected",RpcTarget.AllViaServer);
+        Debug.Log("Item Collected By: " + Collecter.name);
+
+        Collecter.GetItem(contains);
+
+        photonView.RPC("OnCollected", RpcTarget.AllViaServer);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -54,8 +49,8 @@ public class DropItem : ZDRegisterObject, IPunObservable, IACollectObject
     [PunRPC]
     private void OnCollected(PhotonMessageInfo info)
     {
-        Vector3 FXpos = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
-        PhotonNetwork.InstantiateSceneObject(pickedFX.name, FXpos, Quaternion.identity);
+        Vector3 FXpos = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z - 1);
+        PhotonNetwork.InstantiateSceneObject(pickedFX.name, FXpos, Quaternion.Euler(-90, 0, 0));
         if (photonView.IsMine)
         {
             PhotonNetwork.Destroy(photonView);

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -6191524902527458503}
   - component: {fileID: -4391196786053079688}
   m_Layer: 0
-  m_Name: CFX3_Hit_SmokePuff
+  m_Name: broken_effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
