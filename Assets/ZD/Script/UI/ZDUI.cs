@@ -48,7 +48,7 @@ namespace ZoneDepict.UI
         public void UpdateAttackCircle(AttackType Type)
         {
             AttackIndicator.GetComponent<SpriteRenderer>().sprite = AttackSources[(int)Type];
-            Debug.Log(AttackIndicator.GetComponent<Sprite>());
+            
         }
 
         public void SetMoveIndicator(Vector2 Pos, float Degree, float Scale)

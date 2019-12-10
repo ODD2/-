@@ -4,16 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Photon.Pun;
+
 namespace ZoneDepict.UI
 {
-    public class BagController : MonoBehaviour, IPointerEnterHandler
+    public class BagController : MonoBehaviour, IPointerEnterHandler,IPointerClickHandler
     {
         public void OnPointerEnter(PointerEventData eventData)
+        {
+            hover = true;
+            Debug.Log(hover);
+        }
+        public void OnPointerClick(PointerEventData eventData)
         {
             hover = true;
         }
 
         #region BagUI
+
         int choosingID; //正在選哪個道具
         bool hover;     //選擇中
         public Sprite defaultSprite;
@@ -48,8 +55,12 @@ namespace ZoneDepict.UI
         // Update is called once per frame
         void Update()
         {
+            if (Input.GetMouseButtonUp(0))
+            {
+                hover = false;
+            }
             FreshInventory();
-            if (Input.touchCount == 1)
+            if (Input.touchCount == 1 )
             {
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Stationary)
@@ -59,7 +70,7 @@ namespace ZoneDepict.UI
                         showall();
                     }
                 }
-                else if (touch.phase == TouchPhase.Ended)
+                else if (touch.phase == TouchPhase.Ended )
                 {
                     if (hover)
                     {
@@ -140,5 +151,12 @@ namespace ZoneDepict.UI
 
 
         }
+
+        public bool GetHover()
+        {
+            return hover;
+        }
+
+        
     }
 }

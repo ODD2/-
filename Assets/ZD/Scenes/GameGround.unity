@@ -987,6 +987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88e8aa8a93a8f164ca61b59b11f4e3e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BetaDemoDebug: 1
   defaultSprite: {fileID: 21300000, guid: eb73db2ea097a1a48b98b012b8d882b3, type: 3}
   showItem:
   - {fileID: 442141758}
