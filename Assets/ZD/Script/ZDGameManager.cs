@@ -371,6 +371,11 @@ namespace ZoneDepict
         #endregion
 
         #region Coroutines
+        IEnumerator WaitToRestart()
+        {
+            yield return new WaitForSeconds(5);
+            PhotonNetwork.LoadLevel("GameStartView");
+        }
         private IEnumerator SpawnBox()
         {
             System.Random rnd = new System.Random();
@@ -386,6 +391,8 @@ namespace ZoneDepict
                 PhotonNetwork.InstantiateSceneObject("TreasureBox", Position, Rotation, 0, instantiationData);
             }
         }
+        
+        
         #endregion
 
         #region Photon Callbacks
@@ -462,6 +469,7 @@ namespace ZoneDepict
                         Lose.SetActive(true);
                     }
                     // Go back to start view
+                    StartCoroutine(WaitToRestart());
                     break;
                 case (int)ZDGameEvent.SpawnEffect:
                     object[] data = (object[])photonEvent.CustomData;
