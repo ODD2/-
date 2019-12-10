@@ -49,7 +49,17 @@ public abstract class ItemContainerBase : StationaryMapObject, IADamageObject, I
     #endregion
 
     #region Item Container Interface
-    public abstract void Hurt(float damaged);
+    public virtual void Hurt(float damaged)
+    {
+        if (photonView.IsMine && Durability > float.Epsilon)
+        {
+            Durability -= damaged;
+            if (Durability < 1.0)
+            {
+                Broken();
+            }
+        }
+    }
     public virtual void Broken()
     {
         ZDMap.UnRegister(this);

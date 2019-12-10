@@ -22,16 +22,6 @@ public class RandomItemContainer : ItemContainerBase
         Debug.LogFormat("Random type: {0}", randomNum);
     }
 
-    public new void Update()
-    {
-        base.Update();
-    }
-
-    public new void OnDestroy()
-    {
-        base.OnDestroy();
-    }
-
     public override void Broken()
     {
         base.Broken();
@@ -50,18 +40,6 @@ public class RandomItemContainer : ItemContainerBase
             }
         }
         
-    }
-
-    public override void Hurt(float damaged)
-    {
-        if (photonView.IsMine)
-        {
-            Durability -= damaged;
-            if (Durability < 1.0)
-            {
-                Broken();
-            }
-        }
     }
 
     #region RPCs

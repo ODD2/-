@@ -8,7 +8,7 @@ public class Ruso : CrossMoveCharacter
 {
     [SerializeField]
     private GameObject[] HitEffects;
-    private float[] AttackDamage = { 200, 10, 15, 20 };
+    private float[] AttackDamage = { 5, 10, 15, 20 };
     
     #region UNITY
     protected new void Start()
@@ -27,14 +27,15 @@ public class Ruso : CrossMoveCharacter
     {
         if (Hits != null)
         {
-            foreach (var i in Hits)
+            foreach (var HitList in Hits)
             {
-                if (i == null) continue;
-                foreach (var Obj in i)
+                if (HitList == null) continue;
+                for(int i = 0 ,_i = HitList.Count; i < _i; ++i)
                 {
+                    var Obj = HitList[i];
                     if (Obj is IADamageObject HitObj)
                     {
-                        if(HitObj is Character HitChar && HitChar.TeamID==this.TeamID)
+                        if (HitObj is Character HitChar && HitChar.TeamID == this.TeamID)
                         {
                             continue;
                         }

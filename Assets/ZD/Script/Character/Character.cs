@@ -13,6 +13,10 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #region Components
     protected Animator animator;
     protected SpriteRenderer sprite;
+    protected AudioSource audioSource;
+    //Sound Effects
+    [SerializeField]
+    protected AudioClip DeathSound;
     #endregion
 
     #region Input Wrappers
@@ -83,13 +87,11 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     public virtual void Hurt(float Damage)
     {
         Debug.LogFormat("Player Received {0} Damage.", Damage);
-        if (photonView.IsMine)
+        if (photonView.IsMine && !HP.Equals(0))
         {
             SetHP(HP - Damage);
-            if (HP.Equals(0))
-            {
-                Dead();
-            }
+            if (HP.Equals(0))Dead();
+            else photonView.RPC("DoHurtRpc",RpcTarget.AllViaServer);
         }
     }
 
@@ -100,7 +102,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
             Hashtable NewSetting = new Hashtable();
             NewSetting.Add("Alive", false);
             PhotonNetwork.SetPlayerCustomProperties(NewSetting);
-            photonView.RPC("DeadRPC", RpcTarget.AllViaServer);
+            photonView.RPC("DoDeadRpc", RpcTarget.AllViaServer);
         }
     }
 
@@ -134,6 +136,13 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #endregion
 
     #region Character Helpers
+    public void Destroy()
+    {
+        if (photonView.IsMine)
+        {
+            PhotonNetwork.Destroy(photonView);
+        }
+    }
     #endregion
 
     #region UNITY
@@ -144,23 +153,30 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         //Cache Components.
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
+
+        //Setup Depth
+        Vector3 NewPos = transform.position;
+        if (photonView.IsMine) NewPos.z = (int)TypeDepth.LocalCharacter;
+        else NewPos.z = (int)TypeDepth.RemoteCharacter;
+        transform.position = NewPos;
 
         //Setup TeamID.
         if (photonView.Owner.CustomProperties.ContainsKey("Team"))
         {
             TeamID = (int)photonView.Owner.CustomProperties["Team"];
         }
-        //Setup Depth Layer
-        Vector3 NewPos = transform.position;
-        if (photonView.IsMine) NewPos.z = (int)TypeDepth.LocalCharacter;
-        else NewPos.z = (int)TypeDepth.RemoteCharacter;
-        transform.position = NewPos;
+        
     }
 
     protected new void Update()
     {
         //Calls ZDObject Update()
         base.Update();
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Hurt(200);
+        }
     }
 
     protected void FixedUpdate()
@@ -220,9 +236,16 @@ public class Character : ZDObject,IPunObservable, IADamageObject
 
     #region RPC
     [PunRPC]
-    public void DeadRPC()
+    public void DoDeadRpc()
     {
-        StartCoroutine(Vanish());
+        if(animator)animator.SetTrigger("Die");
+        ZDAudioSource.PlayAtPoint(DeathSound, transform.position, 1, false);
+        Debug.Break();
+    }
+    [PunRPC]
+    public void DoHurtRpc()
+    {
+        animator.SetTrigger("Hurt");
     }
     #endregion
 
@@ -237,15 +260,5 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #endregion
 
     #region Routines
-    private IEnumerator Vanish()
-    {
-        Color currentColor = sprite.color;
-        while(currentColor.a > 0)
-        {
-            yield return new WaitForSeconds(0.2f);
-            currentColor.a -= 0.1f;
-            sprite.color = currentColor;
-        }
-    }
     #endregion
 }

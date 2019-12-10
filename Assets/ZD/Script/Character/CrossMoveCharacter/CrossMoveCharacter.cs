@@ -141,7 +141,7 @@ public class CrossMoveCharacter : Character
                 {
                     //Move To Currently Checking Position.
                     CurPos[i] += Delta;
-                    if (ZDMap.HitAtUnit(CurPos,ETypeZDO.Obstacle)!=null)
+                    if (!ZDMap.IsUnitInMap(CurPos) || ZDMap.HitAtUnit(CurPos,ETypeZDO.Obstacle)!=null)
                     {
                         //Return To Last Position.
                         CurPos[i] -= Delta;
