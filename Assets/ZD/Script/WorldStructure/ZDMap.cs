@@ -9,6 +9,7 @@ namespace ZoneDepict
     {
         Obstacle,
         Transient,
+        Character,
         ACollect,
         ADamage,
         Total,
@@ -201,6 +202,9 @@ namespace ZoneDepict
                     case ETypeZDO.ADamage:
                         if (Caller is IADamageObject) TrueTypes.Add(ETypeZDO.ADamage);
                         break;
+                    case ETypeZDO.Character:
+                        if (Caller is Character) TrueTypes.Add(ETypeZDO.Character);
+                        break;
                     default:
                         if(Array.Exists(Caller.Types, x => x ==types))
                         {
@@ -209,21 +213,7 @@ namespace ZoneDepict
                         break;
                 }
             }
-            //foreach(var AuditType in Caller.Types)
-            //{
-            //    switch (AuditType)
-            //    {
-            //        case ETypeZDO.ACollect:
-            //            if(Caller is IACollectObject) TrueTypes.Add(ETypeZDO.ACollect);
-            //        break;
-            //        case ETypeZDO.ADamage:
-            //            if (Caller is IADamageObject) TrueTypes.Add(ETypeZDO.ADamage);
-            //        break;
-            //        default:
-            //            TrueTypes.Add(AuditType);
-            //        break;
-            //    }
-            //}
+            if (TrueTypes.Count == 0) TrueTypes.Add(ETypeZDO.Transient);
             return TrueTypes;
         }
 
@@ -388,6 +378,29 @@ namespace ZoneDepict
         static public List<ZDObject> HitAtUnit(Vector2 UnitLoc, ETypeZDO Type)
         {
             return HitAtUnit((int)UnitLoc.x, (int)UnitLoc.y,Type);
+        }
+
+        static public List<ZDObject> HitAtObject(ZDObject Target,ETypeZDO Type)
+        {
+            if (Recorder.ContainsKey(Target))
+            {
+                List<ZDObject> Result = new List<ZDObject>();
+                ZDObjectRecord TargetRecord = Recorder[Target];
+                (uint, uint) Origin = TargetRecord.Location;
+                ZDObject Caller = TargetRecord.Owner;
+                (int, int) OffsetLoc;
+                foreach (var terrain in Caller.Terrain)
+                {
+                    OffsetLoc = ((int)Origin.Item1 + terrain.x, (int)Origin.Item2 + terrain.y);
+                    if (IsValidMapLoc(OffsetLoc.Item1, OffsetLoc.Item2))
+                    {
+                        List<ZDObject> GetList = RecordGrid[OffsetLoc.Item1, OffsetLoc.Item2].GetTypeList(Type);
+                        if (GetList != null) Result.AddRange(GetList);
+                    }
+                }
+                return Result;
+            }
+            return null;
         }
     }
 }

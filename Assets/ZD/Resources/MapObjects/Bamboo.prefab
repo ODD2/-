@@ -1,55 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!212 &-1469117380171539302
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5845847748253022843}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!1 &7713851683024276467
+--- !u!1 &3408191582142798441
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8522948204804116025}
-  - component: {fileID: 6426683612267105268}
+  - component: {fileID: 6509440441119107809}
+  - component: {fileID: 8563520530145163885}
   m_Layer: 0
   m_Name: img
   m_TagString: Untagged
@@ -66,27 +17,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8522948204804116025
+--- !u!4 &6509440441119107809
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7713851683024276467}
+  m_GameObject: {fileID: 3408191582142798441}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5845847748253022841}
+  m_Father: {fileID: 8015094449599304683}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6426683612267105268
+--- !u!212 &8563520530145163885
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7713851683024276467}
+  m_GameObject: {fileID: 3408191582142798441}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -123,13 +74,13 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 1
---- !u!1001 &3681026644907882244
+  m_SpriteSortPoint: 0
+--- !u!1001 &940804104740560534
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -198,15 +149,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b22f029b241b49869b2bb0d697a8dcb, type: 3}
---- !u!1 &5845847748253022843 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7076630245265640831, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-    type: 3}
-  m_PrefabInstance: {fileID: 3681026644907882244}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &5845847748253022841 stripped
+--- !u!4 &8015094449599304683 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7076630245265640829, guid: 9b22f029b241b49869b2bb0d697a8dcb,
     type: 3}
-  m_PrefabInstance: {fileID: 3681026644907882244}
+  m_PrefabInstance: {fileID: 940804104740560534}
   m_PrefabAsset: {fileID: 0}

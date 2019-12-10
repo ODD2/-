@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict;
 using ZoneDepict.Rule;
-public class StaticMapObject : ZDRegisterObject
+public class StationaryMapObject : ZDRegisterObject
 {
-    public bool update;
+    public bool update = true;
     // Start is called before the first frame update
     protected new void Start()
     {
@@ -13,7 +13,10 @@ public class StaticMapObject : ZDRegisterObject
         Vector3 NewPos = transform.position;
         NewPos.z = (int)TypeDepth.MapObject;
         transform.position = NewPos;
+        Vector3 NewScale = transform.localScale;
+        NewScale.x = ZDGameRule.UnitInWorld;
+        NewScale.y = ZDGameRule.UnitInWorld;
+        transform.localScale = NewScale;
         enabled = update;
-        //this.gameObject.SetActive(CanUpdate);
     }
 }

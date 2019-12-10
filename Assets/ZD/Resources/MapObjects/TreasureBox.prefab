@@ -117,8 +117,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba03d1ee1b59924e8fae01c3ebf7150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Types: 0000000003000000
+  Types: 00000000
   Terrain: []
+  update: 0
   Durability: 10
   DropPrefabs:
   - MpDrop
