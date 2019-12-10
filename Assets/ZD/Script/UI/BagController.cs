@@ -54,6 +54,7 @@ namespace ZoneDepict.UI
         
         void Update()
         {
+            
             FreshInventory();
             if (Input.touchCount == 1)
             {
@@ -103,6 +104,7 @@ namespace ZoneDepict.UI
                     }
                 }
             }
+            
         }
         
         void FreshInventory()

@@ -30,8 +30,8 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     public int TeamID {get; protected set; } = 0;
     protected float HP = 100;
     protected float MP = 100;
-    protected float RegHP;
-    protected float RegMP;
+    protected float RegHP = 0.1f;
+    protected float RegMP = 2.9f;
     protected float MaxHP = 100;
     protected float MaxMP = 100;
     protected Vector2 Velocity = new Vector2(0,0);
@@ -44,9 +44,25 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         return Inventory;
     }
+    public float GetRegHP()
+    {
+        return RegHP;
+    }
+    public float GetRegMP()
+    {
+        return RegMP;
+    }
+    public float GetMaxHP()
+    {
+        return MaxHP;
+    }
     public float GetHP()
     {
         return HP;
+    }
+    public float GetMaxMP()
+    {
+        return MaxMP;
     }
     public float GetMP()
     {
@@ -161,6 +177,8 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         //Calls ZDObject Update()
         base.Update();
+        SetHP(GetHP() + Time.deltaTime * GetRegHP() * 8);
+        SetMP(GetMP() + Time.deltaTime * GetRegMP() * 8);
     }
 
     protected void FixedUpdate()
