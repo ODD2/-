@@ -13,6 +13,7 @@ using Hashtable =  ExitGames.Client.Photon.Hashtable;
 
 namespace ZoneDepict
 {
+    
     enum ZDGameState
     {
         Initialize,
@@ -40,6 +41,8 @@ namespace ZoneDepict
 
     public class ZDGameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
+        private bool HotKey = false;
+
 
         #region Feilds
         ZDGameState gameState = ZDGameState.Initialize;
@@ -162,7 +165,10 @@ namespace ZoneDepict
             },
         };
         Dictionary<Player, int> TeamList = new Dictionary<Player, int>();
-        
+        public GameObject Lose;
+        public GameObject Victory;
+        public GameObject ZDUI;
+        private int TeamAlive = -1;
         #endregion
         #region Unity
         public void Awake()
@@ -179,13 +185,25 @@ namespace ZoneDepict
 
         void Start()
         {
-            Initialize();
+            //Initialize();
             gameState = ZDGameState.Prepare;
+            // Wait for everybody in
+            Hashtable props = new Hashtable
+            {
+                {ZDGameRule.PLAYER_LOADED_LEVEL, true}
+            };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
 
         void Update()
         {
-
+            if(Input.GetKeyDown(KeyCode.G))
+            {
+                //HotKey = true;
+                //CheckGameEnded();
+                Debug.Log(PhotonNetwork.LocalPlayer.CustomProperties["Team"]);
+            }
+            
         }
         #endregion
 
@@ -231,11 +249,11 @@ namespace ZoneDepict
                     }
                 }
             }
+
+            ZDUI.SetActive(true);
         }
 
-        private void StartGame()
-        {
-        }
+        
         #endregion
 
         #region Helper Functions
@@ -249,7 +267,7 @@ namespace ZoneDepict
 
         bool IsGameEnd()
         {
-            int TeamAlive = -1;
+            
             foreach (var player in TeamList)
             {
                 if (TeamAlive < 0)
@@ -266,8 +284,9 @@ namespace ZoneDepict
 
         void CheckGameEnded()
         {
-            if (PhotonNetwork.IsMasterClient && IsGameEnd())
+            if ((PhotonNetwork.IsMasterClient && IsGameEnd()) || HotKey)
             {
+                
                 SendEndGameEvent();
             }
         }
@@ -275,7 +294,7 @@ namespace ZoneDepict
         private void SendEndGameEvent()
         {
             byte evCode = 100; // Custom Event 1: Used as "MoveUnitsToTargetPosition" event
-            object[] content = { new Vector3(10.0f, 2.0f, 5.0f), 1, 2, 5, 10 }; // Array contains the target position and the IDs of the selected units
+            object[] content = { TeamAlive }; // Array contains the target position and the IDs of the selected units
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; // You would have to set the Receivers to All in order to receive this event on the local client as well
             SendOptions sendOptions = new SendOptions { Reliability = true };
             PhotonNetwork.RaiseEvent(evCode, content, raiseEventOptions, sendOptions);
@@ -329,6 +348,26 @@ namespace ZoneDepict
                 PhotonNetwork.InstantiateSceneObject(ObjPath, Pos,Quaternion.identity);
             }
         }
+
+        private bool CheckAllPlayerLoadedLevel()
+        {
+            foreach (Player play in PhotonNetwork.PlayerList)
+            {
+                object playerLoadedLevel;
+
+                if (play.CustomProperties.TryGetValue(ZDGameRule.PLAYER_LOADED_LEVEL, out playerLoadedLevel))
+                {
+                    if ((bool)playerLoadedLevel)
+                    {
+                        continue;
+                    }
+                }
+
+                return false;
+            }
+
+            return true;
+        }
         #endregion
 
         #region Coroutines
@@ -363,6 +402,15 @@ namespace ZoneDepict
                     }
                 }
 
+            }
+
+            if (changedProps.ContainsKey(ZDGameRule.PLAYER_LOADED_LEVEL))
+            {
+                if (CheckAllPlayerLoadedLevel())
+                {
+                    // Start Game
+                    Initialize();
+                }
             }
         }
 
@@ -400,6 +448,20 @@ namespace ZoneDepict
 
                 case (int)ZDGameEvent.EndGame:
                     Debug.Log("Game Ended");
+                    object[] dataEnd = (object[])photonEvent.CustomData;
+                    Debug.Log(dataEnd[0] + " is winner!");
+                    
+                    Debug.Log((int)PhotonNetwork.LocalPlayer.CustomProperties["Team"]);
+                    
+                    if ((int)PhotonNetwork.LocalPlayer.CustomProperties["Team"] == (int)dataEnd[0])
+                    {
+                        Victory.SetActive(true);
+                    }
+                    else
+                    {
+                        Lose.SetActive(true);
+                    }
+                    // Go back to start view
                     break;
                 case (int)ZDGameEvent.SpawnEffect:
                     object[] data = (object[])photonEvent.CustomData;

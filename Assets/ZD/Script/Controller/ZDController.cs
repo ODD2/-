@@ -324,7 +324,8 @@ public class ZDController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             Debug.Log("Hurt");
-            TargetCharacter.SetHP(TargetCharacter.GetHP()-10);
+            TargetCharacter.Hurt(10);
+            //TargetCharacter.SetHP(TargetCharacter.GetHP()-10);
             TargetCharacter.SetMP(TargetCharacter.GetMP()-10);
         }
         // Update HP/MP

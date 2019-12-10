@@ -23,6 +23,7 @@ namespace ZoneDepict.UI
         // Start is called before the first frame update
         void Start()
         {
+            
             MoveIndicator = Instantiate(MoveIndicator);
             AttackIndicator = Instantiate(AttackIndicator);
             MoveIndicator.SetActive(false);
