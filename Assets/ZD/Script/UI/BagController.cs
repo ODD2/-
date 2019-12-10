@@ -48,7 +48,7 @@ namespace ZoneDepict.UI
         // Update is called once per frame
         void Update()
         {
-            FreshInventory();
+            
             if (Input.touchCount == 1)
             {
                 Touch touch = Input.GetTouch(0);
@@ -56,6 +56,7 @@ namespace ZoneDepict.UI
                 {
                     if (hover)
                     {
+                        FreshInventory();
                         showall();
                     }
                 }
@@ -70,20 +71,20 @@ namespace ZoneDepict.UI
                         }
 
                         hover = false;
-               
+                        hideall();
                     }
-                    hideall();
+                   
                 }
                 else if (touch.phase == TouchPhase.Moved)
                 {
                     if (hover)
                     {
+                        FreshInventory();
                         bool hasselect = false;
                         for (int i = 0; i < showItem.Count; i++)
                         {
                             if (showItem[i].GetComponent<UIstate>().ishover)
-                            {
-                                //  imessage.GetComponent<Text>().text = "item" + i.ToString();
+                            {                        
                                 choosingID = i;
                                 hasselect = true;
                                 break;
@@ -101,20 +102,24 @@ namespace ZoneDepict.UI
 
         void FreshInventory()
         {
-            inventory = player.GetComponent<Character>().GetInventory();
-            for (int i = 0; i < Bagsize; i++)
+            if (player)
             {
-                if (i < inventory.Count)
+                inventory = player.GetComponent<Character>().GetInventory();
+                for (int i = 0; i < Bagsize; i++)
                 {
-                    showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];
-                    showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState().ToString();
-                }
-                else
-                {
-                    showItem[i].GetComponentInChildren<Text>().text = "";
-                    showItem[i].GetComponent<Image>().sprite = defaultSprite;
+                    if (i < inventory.Count)
+                    {
+                        showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];
+                        showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState().ToString();
+                    }
+                    else
+                    {
+                        showItem[i].GetComponentInChildren<Text>().text = "";
+                        showItem[i].GetComponent<Image>().sprite = defaultSprite;
+                    }
                 }
             }
+          
         }
 
         void hideall()

@@ -87,25 +87,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+    - target: {fileID: 7076630245265640831, guid: 9b22f029b241b49869b2bb0d697a8dcb,
         type: 3}
-      propertyPath: Terrain.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: Terrain.Array.data[0].x
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: Terrain.Array.data[2].y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: Terrain.Array.data[2].x
-      value: 1
+      propertyPath: m_Name
+      value: Mountain
       objectReference: {fileID: 0}
     - target: {fileID: 7076630245265640829, guid: 9b22f029b241b49869b2bb0d697a8dcb,
         type: 3}
@@ -162,10 +147,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640831, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
         type: 3}
-      propertyPath: m_Name
-      value: Mountain
+      propertyPath: Terrain.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+        type: 3}
+      propertyPath: Terrain.Array.data[0].x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+        type: 3}
+      propertyPath: Terrain.Array.data[2].y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+        type: 3}
+      propertyPath: Terrain.Array.data[2].x
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b22f029b241b49869b2bb0d697a8dcb, type: 3}
