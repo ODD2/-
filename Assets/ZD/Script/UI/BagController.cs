@@ -40,7 +40,7 @@ namespace ZoneDepict.UI
             hideall();
             Bagsize = 3;
             hover = false;
-            if (player = ZDGameManager.PlayerObject)
+            if (player = ZDGameManager.playerProps.Object)
             {
                 Debug.Log("UI connect to player");
             }

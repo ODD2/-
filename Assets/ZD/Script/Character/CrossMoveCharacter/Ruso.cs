@@ -6,8 +6,7 @@ using ZoneDepict;
 using Photon.Pun; 
 public class Ruso : CrossMoveCharacter
 {
-    [SerializeField]
-    private GameObject[] HitEffects;
+    public GameObject[] HitEffects;
     private readonly float[] AttackDamage = { 5, 10, 15, 20 };
     
     #region UNITY
