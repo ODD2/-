@@ -41,6 +41,10 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected Vector2 Velocity = new Vector2(0,0);
     protected float MaxVelocity = 30;
     List<ItemBase> Inventory = new List<ItemBase>();
+    protected float MoveMana = 5.0f;
+    protected float[] MaxSkillCD = new float[4];
+    protected float[] SkillMana = new float[4];
+    protected float[] SkillCD = new float[4];
     #endregion
 
     #region Getters/Setters

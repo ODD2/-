@@ -14,6 +14,8 @@ public class Ruso : CrossMoveCharacter
     protected new void Start()
     {
         base.Start();
+        SkillMana = new float[]{ 15, 25, 35, 50 };
+        MaxSkillCD = new float[] { 1, 2.5f, 4, 10 };
     }
 
     protected new void Update()

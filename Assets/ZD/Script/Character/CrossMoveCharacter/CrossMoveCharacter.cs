@@ -12,7 +12,6 @@ public class CrossMoveCharacter : Character
     //Movement
     private bool NewDestination = false;
     protected Vector2 SprintDestination;
-
     //Attack
     protected float AttackRad;
     #endregion
@@ -20,16 +19,24 @@ public class CrossMoveCharacter : Character
     #region Character Override
     public override void InputSprint(Vector2 Destination)
     {
-        if (photonView.IsMine && !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM"))
+        Destination = GetValidDest(Destination);
+        float RequireMana = (Destination - (Vector2)transform.position).magnitude / ZDGameRule.UnitInWorld;
+        if (photonView.IsMine && !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") && RequireMana < MP)
         {
-            photonView.RPC("SprintRPC", RpcTarget.All, GetValidDest(Destination));
+            SetMP(MP - RequireMana);
+            photonView.RPC("SprintRPC", RpcTarget.All,Destination);
         }
     }
 
     public override void InputAttack(Vector2 AttackDirection, AttackType Type)
     { 
-        if (photonView.IsMine)
+        if (photonView.IsMine &&
+            !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") &&
+            SkillMana[(int)Type] < MP &&
+            !(SkillCD[(int)Type] > float.Epsilon))
         {
+            SetMP(MP - SkillMana[(int)Type]);
+            SkillCD[(int)Type] = MaxSkillCD[(int)Type];
             photonView.RPC("RPCAttack", RpcTarget.AllViaServer, AttackDirection, Type);
         }
     }
