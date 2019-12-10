@@ -13,9 +13,6 @@ public class RandomItemContainer : ItemContainerBase
     //隨機道具的index
     private int randomNum;
 
-    //破壞特效
-    public GameObject BrokenEffect;
-
     public new void Start()
     {
         base.Start();
@@ -37,6 +34,10 @@ public class RandomItemContainer : ItemContainerBase
 
     public override void Broken()
     {
+        if (audioSource)
+        {
+            audioSource.PlayOneShot(BrokenAudio);
+        }
         //產生道具
         if (photonView.IsMine)
         {
@@ -45,8 +46,9 @@ public class RandomItemContainer : ItemContainerBase
             PhotonNetwork.InstantiateSceneObject(ZDAssetTable.GetPath(DropPrefabs[randomNum]),
                                                  transform.position,
                                                  Quaternion.identity);
-            PhotonNetwork.Destroy(this.gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }
+        
     }
 
     public override void Hurt(float damaged)
@@ -65,7 +67,8 @@ public class RandomItemContainer : ItemContainerBase
     [PunRPC]
     void PerformBroken()
     {
-        Instantiate(BrokenEffect, transform.position, Quaternion.identity);
+        if(BrokenEffect)Instantiate(BrokenEffect, transform.position, Quaternion.identity);
+        if (BrokenAudio) ZDAudioSource.PlayAtPoint(BrokenAudio, transform.position, 1.0f);
     }
     #endregion
 }

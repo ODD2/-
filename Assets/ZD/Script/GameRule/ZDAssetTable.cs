@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace ZoneDepict
 {
     public class ZDAssetTable
@@ -113,8 +114,15 @@ namespace ZoneDepict
                 {
                     path = "DropItems/BoostAtkDrop",
                 }
-            }
+            },
             //Others
+            {
+                "AudioPlayer",
+                new DefaultAssetObject
+                {
+                    path =  "AudioPlayer/AudioPlayer",
+                }
+            },
         };
 
         static public GameObject GetObject(string name)
