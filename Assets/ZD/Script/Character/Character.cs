@@ -193,13 +193,20 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         //Calls ZDObject Update()
         base.Update();
-        SetHP(GetHP() + Time.deltaTime * GetRegHP() * 8);
-        SetMP(GetMP() + Time.deltaTime * GetRegMP() * 8);
     }
 
     protected void FixedUpdate()
     {
         UpdateAnimParams();
+        SetHP(GetHP() + Time.deltaTime * GetRegHP() * 8);
+        SetMP(GetMP() + Time.deltaTime * GetRegMP() * 8);
+        for (int i = 0; i < 4; ++i)
+        {
+            if (SkillCD[i] > float.Epsilon)
+            {
+                SkillCD[i] -= Time.deltaTime > SkillCD[i] ? SkillCD[i] : Time.deltaTime;
+            }
+        }
     }
 
     private new void OnDestroy()

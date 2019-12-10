@@ -156,6 +156,19 @@ namespace ZoneDepict
                     new Vector2(6,3),
                     new Vector2(8,-2),
                     new Vector2(10,6),
+                    new Vector2(-6,8),
+                    new Vector2(-6,7),
+                    new Vector2(-6,6),
+                },
+                flipX = true,
+                flipY = true,
+            },
+             new SpawnObjectConfig
+            {
+                name = "SpawnPoint",
+                pos = new Vector2[]
+                {
+                    new Vector2(-9,7),
                 },
                 flipX = true,
                 flipY = true,

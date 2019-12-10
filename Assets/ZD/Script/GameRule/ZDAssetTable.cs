@@ -70,6 +70,13 @@ namespace ZoneDepict
                     path = "MapObjects/WoodBox",
                 }
             },
+            {
+                "SpawnPoint",
+                new DefaultAssetObject
+                {
+                    path = "MapObjects/SpawnPoint",
+                }
+            },
             //Character
             //Item Effect
             {

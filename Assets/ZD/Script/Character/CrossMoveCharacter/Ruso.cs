@@ -15,7 +15,7 @@ public class Ruso : CrossMoveCharacter
     {
         base.Start();
         SkillMana = new float[]{ 15, 25, 35, 50 };
-        MaxSkillCD = new float[] { 1, 2.5f, 4, 10 };
+        MaxSkillCD = new float[] { 0.5f, 1.5f, 2.0f, 5 };
     }
 
     protected new void Update()
@@ -72,9 +72,6 @@ public class Ruso : CrossMoveCharacter
         {
             case 0:
                 AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this,ETypeZDO.ADamage));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 1), AttackRad), this, ETypeZDO.ADamage));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0,-1), AttackRad), this, ETypeZDO.ADamage));
-               
                 break;
         }
         ApplyDamage(AllHitObject, AttackType.N);
