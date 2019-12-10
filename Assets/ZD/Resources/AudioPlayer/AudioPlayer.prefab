@@ -53,7 +53,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 100
+  MaxDistance: 50
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -140,3 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62600676018e34bd99b14cafa294dfd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clip: {fileID: 0}
+  vol: 1
+  loop: 0

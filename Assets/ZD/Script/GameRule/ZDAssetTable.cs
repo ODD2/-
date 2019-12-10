@@ -64,10 +64,10 @@ namespace ZoneDepict
                 }
             },
             {
-                "TreasureBox",
+                "WoodBox",
                 new DefaultAssetObject
                 {
-                    path = "MapObjects/TreasureBox",
+                    path = "MapObjects/WoodBox",
                 }
             },
             //Character

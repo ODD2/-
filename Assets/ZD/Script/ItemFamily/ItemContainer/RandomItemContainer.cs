@@ -34,10 +34,7 @@ public class RandomItemContainer : ItemContainerBase
 
     public override void Broken()
     {
-        if (audioSource)
-        {
-            audioSource.PlayOneShot(BrokenAudio);
-        }
+        base.Broken();
         //產生道具
         if (photonView.IsMine)
         {
@@ -46,7 +43,11 @@ public class RandomItemContainer : ItemContainerBase
             PhotonNetwork.InstantiateSceneObject(ZDAssetTable.GetPath(DropPrefabs[randomNum]),
                                                  transform.position,
                                                  Quaternion.identity);
-            PhotonNetwork.Destroy(gameObject);
+            if (!animator)
+            {
+                //如果沒有Animator就自行Destroy不然就由Animator來觸發。
+                Destroy();
+            }
         }
         
     }
@@ -67,8 +68,9 @@ public class RandomItemContainer : ItemContainerBase
     [PunRPC]
     void PerformBroken()
     {
-        if(BrokenEffect)Instantiate(BrokenEffect, transform.position, Quaternion.identity);
+        if (BrokenEffect)Instantiate(BrokenEffect, transform.position, Quaternion.identity);
         if (BrokenAudio) ZDAudioSource.PlayAtPoint(BrokenAudio, transform.position, 1.0f);
+        if (animator)animator.SetTrigger("Broken");
     }
     #endregion
 }

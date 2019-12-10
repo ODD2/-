@@ -13,8 +13,8 @@ public abstract class ItemContainerBase : StationaryMapObject, IADamageObject, I
     public AudioClip BrokenAudio;
     [SerializeField]
     protected GameObject BrokenEffect;
-    protected AudioSource audioSource;
     protected SpriteRenderer spriteRenderer;
+    protected Animator animator;
     #endregion
 
     #region Unity
@@ -26,8 +26,8 @@ public abstract class ItemContainerBase : StationaryMapObject, IADamageObject, I
         NewPos.z = (int)TypeDepth.ItemContainer;
         transform.position = NewPos;
         //Setup Component
-        audioSource = GetComponent<AudioSource>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
         Durability = 10;
     }
     protected new void Update()
@@ -50,21 +50,20 @@ public abstract class ItemContainerBase : StationaryMapObject, IADamageObject, I
 
     #region Item Container Interface
     public abstract void Hurt(float damaged);
-    public abstract void Broken();
+    public virtual void Broken()
+    {
+        ZDMap.UnRegister(this);
+    }
+    public virtual void  Destroy()
+    {
+        if (photonView.IsMine)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
     #endregion
 
     #region Enumerator
-    protected IEnumerator Vanish()
-    {
-        if (spriteRenderer)
-        {
-            while (spriteRenderer.color.a > float.Epsilon)
-            {
-                yield return new WaitForSeconds(0.1f);
-                spriteRenderer.color -= new Color(0, 0, 0, 0.5f);
-            }
-        }   
-    }
     #endregion
 
 }

@@ -148,7 +148,7 @@ namespace ZoneDepict
             },
             new SpawnObjectConfig
             {
-                name = "TreasureBox",
+                name = "WoodBox",
                 pos = new Vector2[]
                 {
                     new Vector2(3,-1),
@@ -344,7 +344,7 @@ namespace ZoneDepict
                 Quaternion Rotation = Quaternion.Euler(0, 0, 0);
                 // This can create more infos of this Object 
                 object[] instantiationData = { 0, 1 };
-                PhotonNetwork.InstantiateSceneObject("TreasureBox", Position, Rotation, 0, instantiationData);
+                PhotonNetwork.InstantiateSceneObject("WoodBox", Position, Rotation, 0, instantiationData);
             }
         }
         #endregion
