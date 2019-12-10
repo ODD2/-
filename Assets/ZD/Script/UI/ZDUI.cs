@@ -7,13 +7,17 @@ namespace ZoneDepict.UI
 {
     public class ZDUI : MonoBehaviour
     {
-        public Sprite FuckingBug;
+        public RectTransform HealthBar;
+        public RectTransform HealthBarBG;
+        public RectTransform MagicBar;
+        public RectTransform MagicBarBG;
+
         public Sprite[] AttackSources;
         public GameObject AttackIndicator;
         public GameObject MoveIndicator;
         private Transform Attack;
         private Transform Move;
-        private float FrameFix = 0.008f;
+        private float FrameFix = 0.01f;
         private float[] ArrowScale = { 0, 0, 0, 0, 0, 0 };
 
         // Start is called before the first frame update
@@ -55,10 +59,10 @@ namespace ZoneDepict.UI
         {
             Move.rotation = Quaternion.Euler(0, 0, Degree - 90); // Fix Assets's 90 degree
             Move.position = Pos;
+            if ((int)Scale > 5) Scale = 5;
             float DoScale = ArrowScale[(int)Scale]; // Fix 
             Move.localScale = new Vector3(ZDGameRule.UnitInWorld, DoScale, 0);
             MoveIndicator.SetActive(true);
-
         }
 
         public void CancelMoveIndicator()
@@ -69,6 +73,25 @@ namespace ZoneDepict.UI
         public void SetAttackOpacity(int Frame)
         {
             AttackIndicator.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, Frame * FrameFix);
+        }
+
+        public void UpdateHPBar(float maxHP,float HP)
+        {
+            HealthBar.sizeDelta = new Vector2((maxHP / HealthBarBG.rect.width) * HP, HealthBar.rect.height);
+        }
+      
+        public void UpdateMPBar(float maxMP, float MP)
+        {
+            MagicBar.sizeDelta = new Vector2((maxMP / MagicBarBG.rect.width) * MP, MagicBar.rect.height);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                HealthBar.sizeDelta += new Vector2(-1, 0);
+            }
+            
         }
     }
 }

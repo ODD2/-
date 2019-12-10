@@ -19,10 +19,11 @@ public class ZDController : MonoBehaviour
     private bool IsSelectingAttack = false;
     private bool IsTouchMove = false; // To judge if did "Drag" or not
     private bool IsDidMovePhase = false;
+    private bool IsCollectItem = false;
     #endregion
 
     #region Fix const
-    private const float ClickOnFix = 0.6f; // To fix the radius of "TochOn Circle"
+    private const float ClickOnFix = 0.8f; // To fix the radius of "TochOn Circle"
     private const float TouchMoveFix = 1.7f; // To fix what is "Move"
     #endregion
   
@@ -53,6 +54,7 @@ public class ZDController : MonoBehaviour
             #region Touch Input for Single Touch
             if (Input.touchCount == 1 && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
             {
+                Debug.Log("GotFinger");
                 if (BagClass.GetFrameBlock())
                 {
                     BagClass.SetBlockFrame(false);
@@ -77,8 +79,10 @@ public class ZDController : MonoBehaviour
                             if (obj is IACollectObject)
                             {
                                 ((IACollectObject)obj).Collect(TargetCharacter);
+                                IsCollectItem = true;
                             }
                         }
+                        return;
                     }
                     else if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UnitInWorld * ClickOnFix)
                     {
@@ -99,15 +103,21 @@ public class ZDController : MonoBehaviour
                     }
 
                 }
-
                 else if (TouchTemp.phase == TouchPhase.Moved || TouchTemp.phase == TouchPhase.Stationary)
                 {
                     IsDidMovePhase = true;
                     Frame++;
+                    
                 }
                 else if (TouchTemp.phase == TouchPhase.Ended)
                 {
+                    
                     ZDUIClass.CancelMoveIndicator();
+                    if (IsCollectItem)
+                    {
+                        IsCollectItem = false;
+                        return;
+                    }
                     // DoMove
                     if ((TouchTemp.deltaPosition.magnitude >= TouchMoveFix) && IsDidMovePhase)
                     {
@@ -155,22 +165,23 @@ public class ZDController : MonoBehaviour
                     Frame = 0;
                 }
 
+                
+                if (IsActivateAttackCircle)
+                {
+                    Vector2 Direction = TouchPos - TouchPosRecord;
+                    ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
+                }
+
                 if (IsMovingCharacter)
                 {
-                    Vector2 Direction = new Vector3(TouchPos.x, TouchPos.y, 0) - TargetCharacter.transform.position;
+                    Vector2 Direction = TouchPos - CharactorPos;
                     float Degree = ZDGameRule.QuadAngle(Direction);
-                    Vector3 Temp = ZDGameRule.WorldToUnit(Camera.main.ScreenToWorldPoint(Input.mousePosition)) - ZDGameRule.WorldToUnit(TargetCharacter.transform.position);
-                    Vector2 Distance = new Vector2(Temp.x, Temp.y);
+                    Vector3 Distance = ZDGameRule.WorldToUnit(TouchPos) - ZDGameRule.WorldToUnit(CharactorPos);
                     ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
                 }
                 else
                 {
                     ZDUIClass.SetAttackOpacity(Frame);
-                }
-                if (IsActivateAttackCircle)
-                {
-                    Vector2 Direction = TouchPos - TouchPosRecord;
-                    ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
                 }
             }
 
@@ -308,6 +319,18 @@ public class ZDController : MonoBehaviour
             }
             #endregion
         }
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            Debug.Log("Hurt");
+            TargetCharacter.SetHP(TargetCharacter.GetHP()-10);
+            TargetCharacter.SetMP(TargetCharacter.GetMP()-10);
+        }
+        // Update HP/MP
+        ZDUIClass.UpdateHPBar(TargetCharacter.GetMaxHP(), TargetCharacter.GetHP());
+        ZDUIClass.UpdateMPBar(TargetCharacter.GetMaxMP(), TargetCharacter.GetMP());
+        
     }
 
 }
