@@ -8,7 +8,7 @@ public class Ruso : CrossMoveCharacter
 {
     [SerializeField]
     private GameObject[] HitEffects;
-    private float[] AttackDamage = { 5, 10, 15, 20 };
+    private readonly float[] AttackDamage = { 5, 10, 15, 20 };
     
     #region UNITY
     protected new void Start()

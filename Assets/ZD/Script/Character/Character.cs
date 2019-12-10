@@ -240,7 +240,6 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         if(animator)animator.SetTrigger("Die");
         ZDAudioSource.PlayAtPoint(DeathSound, transform.position, 1, false);
-        Debug.Break();
     }
     [PunRPC]
     public void DoHurtRpc()

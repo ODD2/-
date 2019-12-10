@@ -162,8 +162,12 @@ namespace ZoneDepict
             },
         };
         Dictionary<Player, int> TeamList = new Dictionary<Player, int>();
-        
+        //Component
+        protected AudioSource audioSource;
+        //Audio Clips
+        public AudioClip EndGameMusic;
         #endregion
+
         #region Unity
         public void Awake()
         {
@@ -175,6 +179,7 @@ namespace ZoneDepict
             {
                 Instance = this;
             }
+            audioSource = GetComponent<AudioSource>();
         }
 
         void Start()
@@ -274,8 +279,11 @@ namespace ZoneDepict
 
         private void SendEndGameEvent()
         {
+            Player player = TeamList.Keys.GetEnumerator().Current;
+            int WinningTeam = -1;
+            if (player != null)WinningTeam = (int)player.CustomProperties["Team"];
             byte evCode = 100; // Custom Event 1: Used as "MoveUnitsToTargetPosition" event
-            object[] content = { new Vector3(10.0f, 2.0f, 5.0f), 1, 2, 5, 10 }; // Array contains the target position and the IDs of the selected units
+            object[] content = {WinningTeam}; // Array contains the target position and the IDs of the selected units
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; // You would have to set the Receivers to All in order to receive this event on the local client as well
             SendOptions sendOptions = new SendOptions { Reliability = true };
             PhotonNetwork.RaiseEvent(evCode, content, raiseEventOptions, sendOptions);
@@ -332,21 +340,6 @@ namespace ZoneDepict
         #endregion
 
         #region Coroutines
-        private IEnumerator SpawnBox()
-        {
-            System.Random rnd = new System.Random();
-            // Basic Spwan Box function , can set some condition
-            // This is random number for waiting Spwan Box
-            for (int i = 0; i < 3; ++i)
-            {
-                yield return new WaitForSeconds(0.5f);
-                Vector3 Position = ZDGameRule.WorldUnify(new Vector3(rnd.Next(-4, 4), rnd.Next(-4, 4), 0));
-                Quaternion Rotation = Quaternion.Euler(0, 0, 0);
-                // This can create more infos of this Object 
-                object[] instantiationData = { 0, 1 };
-                PhotonNetwork.InstantiateSceneObject("WoodBox", Position, Rotation, 0, instantiationData);
-            }
-        }
         #endregion
 
         #region Photon Callbacks
@@ -397,9 +390,9 @@ namespace ZoneDepict
         {
             switch (photonEvent.Code)
             {
-
                 case (int)ZDGameEvent.EndGame:
-                    Debug.Log("Game Ended");
+                    if (audioSource.isPlaying) audioSource.Stop();
+                    audioSource.PlayOneShot(EndGameMusic);
                     break;
                 case (int)ZDGameEvent.SpawnEffect:
                     object[] data = (object[])photonEvent.CustomData;
