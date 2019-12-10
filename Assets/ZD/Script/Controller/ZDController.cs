@@ -49,9 +49,16 @@ public class ZDController : MonoBehaviour
     {
         if (IsPhoneTest)
         {
+            //Debug.Log(BagClass.GetHover());
             #region Touch Input for Single Touch
-            if (Input.touchCount == 1 && !(EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)))
+            if (Input.touchCount == 1 && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
             {
+                if (BagClass.GetFrameBlock())
+                {
+                    BagClass.SetBlockFrame(false);
+                    return;
+                }
+                
                 Touch TouchTemp = Input.GetTouch(0);
                 Debug.Log("NotEveSys");
                 // TouchPos is world Position

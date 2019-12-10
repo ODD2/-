@@ -7,18 +7,16 @@ using Photon.Pun;
 
 namespace ZoneDepict.UI
 {
-    public class BagController : MonoBehaviour, IPointerEnterHandler,IPointerClickHandler
+    public class BagController : MonoBehaviour,IPointerEnterHandler
     {
+        
         public void OnPointerEnter(PointerEventData eventData)
         {
             hover = true;
-            Debug.Log(hover);
-        }
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            hover = true;
+            FrameBlock = true;
         }
 
+        private bool FrameBlock;
         #region BagUI
 
         int choosingID; //正在選哪個道具
@@ -53,14 +51,11 @@ namespace ZoneDepict.UI
         }
 
         // Update is called once per frame
+        
         void Update()
         {
-            if (Input.GetMouseButtonUp(0))
-            {
-                hover = false;
-            }
             FreshInventory();
-            if (Input.touchCount == 1 )
+            if (Input.touchCount == 1)
             {
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Stationary)
@@ -70,18 +65,19 @@ namespace ZoneDepict.UI
                         showall();
                     }
                 }
-                else if (touch.phase == TouchPhase.Ended )
+                else if (touch.phase == TouchPhase.Ended)
                 {
+
                     if (hover)
                     {
-                        if (choosingID!=-1)
+                        if (choosingID != -1)
                         {
                             useItem(choosingID);
                             choosingID = -1;
                         }
 
                         hover = false;
-               
+
                     }
                     hideall();
                 }
@@ -107,9 +103,8 @@ namespace ZoneDepict.UI
                     }
                 }
             }
-
         }
-
+        
         void FreshInventory()
         {
             inventory = player.GetComponent<Character>().GetInventory();
@@ -157,6 +152,25 @@ namespace ZoneDepict.UI
             return hover;
         }
 
-        
+        public void SetHover(bool hoverSet)
+        {
+            hover = hoverSet;
+        }
+
+        public bool GetFrameBlock()
+        {
+            return FrameBlock;
+        }
+
+        public void SetBlockFrame(bool FrameBlockSet)
+        {
+            FrameBlock = FrameBlockSet;
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+           // hover = true;
+            
+        }
     }
 }
