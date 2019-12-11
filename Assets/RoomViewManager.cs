@@ -70,6 +70,8 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
             Hashtable NewState = new Hashtable();
             NewState.Add("RoomState", RoomPlayerState.Ready);
             NewState.Add("CharacterName", CharacterName);
+            if (PhotonNetwork.IsMasterClient) NewState.Add("Team", 0);
+            else NewState.Add("Team", 1);
             PhotonNetwork.SetPlayerCustomProperties(NewState);
         }
     }
@@ -116,7 +118,7 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (CheckAllReady())
+        if (changedProps.ContainsKey("RoomState") && CheckAllReady())
         {
             Debug.Log("All Ready");
             PhotonNetwork.LoadLevel("GameGround");
@@ -125,6 +127,10 @@ public class RoomViewManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("Not Yet");
         }
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
     }
 
     IEnumerator ReadyWait()
