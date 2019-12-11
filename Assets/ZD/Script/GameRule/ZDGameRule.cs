@@ -6,7 +6,7 @@ namespace ZoneDepict.Rule
     public enum TypeDepth
     {
 
-        MapObject = 1,
+        MapObject = 0,
         Effect,
         DroppedItem,
         ItemContainer,

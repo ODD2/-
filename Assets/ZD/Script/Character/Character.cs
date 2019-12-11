@@ -15,8 +15,8 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected SpriteRenderer sprite;
     protected AudioSource audioSource;
     //Sound Effects
-    [SerializeField]
-    protected AudioClip DeathSound;
+    public AudioClip DeathSound;
+    public AudioClip MoveSound;
     #endregion
 
     #region Input Wrappers
