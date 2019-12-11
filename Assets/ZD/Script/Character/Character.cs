@@ -41,10 +41,12 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected Vector2 Velocity = new Vector2(0,0);
     protected float MaxVelocity = 30;
     List<ItemBase> Inventory = new List<ItemBase>();
+    protected int InventoryMax = 3;
     protected float MoveMana = 5.0f;
     protected float[] MaxSkillCD = new float[4];
     protected float[] SkillMana = new float[4];
     protected float[] SkillCD = new float[4];
+    
     #endregion
 
     #region Getters/Setters
@@ -87,6 +89,10 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         if (NewMP > MaxMP) MP = MaxMP;
         else if (NewMP < 0) MP = 0;
         else MP = NewMP;
+    }
+    public int GetInventoryMax()
+    {
+        return InventoryMax;
     }
     #endregion
 

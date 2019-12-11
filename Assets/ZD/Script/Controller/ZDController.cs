@@ -87,8 +87,15 @@ public class ZDController : MonoBehaviour
                             {
                                 if (obj is IACollectObject)
                                 {
-                                    ((IACollectObject)obj).Collect(TargetCharacter);
-                                    IsCollectItem = true;
+                                    if(TargetCharacter.GetInventory().Count < TargetCharacter.GetInventoryMax())
+                                    {
+                                        ((IACollectObject)obj).Collect(TargetCharacter);
+                                        IsCollectItem = true;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
                                 }
                             }
                             return;
@@ -257,9 +264,14 @@ public class ZDController : MonoBehaviour
                     {
                         foreach (var obj in HitObjects)
                         {
-                            if (obj is IACollectObject)
+                            if (TargetCharacter.GetInventory().Count < TargetCharacter.GetInventoryMax())
                             {
                                 ((IACollectObject)obj).Collect(TargetCharacter);
+                                IsCollectItem = true;
+                            }
+                            else
+                            {
+                                break;
                             }
                         }
                     }
