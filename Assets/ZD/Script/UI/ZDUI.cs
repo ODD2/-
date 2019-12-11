@@ -7,6 +7,7 @@ namespace ZoneDepict.UI
 {
     public class ZDUI : MonoBehaviour
     {
+        static public GameObject InstanceObject;
         public RectTransform HealthBar;
         public RectTransform HealthBarBG;
         public RectTransform MagicBar;
@@ -19,10 +20,12 @@ namespace ZoneDepict.UI
         private Transform Move;
         private float FrameFix = 0.01f;
         private float[] ArrowScale = { 0, 0, 0, 0, 0, 0 };
-
         // Start is called before the first frame update
         void Start()
         {
+            if (InstanceObject != null) Destroy(gameObject);
+            else InstanceObject = this.gameObject;
+
             MoveIndicator = Instantiate(MoveIndicator);
             AttackIndicator = Instantiate(AttackIndicator);
             MoveIndicator.SetActive(false);

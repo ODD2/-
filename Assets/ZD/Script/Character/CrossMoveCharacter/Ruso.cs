@@ -19,7 +19,11 @@ public class Ruso : CrossMoveCharacter
 
     protected new void Update()
     {
-        base.Update();        
+        base.Update();
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Hurt(100);
+        }
     }
     #endregion
 

@@ -8,6 +8,8 @@ using UnityEngine.EventSystems;
 
 public class ZDController : MonoBehaviour
 {
+    public static ZDController Instance;
+
     private Character TargetCharacter = null;
     private Vector2 TouchPosRecord; // To record the attack start pos (to calculate direction)
 
@@ -37,6 +39,9 @@ public class ZDController : MonoBehaviour
 
     void Start()
     {
+        if (Instance && Instance != this) Destroy(this);
+        else Instance = this;
+
         TargetCharacter = GetComponent<Character>();
         if (!TargetCharacter.photonView.IsMine)
         {
@@ -44,293 +49,311 @@ public class ZDController : MonoBehaviour
         }
         ZDUIClass = GameObject.Find("ZDUI").GetComponent<ZDUI>();
         BagClass = GameObject.Find("Item").GetComponent<BagController>();
+   
+        //StartCoroutine(WaitToActive());
     }
 
     void Update()
     {
-        if (IsPhoneTest)
+        if(ZDGameManager.gameState == ZDGameState.Play)
         {
-            //Debug.Log(BagClass.GetHover());
-            #region Touch Input for Single Touch
-            if (Input.touchCount == 1 && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+            if (IsPhoneTest)
             {
-                Debug.Log("GotFinger");
-                if (BagClass.GetFrameBlock())
+                //Debug.Log(BagClass.GetHover());
+                #region Touch Input for Single Touch
+                if (Input.touchCount == 1 && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
                 {
-                    BagClass.SetBlockFrame(false);
-                    return;
-                }
-                
-                Touch TouchTemp = Input.GetTouch(0);
-                Debug.Log("NotEveSys");
-                // TouchPos is world Position
-                Vector2 TouchPos = Camera.main.ScreenToWorldPoint(TouchTemp.position);
-                // UnitTouchPos is Unit Position
-                Vector2 UnitTouchPos = ZDGameRule.WorldToUnit(TouchPos);
-                Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
-                List<ZDObject> HitObjects;
+                    Debug.Log("GotFinger");
+                    if (BagClass.GetFrameBlock())
+                    {
+                        BagClass.SetBlockFrame(false);
+                        return;
+                    }
 
-                if (TouchTemp.phase == TouchPhase.Began)
+                    Touch TouchTemp = Input.GetTouch(0);
+                    Debug.Log("NotEveSys");
+                    // TouchPos is world Position
+                    Vector2 TouchPos = Camera.main.ScreenToWorldPoint(TouchTemp.position);
+                    // UnitTouchPos is Unit Position
+                    Vector2 UnitTouchPos = ZDGameRule.WorldToUnit(TouchPos);
+                    Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
+                    List<ZDObject> HitObjects;
+
+                    if (TouchTemp.phase == TouchPhase.Began)
+                    {
+                        if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, ETypeZDO.ACollect)) != null)
+                        {
+                            foreach (var obj in HitObjects)
+                            {
+                                if (obj is IACollectObject)
+                                {
+                                    ((IACollectObject)obj).Collect(TargetCharacter);
+                                    IsCollectItem = true;
+                                }
+                            }
+                            return;
+                        }
+                        else if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UnitInWorld * ClickOnFix)
+                        {
+                            IsMovingCharacter = true;
+                        }
+                        else
+                        {
+                            // Activate Attack System
+                            IsMovingCharacter = false;
+                            if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, ETypeZDO.ACollect)) == null && !BagClass.GetHover())
+                            {
+                                IsSelectingAttack = true;
+                                IsActivateAttackCircle = true;
+                                ZDUIClass.SetAttackIndicator(TouchPos);
+                                TouchPosRecord = TouchPos;
+                            }
+
+                        }
+
+                    }
+                    else if (TouchTemp.phase == TouchPhase.Moved || TouchTemp.phase == TouchPhase.Stationary)
+                    {
+                        IsDidMovePhase = true;
+                        Frame++;
+
+                    }
+                    else if (TouchTemp.phase == TouchPhase.Ended)
+                    {
+
+                        ZDUIClass.CancelMoveIndicator();
+                        if (IsCollectItem)
+                        {
+                            IsCollectItem = false;
+                            return;
+                        }
+                        // DoMove
+                        if ((TouchTemp.deltaPosition.magnitude >= TouchMoveFix) && IsDidMovePhase)
+                        {
+                            IsTouchMove = true;
+                        }
+                        else
+                        {
+                            IsTouchMove = false;
+                        }
+                        if (IsMovingCharacter && IsTouchMove)
+                        {
+                            TargetCharacter.InputSprint(TouchPos);
+                            IsTouchMove = false;
+
+                        }
+                        else if (IsSelectingAttack)
+                        {
+                            ZDUIClass.CancelAttackIndicator();
+                            IsSelectingAttack = false;
+                            IsActivateAttackCircle = false;
+                            if ((TouchPos - TouchPosRecord).magnitude < 0.1f) // This Distance is to judge how is "Tap"
+                            {
+                                TargetCharacter.InputAttack(TouchPos - CharactorPos, AttackType.N);
+                            }
+                            else
+                            {
+                                TargetCharacter.InputAttack(TouchPosRecord - CharactorPos, ZDGameRule.DirectionToType(Camera.main.ScreenToWorldPoint(Input.mousePosition) - new Vector3(TouchPosRecord.x, TouchPosRecord.y, 0)));
+                            }
+                        }
+                        // Tap for Normal attack
+                        if (Frame <= ZDGameRule.TOUCH_TAP_BOUND_FRAMES && !IsTouchMove && !IsMovingCharacter)
+                        {
+                            TargetCharacter.InputAttack(TouchPos - CharactorPos, AttackType.N);
+
+                        }
+
+                        else if (!IsMovingCharacter) // Other Type Attack
+                        {
+                            Vector2 Direction = TouchPosRecord - CharactorPos;
+                            TargetCharacter.InputAttack(Direction, ZDGameRule.DirectionToType(TouchPos - TouchPosRecord));
+                        }
+                        IsMovingCharacter = false;
+                        IsDidMovePhase = false;
+                        IsActivateAttackCircle = false;
+                        Frame = 0;
+                    }
+
+
+                    if (IsActivateAttackCircle)
+                    {
+                        Vector2 Direction = TouchPos - TouchPosRecord;
+                        ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
+                    }
+
+                    if (IsMovingCharacter)
+                    {
+                        Vector2 Direction = TouchPos - CharactorPos;
+                        float Degree = ZDGameRule.QuadAngle(Direction);
+                        Vector3 Distance = ZDGameRule.WorldToUnit(TouchPos) - ZDGameRule.WorldToUnit(CharactorPos);
+                        ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
+                    }
+                    else
+                    {
+                        ZDUIClass.SetAttackOpacity(Frame);
+                    }
+                }
+
+                #endregion
+            }
+            else
+            {
+                #region Debugger with hotkeys
+                Vector2 AttackDirection;
+                if (Input.GetKeyDown(KeyCode.V))
                 {
-                    if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, ETypeZDO.ACollect)) != null)
+                    TargetCharacter.PrintStatus();
+                }
+
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
+                    TargetCharacter.InputAttack(AttackDirection, AttackType.N);
+                }
+                else if (Input.GetKeyDown(KeyCode.W))
+                {
+                    AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
+                    TargetCharacter.InputAttack(AttackDirection, AttackType.A);
+                }
+                else if (Input.GetKeyDown(KeyCode.E))
+                {
+                    AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
+                    TargetCharacter.InputAttack(AttackDirection, AttackType.B);
+                }
+                else if (Input.GetKeyDown(KeyCode.R))
+                {
+                    AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
+                    TargetCharacter.InputAttack(AttackDirection, AttackType.R);
+
+                }
+
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    TargetCharacter.UseItem(0);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    TargetCharacter.UseItem(1);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    TargetCharacter.UseItem(2);
+                }
+                #endregion
+
+                #region Just for Fun and Debug
+                if (Input.GetMouseButtonDown(0))
+                {
+                    // World
+                    Vector2 HitLoc = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
+                    // Unit
+                    Vector2 UnitLoc = ZDGameRule.WorldToUnit(HitLoc);
+                    Vector2 UnitCharactorPos = ZDGameRule.WorldToUnit(CharactorPos);
+
+                    List<ZDObject> HitObjects;
+
+                    if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, ETypeZDO.ACollect)) != null)
                     {
                         foreach (var obj in HitObjects)
                         {
                             if (obj is IACollectObject)
                             {
                                 ((IACollectObject)obj).Collect(TargetCharacter);
-                                IsCollectItem = true;
                             }
                         }
-                        return;
                     }
-                    else if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UnitInWorld * ClickOnFix)
+                    else if ((HitLoc - CharactorPos).magnitude <= ZDGameRule.UnitInWorld * ClickOnFix)
                     {
-                        IsMovingCharacter = true;
+                        IsMovingCharacter = true; // Moveing Charactor
                     }
+
                     else
                     {
-                        // Activate Attack System
-                        IsMovingCharacter = false;
-                        if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, ETypeZDO.ACollect)) == null && !BagClass.GetHover())
+                        // Is Activate Attack System
+                        if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, ETypeZDO.ACollect)) == null && !BagClass.GetHover())
                         {
+
                             IsSelectingAttack = true;
+                            ZDUIClass.SetAttackIndicator(Camera.main.ScreenToWorldPoint(Input.mousePosition));
                             IsActivateAttackCircle = true;
-                            ZDUIClass.SetAttackIndicator(TouchPos);
-                            TouchPosRecord = TouchPos;
+                            TouchPosRecord = HitLoc;
                         }
 
                     }
-
                 }
-                else if (TouchTemp.phase == TouchPhase.Moved || TouchTemp.phase == TouchPhase.Stationary)
+                else if (Input.GetMouseButtonUp(0))
                 {
-                    IsDidMovePhase = true;
-                    Frame++;
-                    
-                }
-                else if (TouchTemp.phase == TouchPhase.Ended)
-                {
-                    
-                    ZDUIClass.CancelMoveIndicator();
-                    if (IsCollectItem)
-                    {
-                        IsCollectItem = false;
-                        return;
-                    }
-                    // DoMove
-                    if ((TouchTemp.deltaPosition.magnitude >= TouchMoveFix) && IsDidMovePhase)
-                    {
-                        IsTouchMove = true;
-                    }
-                    else
-                    {
-                        IsTouchMove = false;
-                    }
-                    if (IsMovingCharacter && IsTouchMove)
-                    {
-                        TargetCharacter.InputSprint(TouchPos);
-                        IsTouchMove = false;
+                    Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
+                    Vector2 DropLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
+                    if (IsMovingCharacter)
+                    {
+                        IsMovingCharacter = false;
+                        ZDUIClass.CancelMoveIndicator();
+                        TargetCharacter.InputSprint(DropLocation);
                     }
-                    else if (IsSelectingAttack)
+                    else if (IsSelectingAttack) //Tap
                     {
                         ZDUIClass.CancelAttackIndicator();
                         IsSelectingAttack = false;
                         IsActivateAttackCircle = false;
-                        if ((TouchPos - TouchPosRecord).magnitude < 0.1f) // This Distance is to judge how is "Tap"
+                        if ((DropLocation - TouchPosRecord).magnitude < 0.1f) // This Distance is to judge how is "Tap"
                         {
-                            TargetCharacter.InputAttack(TouchPos - CharactorPos, AttackType.N);
+                            TargetCharacter.InputAttack(DropLocation - CharactorPos, AttackType.N);
                         }
                         else
                         {
                             TargetCharacter.InputAttack(TouchPosRecord - CharactorPos, ZDGameRule.DirectionToType(Camera.main.ScreenToWorldPoint(Input.mousePosition) - new Vector3(TouchPosRecord.x, TouchPosRecord.y, 0)));
                         }
                     }
-                    // Tap for Normal attack
-                    if (Frame <= ZDGameRule.TOUCH_TAP_BOUND_FRAMES && !IsTouchMove && !IsMovingCharacter)
-                    {
-                        TargetCharacter.InputAttack(TouchPos - CharactorPos, AttackType.N);
 
-                    }
-
-                    else if (!IsMovingCharacter) // Other Type Attack
-                    {
-                        Vector2 Direction = TouchPosRecord - CharactorPos;
-                        TargetCharacter.InputAttack(Direction, ZDGameRule.DirectionToType(TouchPos - TouchPosRecord));
-                    }
-                    IsMovingCharacter = false;
-                    IsDidMovePhase = false;
-                    IsActivateAttackCircle = false;
-                    Frame = 0;
-                }
-
-                
-                if (IsActivateAttackCircle)
-                {
-                    Vector2 Direction = TouchPos - TouchPosRecord;
-                    ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
                 }
 
                 if (IsMovingCharacter)
                 {
-                    Vector2 Direction = TouchPos - CharactorPos;
+
+                    Vector2 Direction = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0) - TargetCharacter.transform.position;
                     float Degree = ZDGameRule.QuadAngle(Direction);
-                    Vector3 Distance = ZDGameRule.WorldToUnit(TouchPos) - ZDGameRule.WorldToUnit(CharactorPos);
+                    //Debug.Log(ZDGameRule.QuadrifyDirection(Direction));
+                    Vector3 Temp = ZDGameRule.WorldToUnit(Camera.main.ScreenToWorldPoint(Input.mousePosition)) - ZDGameRule.WorldToUnit(TargetCharacter.transform.position);
+                    Vector2 Distance = new Vector2(Temp.x, Temp.y);
+
                     ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
                 }
-                else
+                if (IsActivateAttackCircle)
                 {
-                    ZDUIClass.SetAttackOpacity(Frame);
+                    Vector2 Direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - new Vector3(TouchPosRecord.x, TouchPosRecord.y, 0);
+                    ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
                 }
+                #endregion
             }
 
-            #endregion
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                Debug.Log("Hurt");
+                TargetCharacter.Hurt(10);
+                //TargetCharacter.SetHP(TargetCharacter.GetHP()-10);
+                TargetCharacter.SetMP(TargetCharacter.GetMP() - 10);
+            }
+            // Update HP/MP
+            ZDUIClass.UpdateHPBar(TargetCharacter.GetMaxHP(), TargetCharacter.GetHP());
+            ZDUIClass.UpdateMPBar(TargetCharacter.GetMaxMP(), TargetCharacter.GetMP());
         }
-        else
-        {
-            #region Debugger with hotkeys
-            Vector2 AttackDirection;
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                TargetCharacter.PrintStatus();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
-                TargetCharacter.InputAttack(AttackDirection, AttackType.N);
-            }
-            else if (Input.GetKeyDown(KeyCode.W))
-            {
-                AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
-                TargetCharacter.InputAttack(AttackDirection, AttackType.A);
-            }
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
-                TargetCharacter.InputAttack(AttackDirection, AttackType.B);
-            }
-            else if (Input.GetKeyDown(KeyCode.R))
-            {
-                AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
-                TargetCharacter.InputAttack(AttackDirection, AttackType.R);
-
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                TargetCharacter.UseItem(0);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                TargetCharacter.UseItem(1);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                TargetCharacter.UseItem(2);
-            }
-            #endregion
-
-            #region Just for Fun and Debug
-            if (Input.GetMouseButtonDown(0))
-            {
-                // World
-                Vector2 HitLoc = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
-                // Unit
-                Vector2 UnitLoc = ZDGameRule.WorldToUnit(HitLoc);
-                Vector2 UnitCharactorPos = ZDGameRule.WorldToUnit(CharactorPos);
-
-                List<ZDObject> HitObjects;
-
-                if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, ETypeZDO.ACollect)) != null)
-                {
-                    foreach (var obj in HitObjects)
-                    {
-                        if (obj is IACollectObject)
-                        {
-                            ((IACollectObject)obj).Collect(TargetCharacter);
-                        }
-                    }
-                }
-                else if ((HitLoc - CharactorPos).magnitude <= ZDGameRule.UnitInWorld * ClickOnFix)
-                {
-                    IsMovingCharacter = true; // Moveing Charactor
-                }
-
-                else
-                {
-                    // Is Activate Attack System
-                    if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, ETypeZDO.ACollect)) == null && !BagClass.GetHover())
-                    {
-
-                        IsSelectingAttack = true;
-                        ZDUIClass.SetAttackIndicator(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                        IsActivateAttackCircle = true;
-                        TouchPosRecord = HitLoc;
-                    }
-
-                }
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
-                Vector2 DropLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-                if (IsMovingCharacter)
-                {
-                    IsMovingCharacter = false;
-                    ZDUIClass.CancelMoveIndicator();
-                    TargetCharacter.InputSprint(DropLocation);
-                }
-                else if (IsSelectingAttack) //Tap
-                {
-                    ZDUIClass.CancelAttackIndicator();
-                    IsSelectingAttack = false;
-                    IsActivateAttackCircle = false;
-                    if ((DropLocation - TouchPosRecord).magnitude < 0.1f) // This Distance is to judge how is "Tap"
-                    {
-                        TargetCharacter.InputAttack(DropLocation - CharactorPos, AttackType.N);
-                    }
-                    else
-                    {
-                        TargetCharacter.InputAttack(TouchPosRecord - CharactorPos, ZDGameRule.DirectionToType(Camera.main.ScreenToWorldPoint(Input.mousePosition) - new Vector3(TouchPosRecord.x, TouchPosRecord.y, 0)));
-                    }
-                }
-
-            }
-
-            if (IsMovingCharacter)
-            {
-
-                Vector2 Direction = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0) - TargetCharacter.transform.position;
-                float Degree = ZDGameRule.QuadAngle(Direction);
-                //Debug.Log(ZDGameRule.QuadrifyDirection(Direction));
-                Vector3 Temp = ZDGameRule.WorldToUnit(Camera.main.ScreenToWorldPoint(Input.mousePosition)) - ZDGameRule.WorldToUnit(TargetCharacter.transform.position);
-                Vector2 Distance = new Vector2(Temp.x, Temp.y);
-
-                ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
-            }
-            if (IsActivateAttackCircle)
-            {
-                Vector2 Direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - new Vector3(TouchPosRecord.x, TouchPosRecord.y, 0);
-                ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
-            }
-            #endregion
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            Debug.Log("Hurt");
-            TargetCharacter.SetHP(TargetCharacter.GetHP()-10);
-            TargetCharacter.SetMP(TargetCharacter.GetMP()-10);
-        }
-        // Update HP/MP
-        ZDUIClass.UpdateHPBar(TargetCharacter.GetMaxHP(), TargetCharacter.GetHP());
-        ZDUIClass.UpdateMPBar(TargetCharacter.GetMaxMP(), TargetCharacter.GetMP());
-        
     }
 
+
+    //IEnumerator WaitToActive()
+    //{
+    //    enabled = false;
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(0.1f);
+    //        if (ZDGameManager.gameState == ZDGameState.Play)
+    //        {
+    //            enabled = true;
+    //            break;
+    //        }
+    //    }
+    //}
 }

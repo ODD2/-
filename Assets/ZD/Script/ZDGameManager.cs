@@ -9,11 +9,11 @@ using Photon.Pun.UtilityScripts;
 using UnityEngine;
 using ExitGames.Client.Photon;
 using ZoneDepict.Rule;
+using ZoneDepict.UI;
 using Hashtable =  ExitGames.Client.Photon.Hashtable;
 
 namespace ZoneDepict
 {
-    
     public enum ZDGameState
     {
         Initialize,
@@ -58,9 +58,8 @@ namespace ZoneDepict
     {
         private bool HotKey = false;
 
-
         #region Feilds
-        ZDGameState gameState = ZDGameState.Initialize;
+        public static ZDGameState gameState = ZDGameState.Initialize;
         public static ZDGameManager Instance;
         public static PlayerProps playerProps;
         public static Vector2[] TeamSpawnUnit =
@@ -198,7 +197,7 @@ namespace ZoneDepict
             },
         };
 
-        Dictionary<Player, int> TeamList = new Dictionary<Player, int>();
+        Dictionary<Player, int> TeamList = new Dictionary<Player, int>();   
         //Component
         protected AudioSource audioSource;
         //Audio Clips
@@ -206,18 +205,14 @@ namespace ZoneDepict
         //Scene Objects
         public GameObject Lose;
         public GameObject Victory;
-        public GameObject ZDUI;
         #endregion
 
         #region Unity
-        public void Awake()
-        {
-            if (Instance) Destroy(gameObject);
-            else Instance = this;
-        }
-
         void Start()
         {
+            if (Instance && Instance != this) Destroy(this);
+            else Instance = this;
+
             //Cache Component
             audioSource = GetComponent<AudioSource>();
 
@@ -237,6 +232,8 @@ namespace ZoneDepict
         #region Game Process
         void Initialize()
         {
+            //if (ZDUI.InstanceObject) ZDUI.InstanceObject.SetActive(false);
+
             //Fetch Player Props;
             SetupPlayerProps();
 
@@ -249,6 +246,7 @@ namespace ZoneDepict
             CreatePlayerCharacter();
             //Record Team 
             BuildTeamList();
+            
 
             //Tell Everyone I'm Ready To Play
             Hashtable props = new Hashtable
@@ -260,8 +258,8 @@ namespace ZoneDepict
 
         void GameStart()
         {
-            //Active UI
-            ZDUI.SetActive(true);
+            //if(ZDUI.InstanceObject)ZDUI.InstanceObject.SetActive(true);
+            gameState = ZDGameState.Play;
         }
 
         void SetupPlayerProps()
@@ -382,7 +380,10 @@ namespace ZoneDepict
         {
             if (TeamList.Count != 0)
             {
-                int AliveTeam = TeamList.Values.GetEnumerator().Current;
+                
+                var enumerator = TeamList.Values.GetEnumerator();
+                enumerator.MoveNext();
+                int AliveTeam = enumerator.Current;
                 foreach (var player in TeamList)
                 {
                     if (player.Value != AliveTeam)
@@ -454,6 +455,13 @@ namespace ZoneDepict
             }
             return true;
         }
+
+        IEnumerator WaitToRestart()
+        {
+            yield return new WaitForSeconds(5);
+            PhotonNetwork.LoadLevel("GameStartView");
+        }
+
         #endregion
 
         #region Photon Callbacks
@@ -471,6 +479,7 @@ namespace ZoneDepict
                 }
 
             }
+
             if (changedProps.ContainsKey(ZDGameRule.CustomPropsKey.PLAYER_LOADED_LEVEL))
             {
                 if (CheckAllPlayerLoadedLevel() && PhotonNetwork.IsMasterClient)
@@ -520,26 +529,17 @@ namespace ZoneDepict
                     Debug.Log("Game Ended");
                     object[] dataEnd = (object[])photonEvent.CustomData;
                     Debug.Log(dataEnd[0] + " is winner!");
-                    
                     Debug.Log((int)PhotonNetwork.LocalPlayer.CustomProperties["Team"]);
-                    
                     if ((int)PhotonNetwork.LocalPlayer.CustomProperties["Team"] == (int)dataEnd[0]) Victory.SetActive(true);
                     else Lose.SetActive(true);
                     // Go back to start view
+                    StartCoroutine(WaitToRestart());
                     break;
                 case (int)ZDGameEvent.SpawnEffect:
                     object[] data = (object[])photonEvent.CustomData;
                     Instantiate(ZDAssetTable.GetObject((string)data[0]),(Vector3)data[1],(Quaternion)data[2]);
                     break;
             }
-        }
-        #endregion
-
-        #region RPC
-        [PunRPC]
-        void GameEnded()
-        {
-            gameState = ZDGameState.End;
         }
         #endregion
     }
