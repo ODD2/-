@@ -10,7 +10,7 @@ public class EffectBase : MonoBehaviour
     {
         //Setup Effect
         Vector3 NewPos = transform.position;
-        NewPos.z = (int)TypeDepth.Effect;
+        NewPos.z = NewPos.y + TypeDepth.Effect;
         transform.position = NewPos;
         //Disable Update Loop For This Scripts
         enabled = false;

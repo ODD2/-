@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict;
+using ZoneDepict.Rule;
 using Photon.Pun;
 using System;
 
@@ -13,6 +14,8 @@ public class DropItem : ZDRegisterObject, IACollectObject
     // Start is called before the first frame update
     protected new void Start()
     {
+        //Setup Object Depth
+        ObjectTypeDepth = TypeDepth.DroppedItem;
         base.Start();
     }
 

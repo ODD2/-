@@ -5,7 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon;
 using Photon.Realtime;
-
+using ZoneDepict.Rule;
 namespace ZoneDepict
 {
     [Serializable]
@@ -23,8 +23,8 @@ namespace ZoneDepict
 
     public class ZDObject : MonoBehaviourPunCallbacks
     {
-        
 
+        protected float ObjectTypeDepth = 0.0f;
         public ETypeZDO[] Types;
         public VectorI2[] Terrain;
 
@@ -37,11 +37,19 @@ namespace ZoneDepict
             {
                 Debug.Log("Error! Cannot Register ZDObject, Object Out of Bound!");
             }
+            //Forced Update to set object depth with type depth;
+            SetObjectDepthWithTypeDepth();
         }
 
         protected void Update()
         {
             ZDMap.UpdateLocation(this);
+            //Update Z axis to correct the in block layers.
+            if (transform.hasChanged)
+            {
+                SetObjectDepthWithTypeDepth();
+                transform.hasChanged = false;
+            }
         }
 
         protected void OnDestroy()
@@ -52,6 +60,13 @@ namespace ZoneDepict
         public bool IsRegistered()
         {
             return ZDMap.IsRegistered(this);
+        }
+
+        protected void SetObjectDepthWithTypeDepth()
+        {
+            Vector3 NewPos = transform.position;
+            NewPos.z = transform.position.y + ObjectTypeDepth;
+            transform.position = NewPos;
         }
     }
 }

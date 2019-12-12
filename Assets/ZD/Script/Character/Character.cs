@@ -174,25 +174,23 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #region UNITY
     protected new  void Start()
     {
-        //Calls ZDObject Start()
-        base.Start();
         //Cache Components.
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
-
-        //Setup Depth
-        Vector3 NewPos = transform.position;
-        if (photonView.IsMine) NewPos.z = (int)TypeDepth.LocalCharacter;
-        else NewPos.z = (int)TypeDepth.RemoteCharacter;
-        transform.position = NewPos;
 
         //Setup TeamID.
         if (photonView.Owner.CustomProperties.ContainsKey("Team"))
         {
             TeamID = (int)photonView.Owner.CustomProperties["Team"];
         }
-        
+
+        //Setup Depth
+        if (photonView.IsMine) ObjectTypeDepth = TypeDepth.LocalCharacter;
+        else ObjectTypeDepth = TypeDepth.RemoteCharacter;
+
+        //Calls ZDObject Start()
+        base.Start();
     }
 
     protected new void Update()

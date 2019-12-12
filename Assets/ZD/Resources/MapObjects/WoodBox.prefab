@@ -119,8 +119,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Types: 00000000
   Terrain: []
-  update: 0
-  IsMap: 0
   Durability: 10
   BrokenAudio: {fileID: 8300000, guid: df251bb1b25b549e09a31995f8208420, type: 3}
   BrokenEffect: {fileID: 100000, guid: 83cd9cc9f9c88824ba18dc59b05ae328, type: 3}

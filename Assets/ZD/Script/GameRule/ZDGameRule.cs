@@ -5,12 +5,12 @@ namespace ZoneDepict.Rule
 {
     public static class TypeDepth
     {
-        public const float MapObject = 0;
-        public const float Effect = 0.1f;
-        public const float DroppedItem = 0.2f;
-        public const float ItemContainer = 0.3f;
-        public const float RemoteCharacter = 0.4f;
-        public const float LocalCharacter = 0.5f;
+        public const float MapObject = ZDGameRule.UnitInWorld - 0.6f;
+        public const float Effect = ZDGameRule.UnitInWorld - 0.5f;
+        public const float LocalCharacter = ZDGameRule.UnitInWorld - 0.4f;
+        public const float RemoteCharacter = ZDGameRule.UnitInWorld - 0.3f;
+        public const float ItemContainer = ZDGameRule.UnitInWorld - 0.2f;
+        public const float DroppedItem = ZDGameRule.UnitInWorld - 0.1f;
         //const float Map = 0.6f;
     }
     public enum AttackType

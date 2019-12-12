@@ -153,7 +153,6 @@ MonoBehaviour:
   Types: 
   Terrain: []
   update: 1
-  IsMap: 0
   InGrassAudio: {fileID: 8300000, guid: f8ec6179585ef49c89dcf3d4c61eb763, type: 3}
 --- !u!82 &74000543282453575
 AudioSource:
