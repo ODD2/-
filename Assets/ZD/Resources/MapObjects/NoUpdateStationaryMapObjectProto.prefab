@@ -47,6 +47,7 @@ MonoBehaviour:
   Types: 00000000
   Terrain: []
   update: 0
+  IsMap: 0
 --- !u!114 &-1568315365529725554
 MonoBehaviour:
   m_ObjectHideFlags: 0
