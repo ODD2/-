@@ -18,7 +18,6 @@ public class StationaryMapObject : ZDRegisterObject
         transform.localScale = NewScale;
 
         //Setup ZDObject Type Depth.
-        ObjectTypeDepth = TypeDepth.MapObject;
         base.Start();
 
         //Setup enabled.

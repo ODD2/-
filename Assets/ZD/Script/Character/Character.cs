@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using ZoneDepict.Rule;
 using System;
 using ZoneDepict;
+using ZoneDepict.Rule;
+using ZoneDepict.Audio;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+
 // This class is basic of Charater, and all infos are
 // in this class
 public class Character : ZDObject,IPunObservable, IADamageObject
@@ -20,7 +22,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #endregion
 
     #region Input Wrappers
-    public virtual void InputAttack(Vector2 AttackDirection, AttackType Type)
+    public virtual void InputAttack(Vector2 AttackDirection, EAttackType Type)
     {
     }
 
@@ -98,11 +100,11 @@ public class Character : ZDObject,IPunObservable, IADamageObject
 
     #region Character Interfaces
     // This virtual function
-    protected virtual void Attack(Vector2 Direction, AttackType Type)
+    protected virtual void Attack(Vector2 Direction, EAttackType Type)
     {
     }
 
-    protected virtual void ApplyDamage(List<List<ZDObject>> Hits, AttackType Type)
+    protected virtual void ApplyDamage(List<List<ZDObject>> Hits, EAttackType Type)
     {
     }
 
@@ -186,8 +188,8 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         }
 
         //Setup Depth
-        if (photonView.IsMine) ObjectTypeDepth = TypeDepth.LocalCharacter;
-        else ObjectTypeDepth = TypeDepth.RemoteCharacter;
+        if (photonView.IsMine) ActorType = EActorType.LocalCharacter;
+        else ActorType = EActorType.RemoteCharacter;
 
         //Calls ZDObject Start()
         base.Start();

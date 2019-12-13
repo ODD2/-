@@ -3,31 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace ZoneDepict.Rule
 {
-    public static class TypeDepth
-    {
-        public const float MapObject = ZDGameRule.UnitInWorld - 0.6f;
-        public const float Effect = ZDGameRule.UnitInWorld - 0.5f;
-        public const float LocalCharacter = ZDGameRule.UnitInWorld - 0.4f;
-        public const float RemoteCharacter = ZDGameRule.UnitInWorld - 0.3f;
-        public const float ItemContainer = ZDGameRule.UnitInWorld - 0.2f;
-        public const float DroppedItem = ZDGameRule.UnitInWorld - 0.1f;
-        //const float Map = 0.6f;
-    }
-    public enum AttackType
+    public enum EAttackType
     {
         N, A, B, R, Cancel
     }
+
+    public enum EActorType
+    {
+        CoverMapObject,
+        Effect,
+        LocalCharacter,
+        RemoteCharacter,
+        GeneralMapObject,
+        ItemContainer,
+        DroppedItem,
+        Total,
+    }
+
+    public enum EObjectType
+    {
+        Obstacle,
+        Transient,
+        Character,
+        ACollect,
+        ADamage,
+        Total,
+    }
+
     public enum RoomPlayerState
     {
         Enter , Casting, Ready
     }
 
+    public static class CustomPropsKey
+    {
+        public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
+    }
+
     public class ZDGameRule : MonoBehaviour
     {
-        public static class CustomPropsKey
-        {
-            public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
-        }
         // Const Game Variable declare
         public const uint MAP_WIDTH_UNIT = 21;
         public const uint MAP_HEIGHT_UNIT = 17;
@@ -37,12 +51,18 @@ namespace ZoneDepict.Rule
         public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UnitInWorld;
         public const int TOUCH_TAP_BOUND_FRAMES = 20;
 
+        public const float SINGLE_ACTOR_DEPTH = 0.00003051757f;
+        public const float UNIT_DEPTH = SINGLE_ACTOR_DEPTH * (int)EActorType.Total;
+
+        //Audio
+        public const float MAX_AUDIO_DISTANCE = 10 * UnitInWorld;
+
         // transform the input position from zonedepict unit to world unit.(z axis is remained the same)
         static public Vector3 UnitToWorld(int x, int y, float z)
         {
             Vector3 ret = new Vector3(x, y, 0);
             //只對x,y縮放
-            ret  *= UnitInWorld;
+            ret *= UnitInWorld;
             ret.z = z;
             return ret;
         }
@@ -51,7 +71,7 @@ namespace ZoneDepict.Rule
             return UnitToWorld((int)input.x, (int)input.y, input.z);
         }
 
-       
+
 
         //transform the input position from world unit to zonedepict unit.(z axis is remained the same)
         static public Vector3 WorldToUnit(float x, float y, float z)
@@ -99,9 +119,9 @@ namespace ZoneDepict.Rule
         //Strictly transform the input direction  into one of the four orientations.
         static public Vector2 QuadrifyDirection2Unit(Vector2 input)
         {
-            if(Mathf.Abs(input.x) >Mathf.Abs(input.y))
+            if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
             {
-                return new Vector2(input.x < 0 ? -1 : 1 , 0);
+                return new Vector2(input.x < 0 ? -1 : 1, 0);
             }
             else
             {
@@ -163,7 +183,19 @@ namespace ZoneDepict.Rule
             return QuadRadius(Mathf.Atan2(input.y, input.x));
         }
 
-
+        static public float ActorDepth(EActorType eActorType)
+        {
+            return (int)(eActorType + 1) * SINGLE_ACTOR_DEPTH;
+        }
+        static public float WorldDepth(float y)
+        {
+            return (int)(y / UnitInWorld) * UNIT_DEPTH;
+        }
+        static public float WorldActorDepth(float y, EActorType eActorType)
+        {
+            return WorldDepth(y) + ActorDepth(eActorType);
+        }
+        
         // Given QuadDirection and Angle , return new offset
         static public Vector2 RotateVector2(Vector2 input,float degree)
         {
@@ -179,26 +211,26 @@ namespace ZoneDepict.Rule
         //{
         //    return CalculateDistance(ThisPos, new Vector2(0, 0));
         //}
-        static public AttackType DirectionToType(Vector2 Direction)
+        static public EAttackType DirectionToType(Vector2 Direction)
         {
             // Customer to set where should be N,A,B or R
-            AttackType Type;
+            EAttackType Type;
             switch (QuadAngle(Direction))
             {
                 case 0:
-                    Type = AttackType.B;
+                    Type = EAttackType.B;
                     break;
                 case 90:
-                    Type = AttackType.R;
+                    Type = EAttackType.R;
                     break;
                 case 180:
-                    Type = AttackType.A;
+                    Type = EAttackType.A;
                     break;
                 case 270:
-                    Type = AttackType.Cancel;
+                    Type = EAttackType.Cancel;
                     break;
                 default:
-                    Type = AttackType.Cancel;
+                    Type = EAttackType.Cancel;
                     break;
             }
             return Type;

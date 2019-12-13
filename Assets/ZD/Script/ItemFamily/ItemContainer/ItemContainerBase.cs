@@ -4,6 +4,7 @@ using UnityEngine;
 using ZoneDepict;
 using Photon.Pun;
 using ZoneDepict.Rule;
+using ZoneDepict.Map;
 
 public abstract class ItemContainerBase : ZDRegisterObject, IADamageObject, IPunObservable
 {
@@ -32,7 +33,7 @@ public abstract class ItemContainerBase : ZDRegisterObject, IADamageObject, IPun
         transform.localScale = NewScale;
 
         //Setup Depth
-        ObjectTypeDepth = TypeDepth.ItemContainer;
+        ActorType = EActorType.ItemContainer;
         base.Start();
     }
     protected new void Update()

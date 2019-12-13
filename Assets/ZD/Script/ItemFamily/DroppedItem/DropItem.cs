@@ -15,7 +15,7 @@ public class DropItem : ZDRegisterObject, IACollectObject
     protected new void Start()
     {
         //Setup Object Depth
-        ObjectTypeDepth = TypeDepth.DroppedItem;
+        ActorType = EActorType.DroppedItem;
         base.Start();
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ZoneDepict.Rule;
+
 namespace ZoneDepict.UI
 {
     public class ZDUI : MonoBehaviour
@@ -52,7 +53,7 @@ namespace ZoneDepict.UI
             AttackIndicator.SetActive(false);
         }
 
-        public void UpdateAttackCircle(AttackType Type)
+        public void UpdateAttackCircle(EAttackType Type)
         {
             AttackIndicator.GetComponent<SpriteRenderer>().sprite = AttackSources[(int)Type];
             

@@ -117,7 +117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba03d1ee1b59924e8fae01c3ebf7150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Types: 00000000
+  ActorType: 5
+  ObjectTypes: 00000000
   Terrain: []
   Durability: 10
   BrokenAudio: {fileID: 8300000, guid: df251bb1b25b549e09a31995f8208420, type: 3}

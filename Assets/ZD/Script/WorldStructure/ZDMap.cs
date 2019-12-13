@@ -3,22 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict.Rule;
-namespace ZoneDepict
-{
-    public enum ETypeZDO
-    {
-        Obstacle,
-        Transient,
-        Character,
-        ACollect,
-        ADamage,
-        Total,
-    }
 
+namespace ZoneDepict.Map
+{
     public class ZDGridBlock
     {
-        private List<ZDObject>[] CategorizeList = new List<ZDObject>[(int)ETypeZDO.Total];
-        private Dictionary<ZDObject, List<ETypeZDO>> Passengers = new Dictionary<ZDObject, List<ETypeZDO>>(); 
+        private List<ZDObject>[] CategorizeList = new List<ZDObject>[(int)EObjectType.Total];
+        private Dictionary<ZDObject, List<EObjectType>> Passengers = new Dictionary<ZDObject, List<EObjectType>>(); 
         public bool IsEmpty()
         {
             foreach (var list in CategorizeList)
@@ -66,7 +57,7 @@ namespace ZoneDepict
             }
         }
 
-        public List<ZDObject> GetTypeList(ETypeZDO Type)
+        public List<ZDObject> GetTypeList(EObjectType Type)
         {
             return CategorizeList[(int)Type];
         }
@@ -87,7 +78,7 @@ namespace ZoneDepict
     public class ZDObjectRecord
     {
         public (uint, uint) Location;
-        public List<ETypeZDO> Types;
+        public List<EObjectType> Types;
         public ZDObject Owner;
     }
 
@@ -189,31 +180,31 @@ namespace ZoneDepict
             return Recorder.ContainsKey(Caller);
         }
 
-        static List<ETypeZDO> AuditObjTypes(ZDObject Caller)
+        static List<EObjectType> AuditObjTypes(ZDObject Caller)
         {
-            List<ETypeZDO> TrueTypes = new List<ETypeZDO>();
-            foreach(ETypeZDO types in Enum.GetValues(typeof(ETypeZDO)))
+            List<EObjectType> TrueTypes = new List<EObjectType>();
+            foreach(EObjectType types in Enum.GetValues(typeof(EObjectType)))
             {
                 switch (types)
                 {
-                    case ETypeZDO.ACollect:
-                        if (Caller is IACollectObject) TrueTypes.Add(ETypeZDO.ACollect);
+                    case EObjectType.ACollect:
+                        if (Caller is IACollectObject) TrueTypes.Add(EObjectType.ACollect);
                         break;
-                    case ETypeZDO.ADamage:
-                        if (Caller is IADamageObject) TrueTypes.Add(ETypeZDO.ADamage);
+                    case EObjectType.ADamage:
+                        if (Caller is IADamageObject) TrueTypes.Add(EObjectType.ADamage);
                         break;
-                    case ETypeZDO.Character:
-                        if (Caller is Character) TrueTypes.Add(ETypeZDO.Character);
+                    case EObjectType.Character:
+                        if (Caller is Character) TrueTypes.Add(EObjectType.Character);
                         break;
                     default:
-                        if(Array.Exists(Caller.Types, x => x ==types))
+                        if(Array.Exists(Caller.ObjectTypes, x => x ==types))
                         {
                             TrueTypes.Add(types);
                         }
                         break;
                 }
             }
-            if (TrueTypes.Count == 0) TrueTypes.Add(ETypeZDO.Transient);
+            if (TrueTypes.Count == 0) TrueTypes.Add(EObjectType.Transient);
             return TrueTypes;
         }
 
@@ -333,7 +324,7 @@ namespace ZoneDepict
         {
             return  HitAt((int)input.x,(int)input.y,Caller);
         }
-        static public List<ZDObject> HitAt(int x, int y, ZDObject Caller,ETypeZDO Type)
+        static public List<ZDObject> HitAt(int x, int y, ZDObject Caller,EObjectType Type)
         {
             (uint, uint) MapLoc = Recorder[Caller].Location;
             x += (int)MapLoc.Item1;
@@ -344,7 +335,7 @@ namespace ZoneDepict
             }
             return RecordGrid[x, y].GetTypeList(Type);
         }
-        static public List<ZDObject> HitAt(Vector2 input, ZDObject Caller,ETypeZDO Type)
+        static public List<ZDObject> HitAt(Vector2 input, ZDObject Caller,EObjectType Type)
         {
             return HitAt((int)input.x, (int)input.y, Caller, Type);
         }
@@ -364,7 +355,7 @@ namespace ZoneDepict
         {
             return HitAtUnit((int)UnitLoc.x, (int)UnitLoc.y);
         }
-        static public List<ZDObject> HitAtUnit(int x, int y, ETypeZDO Type)
+        static public List<ZDObject> HitAtUnit(int x, int y, EObjectType Type)
         {
             (uint, uint) MapLoc = UnitToMap(x, y);
             //Debug.Log("ZDMap - HitAt: " + MapLoc.Item1 + ", " + MapLoc.Item2);
@@ -375,12 +366,12 @@ namespace ZoneDepict
             }
             return RecordGrid[MapLoc.Item1, MapLoc.Item2].GetTypeList(Type);
         }
-        static public List<ZDObject> HitAtUnit(Vector2 UnitLoc, ETypeZDO Type)
+        static public List<ZDObject> HitAtUnit(Vector2 UnitLoc, EObjectType Type)
         {
             return HitAtUnit((int)UnitLoc.x, (int)UnitLoc.y,Type);
         }
 
-        static public List<ZDObject> HitAtObject(ZDObject Target,ETypeZDO Type)
+        static public List<ZDObject> HitAtObject(ZDObject Target,EObjectType Type)
         {
             if (Recorder.ContainsKey(Target))
             {

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using ZoneDepict.Rule;
 using ZoneDepict;
+using ZoneDepict.Rule;
+using ZoneDepict.Map;
 
 //Characters Derived from this class is restrict to move and attack on the four directions.
 public class CrossMoveCharacter : Character
@@ -28,7 +29,7 @@ public class CrossMoveCharacter : Character
         }
     }
 
-    public override void InputAttack(Vector2 AttackDirection, AttackType Type)
+    public override void InputAttack(Vector2 AttackDirection, EAttackType Type)
     { 
         if (photonView.IsMine &&
             !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") &&
@@ -50,23 +51,23 @@ public class CrossMoveCharacter : Character
         if (MoveSound && audioSource) audioSource.PlayOneShot(MoveSound);
     }
 
-    protected override void Attack(Vector2 Direction, AttackType Type)
+    protected override void Attack(Vector2 Direction, EAttackType Type)
     {
         FaceTo(Direction);
 
         switch (Type)
         {
-            case AttackType.N:
+            case EAttackType.N:
                 // Play clip and Trigger notify
                 animator.SetTrigger("AttackN");
                 break;
-            case AttackType.A:
+            case EAttackType.A:
                 animator.SetTrigger("AttackA");
                 break;
-            case AttackType.B:
+            case EAttackType.B:
                 animator.SetTrigger("AttackB");
                 break;
-            case AttackType.R:
+            case EAttackType.R:
                 break;
             default:
                 break;
@@ -151,7 +152,7 @@ public class CrossMoveCharacter : Character
                 {
                     //Move To Currently Checking Position.
                     CurPos[i] += Delta;
-                    if (!ZDMap.IsUnitInMap(CurPos) || ZDMap.HitAtUnit(CurPos,ETypeZDO.Obstacle)!=null)
+                    if (!ZDMap.IsUnitInMap(CurPos) || ZDMap.HitAtUnit(CurPos,EObjectType.Obstacle)!=null)
                     {
                         //Return To Last Position.
                         CurPos[i] -= Delta;
@@ -181,7 +182,7 @@ public class CrossMoveCharacter : Character
     }
 
     [PunRPC]
-    public void RPCAttack(Vector2 Direction, AttackType type)
+    public void RPCAttack(Vector2 Direction, EAttackType type)
     {
         Attack(Direction, type);
     }

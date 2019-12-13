@@ -6,6 +6,8 @@ using Photon.Pun;
 using Photon;
 using Photon.Realtime;
 using ZoneDepict.Rule;
+using ZoneDepict.Map;
+
 namespace ZoneDepict
 {
     [Serializable]
@@ -23,9 +25,10 @@ namespace ZoneDepict
 
     public class ZDObject : MonoBehaviourPunCallbacks
     {
-
-        protected float ObjectTypeDepth = 0.0f;
-        public ETypeZDO[] Types;
+        [SerializeField]
+        protected EActorType ActorType;
+        private float ActorTypeDepth = 0.0f;
+        public EObjectType[] ObjectTypes;
         public VectorI2[] Terrain;
 
         protected void Start()
@@ -37,8 +40,12 @@ namespace ZoneDepict
             {
                 Debug.Log("Error! Cannot Register ZDObject, Object Out of Bound!");
             }
+
+            //Cache ActorTypeDepth
+            ActorTypeDepth = ZDGameRule.ActorDepth(ActorType);
+
             //Forced Update to set object depth with type depth;
-            SetObjectDepthWithTypeDepth();
+            SetActorDepth();
         }
 
         protected void Update()
@@ -47,7 +54,7 @@ namespace ZoneDepict
             //Update Z axis to correct the in block layers.
             if (transform.hasChanged)
             {
-                SetObjectDepthWithTypeDepth();
+                SetActorDepth();
                 transform.hasChanged = false;
             }
         }
@@ -62,10 +69,10 @@ namespace ZoneDepict
             return ZDMap.IsRegistered(this);
         }
 
-        protected void SetObjectDepthWithTypeDepth()
+        protected void SetActorDepth()
         {
             Vector3 NewPos = transform.position;
-            NewPos.z = transform.position.y + ObjectTypeDepth;
+            NewPos.z = ZDGameRule.WorldDepth(NewPos.y) + ActorTypeDepth;
             transform.position = NewPos;
         }
     }

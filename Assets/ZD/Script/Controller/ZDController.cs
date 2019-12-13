@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using ZoneDepict;
 using ZoneDepict.Rule;
 using ZoneDepict.UI;
-using ZoneDepict;
-using UnityEngine.EventSystems;
+using ZoneDepict.Map;
+
+
 
 public class ZDController : MonoBehaviour
 {
@@ -81,7 +84,7 @@ public class ZDController : MonoBehaviour
 
                     if (TouchTemp.phase == TouchPhase.Began)
                     {
-                        if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, ETypeZDO.ACollect)) != null)
+                        if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) != null)
                         {
                             foreach (var obj in HitObjects)
                             {
@@ -108,7 +111,7 @@ public class ZDController : MonoBehaviour
                         {
                             // Activate Attack System
                             IsMovingCharacter = false;
-                            if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, ETypeZDO.ACollect)) == null && !BagClass.GetHover())
+                            if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) == null && !BagClass.GetHover())
                             {
                                 IsSelectingAttack = true;
                                 IsActivateAttackCircle = true;
@@ -156,7 +159,7 @@ public class ZDController : MonoBehaviour
                             IsActivateAttackCircle = false;
                             if ((TouchPos - TouchPosRecord).magnitude < 0.1f) // This Distance is to judge how is "Tap"
                             {
-                                TargetCharacter.InputAttack(TouchPos - CharactorPos, AttackType.N);
+                                TargetCharacter.InputAttack(TouchPos - CharactorPos, EAttackType.N);
                             }
                             else
                             {
@@ -166,7 +169,7 @@ public class ZDController : MonoBehaviour
                         // Tap for Normal attack
                         if (Frame <= ZDGameRule.TOUCH_TAP_BOUND_FRAMES && !IsTouchMove && !IsMovingCharacter)
                         {
-                            TargetCharacter.InputAttack(TouchPos - CharactorPos, AttackType.N);
+                            TargetCharacter.InputAttack(TouchPos - CharactorPos, EAttackType.N);
 
                         }
 
@@ -215,22 +218,22 @@ public class ZDController : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
-                    TargetCharacter.InputAttack(AttackDirection, AttackType.N);
+                    TargetCharacter.InputAttack(AttackDirection, EAttackType.N);
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
                     AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
-                    TargetCharacter.InputAttack(AttackDirection, AttackType.A);
+                    TargetCharacter.InputAttack(AttackDirection, EAttackType.A);
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
                     AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
-                    TargetCharacter.InputAttack(AttackDirection, AttackType.B);
+                    TargetCharacter.InputAttack(AttackDirection, EAttackType.B);
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
                     AttackDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - TargetCharacter.transform.position;
-                    TargetCharacter.InputAttack(AttackDirection, AttackType.R);
+                    TargetCharacter.InputAttack(AttackDirection, EAttackType.R);
 
                 }
 
@@ -260,7 +263,7 @@ public class ZDController : MonoBehaviour
 
                     List<ZDObject> HitObjects;
 
-                    if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, ETypeZDO.ACollect)) != null)
+                    if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, EObjectType.ACollect)) != null)
                     {
                         foreach (var obj in HitObjects)
                         {
@@ -283,7 +286,7 @@ public class ZDController : MonoBehaviour
                     else
                     {
                         // Is Activate Attack System
-                        if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, ETypeZDO.ACollect)) == null && !BagClass.GetHover())
+                        if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, EObjectType.ACollect)) == null && !BagClass.GetHover())
                         {
 
                             IsSelectingAttack = true;
@@ -312,7 +315,7 @@ public class ZDController : MonoBehaviour
                         IsActivateAttackCircle = false;
                         if ((DropLocation - TouchPosRecord).magnitude < 0.1f) // This Distance is to judge how is "Tap"
                         {
-                            TargetCharacter.InputAttack(DropLocation - CharactorPos, AttackType.N);
+                            TargetCharacter.InputAttack(DropLocation - CharactorPos, EAttackType.N);
                         }
                         else
                         {

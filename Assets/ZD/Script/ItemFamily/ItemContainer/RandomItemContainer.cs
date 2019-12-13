@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 using ZoneDepict;
+using ZoneDepict.Audio;
 
 public class RandomItemContainer : ItemContainerBase
 {

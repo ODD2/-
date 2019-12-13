@@ -94,7 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a70a3d829b78dfc4fb776ed80d6aaf21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Types: 
+  ActorType: 7
+  ObjectTypes: 
   Terrain: []
   PickupEffect: {fileID: 100000, guid: a809762a0c12a4e46abbc1f56add3508, type: 3}
   amplitude: 0.1
