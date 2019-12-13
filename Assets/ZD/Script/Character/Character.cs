@@ -180,6 +180,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
+        ZDAudioSource.SetupAudioSource(audioSource);
 
         //Setup TeamID.
         if (photonView.Owner.CustomProperties.ContainsKey("Team"))

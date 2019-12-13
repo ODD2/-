@@ -20,8 +20,7 @@ public class Grass : StationaryMapObject
     {
         base.Start();
         StartCoroutine(PauseAndPlay());
-        //audioSource = GetComponent<AudioSource>();
-        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
         ZDAudioSource.SetupAudioSource(audioSource);
     }
 
