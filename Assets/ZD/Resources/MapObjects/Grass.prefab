@@ -151,8 +151,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActorType: 0
-  ObjectTypes: 01000000
-  Terrain: []
+  Configs:
+  - ObjectType: 1
+    Terrain: []
+  - ObjectType: 2
+    Terrain:
+    - {x: 0, y: 0}
   update: 1
   InGrassAudio: {fileID: 8300000, guid: f8ec6179585ef49c89dcf3d4c61eb763, type: 3}
 --- !u!82 &74000543282453575

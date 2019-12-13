@@ -117,8 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActorType: 7
-  ObjectTypes: 
-  Terrain: []
+  Configs: []
   PickupEffect: {fileID: 100000, guid: a809762a0c12a4e46abbc1f56add3508, type: 3}
   amplitude: 0.1
   frequency: 1

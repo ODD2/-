@@ -34,6 +34,8 @@ public class Grass : StationaryMapObject
         uint NewCount = 0;
         List<ZDObject> FetchList =  ZDMap.HitAtObject(this, EObjectType.Character);
         if (FetchList != null) NewCount = (uint)FetchList.Count;
+        else NewCount = 0;
+
         if (NewCount != InGrassCount)
         {
             GrassChangeEffect();

@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActorType: 4
-  ObjectTypes: 00000000
-  Terrain: []
+  Configs:
+  - ObjectType: 0
+    Terrain: []
   update: 0
 --- !u!114 &-1568315365529725554
 MonoBehaviour:

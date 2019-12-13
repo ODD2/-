@@ -22,8 +22,12 @@ namespace ZoneDepict.Rule
 
     public enum EObjectType
     {
+        //Body
         Obstacle,
         Transient,
+        //Functional
+        Shelter,
+        //Characteristic
         Character,
         ACollect,
         ADamage,
@@ -189,7 +193,7 @@ namespace ZoneDepict.Rule
         }
         static public float WorldDepth(float y)
         {
-            return (int)(y / UnitInWorld) * UNIT_DEPTH;
+            return Mathf.Round(y / UnitInWorld) * UNIT_DEPTH;
         }
         static public float WorldActorDepth(float y, EActorType eActorType)
         {

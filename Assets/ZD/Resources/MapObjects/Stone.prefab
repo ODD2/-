@@ -61,11 +61,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stone
       objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: ActorType
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 7076630245265640829, guid: 9b22f029b241b49869b2bb0d697a8dcb,
         type: 3}
       propertyPath: m_LocalPosition.x

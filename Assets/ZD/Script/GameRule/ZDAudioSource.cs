@@ -35,10 +35,9 @@ namespace ZoneDepict.Audio
         {
             audioSource.spatialBlend = 1;
             audioSource.minDistance = 1;
-            audioSource.maxDistance = 100;
+            audioSource.maxDistance = ZDGameRule.MAX_AUDIO_DISTANCE;
             audioSource.dopplerLevel = 0;
-            audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
-            
+            audioSource.rolloffMode = AudioRolloffMode.Linear;
         }
     }
 }

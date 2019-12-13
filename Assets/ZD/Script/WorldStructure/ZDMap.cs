@@ -9,7 +9,7 @@ namespace ZoneDepict.Map
     public class ZDGridBlock
     {
         private List<ZDObject>[] CategorizeList = new List<ZDObject>[(int)EObjectType.Total];
-        private Dictionary<ZDObject, List<EObjectType>> Passengers = new Dictionary<ZDObject, List<EObjectType>>(); 
+        private Dictionary<ZDObject, HashSet<EObjectType>> Passengers = new Dictionary<ZDObject, HashSet<EObjectType>>(); 
         public bool IsEmpty()
         {
             foreach (var list in CategorizeList)
@@ -46,14 +46,14 @@ namespace ZoneDepict.Map
             
         }
 
-        public void Add(ZDObjectRecord TargetRecord)
+        public void Add(ZDObject  TargetObj, HashSet<EObjectType> Types)
         {
-            Passengers.Add(TargetRecord.Owner, TargetRecord.Types);
-            foreach(var Type in TargetRecord.Types)
+            Passengers.Add(TargetObj, Types);
+            foreach(var Type in Types)
             {
                 ref List<ZDObject> TargetList = ref CategorizeList[(int)Type];
                 if (TargetList == null) TargetList = new List<ZDObject>();
-                TargetList.Add(TargetRecord.Owner);
+                TargetList.Add(TargetObj);
             }
         }
 
@@ -120,7 +120,6 @@ namespace ZoneDepict.Map
             Recorder[Caller] = new ZDObjectRecord
             {
                 Location = MapLoc,
-                Types = AuditObjTypes(Caller),
                 Owner = Caller,
             };
             AddToRecordGrids(Recorder[Caller]);
@@ -146,7 +145,7 @@ namespace ZoneDepict.Map
             }
         }
 
-        static public void UpdateLocation(ZDObject Caller)
+        static public bool UpdateLocation(ZDObject Caller)
         {
             //Update location only if caller is inside the map and it's registered.
             if(IsWorldInMap(Caller.transform.position) && IsRegistered(Caller))
@@ -158,12 +157,12 @@ namespace ZoneDepict.Map
                 if (NewMapLoc == PrevMapLoc)
                 {
                     //location remains, no need to update.
-                    return;
+                    return false;
                 }
                 else if (RemoveFromRecordGrids(Recorder[Caller]))
                 {
                     //TODO: Error Log: This should not happen in general.
-                    return;
+                    return false;
                 }
                 else
                 {
@@ -171,8 +170,9 @@ namespace ZoneDepict.Map
                     Recorder[Caller].Location = NewMapLoc;
                     AddToRecordGrids(Recorder[Caller]);
                 }
-                return;
+                return true;
             }
+            return false;
         }
 
         static public bool IsRegistered(ZDObject Caller)
@@ -180,46 +180,18 @@ namespace ZoneDepict.Map
             return Recorder.ContainsKey(Caller);
         }
 
-        static List<EObjectType> AuditObjTypes(ZDObject Caller)
-        {
-            List<EObjectType> TrueTypes = new List<EObjectType>();
-            foreach(EObjectType types in Enum.GetValues(typeof(EObjectType)))
-            {
-                switch (types)
-                {
-                    case EObjectType.ACollect:
-                        if (Caller is IACollectObject) TrueTypes.Add(EObjectType.ACollect);
-                        break;
-                    case EObjectType.ADamage:
-                        if (Caller is IADamageObject) TrueTypes.Add(EObjectType.ADamage);
-                        break;
-                    case EObjectType.Character:
-                        if (Caller is Character) TrueTypes.Add(EObjectType.Character);
-                        break;
-                    default:
-                        if(Array.Exists(Caller.ObjectTypes, x => x ==types))
-                        {
-                            TrueTypes.Add(types);
-                        }
-                        break;
-                }
-            }
-            if (TrueTypes.Count == 0) TrueTypes.Add(EObjectType.Transient);
-            return TrueTypes;
-        }
-
         static void AddToRecordGrids(ZDObjectRecord CallerRecord)
         {
             (uint, uint) Origin = CallerRecord.Location;
             ZDObject Caller = CallerRecord.Owner;
             (int, int) OffsetLoc;
-            foreach (var terrain in Caller.Terrain)
+            foreach (var region in Caller.Regions)
             {
-                OffsetLoc = ((int)Origin.Item1 + terrain.x, (int)Origin.Item2 + terrain.y);
+                OffsetLoc = ((int)Origin.Item1 + region.Key.x, (int)Origin.Item2 + region.Key.y);
                 if (IsValidMapLoc(OffsetLoc.Item1, OffsetLoc.Item2))
                 {
                     //add caller into new location
-                    RecordGrid[OffsetLoc.Item1, OffsetLoc.Item2].Add(Recorder[Caller]);
+                    RecordGrid[OffsetLoc.Item1, OffsetLoc.Item2].Add(Caller, region.Value);
                 }
             }
         }
@@ -229,9 +201,9 @@ namespace ZoneDepict.Map
             (uint, uint) Origin = CallerRecord.Location;
             ZDObject Caller = CallerRecord.Owner;
             (int, int) OffsetLoc;
-            foreach (var terrain in Caller.Terrain)
+            foreach (var region in Caller.Regions)
             {
-                OffsetLoc = ((int)Origin.Item1 + terrain.x, (int)Origin.Item2 + terrain.y);
+                OffsetLoc = ((int)Origin.Item1 + region.Key.x, (int)Origin.Item2 + region.Key.y);
                 if (IsValidMapLoc(OffsetLoc.Item1, OffsetLoc.Item2))
                 {
                     //add caller into new location
@@ -380,16 +352,17 @@ namespace ZoneDepict.Map
                 (uint, uint) Origin = TargetRecord.Location;
                 ZDObject Caller = TargetRecord.Owner;
                 (int, int) OffsetLoc;
-                foreach (var terrain in Caller.Terrain)
+                foreach (var region in Caller.Regions)
                 {
-                    OffsetLoc = ((int)Origin.Item1 + terrain.x, (int)Origin.Item2 + terrain.y);
+                    OffsetLoc = ((int)Origin.Item1 + region.Key.x, (int)Origin.Item2 + region.Key.y);
                     if (IsValidMapLoc(OffsetLoc.Item1, OffsetLoc.Item2))
                     {
                         List<ZDObject> GetList = RecordGrid[OffsetLoc.Item1, OffsetLoc.Item2].GetTypeList(Type);
                         if (GetList != null) Result.AddRange(GetList);
                     }
                 }
-                return Result;
+                if (Result.Count != 0) return Result;
+                else return null;
             }
             return null;
         }
