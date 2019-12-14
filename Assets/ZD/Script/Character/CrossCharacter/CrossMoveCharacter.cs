@@ -47,6 +47,7 @@ public class CrossMoveCharacter : Character
         NewDestination = true;
         //Save Destination
         SprintDestination = ZDGameRule.WorldUnify(ZDGameRule.QuadrifyDirection(Destination, transform.position));
+
         //PlaySound
         if (MoveSound && audioSource) audioSource.PlayOneShot(MoveSound);
     }

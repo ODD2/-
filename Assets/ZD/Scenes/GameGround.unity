@@ -1762,6 +1762,8 @@ MonoBehaviour:
     type: 3}
   MoveIndicator: {fileID: 4230767625700393350, guid: 6153e91dd70bc40e6bef2bed8e26ce09,
     type: 3}
+  SingleSoul: {fileID: 5802979548508717889, guid: 6f532261f494d478c95c9b5c7291354d,
+    type: 3}
 --- !u!1 &2108264073
 GameObject:
   m_ObjectHideFlags: 0
