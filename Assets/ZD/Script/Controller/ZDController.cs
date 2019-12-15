@@ -12,19 +12,18 @@ using ZoneDepict.Map;
 public class ZDController : MonoBehaviour
 {
     public static ZDController Instance;
-
-    private Character TargetCharacter = null;
+    public static Character TargetCharacter = null;
     private Vector2 TouchPosRecord; // To record the attack start pos (to calculate direction)
 
     public bool IsPhoneTest = true;
 
     #region Check Bools
-    private bool IsMovingCharacter = false; // To judge if do click/touch on target
-    private bool IsActivateAttackCircle = false;
-    private bool IsSelectingAttack = false;
-    private bool IsTouchMove = false; // To judge if did "Drag" or not
-    private bool IsDidMovePhase = false;
-    private bool IsCollectItem = false;
+    private bool IsMovingCharacter; // To judge if do click/touch on target
+    private bool IsActivateAttackCircle;
+    private bool IsSelectingAttack;
+    private bool IsTouchMove; // To judge if did "Drag" or not
+    private bool IsDidMovePhase;
+    private bool IsCollectItem;
     #endregion
 
     #region Fix const

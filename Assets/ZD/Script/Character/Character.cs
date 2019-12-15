@@ -41,10 +41,13 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     public int TeamID {get; protected set; } = 0;
     protected float HP = 100;
     protected float MP = 100;
+    protected int Soul;
     protected float RegHP = 0.1f;
     protected float RegMP = 2.9f;
     protected float MaxHP = 100;
     protected float MaxMP = 100;
+    protected int MaxSoul = 4;
+
     protected Vector2 Velocity = new Vector2(0,0);
     protected float MaxVelocity = 30;
     List<ItemBase> Inventory = new List<ItemBase>();
@@ -69,21 +72,9 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         return RegMP;
     }
-    public float GetMaxHP()
-    {
-        return MaxHP;
-    }
     public float GetHP()
     {
         return HP;
-    }
-    public float GetMaxMP()
-    {
-        return MaxMP;
-    }
-    public float GetMP()
-    {
-        return MP;
     }
     public void SetHP(float NewHP)
     {
@@ -91,11 +82,37 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         else if (NewHP < 0) HP = 0;
         else HP = NewHP;
     }
+    public float GetMaxHP()
+    {
+        return MaxHP;
+    }
+    public float GetMP()
+    {
+        return MP;
+    }
     public void SetMP(float NewMP)
     {
         if (NewMP > MaxMP) MP = MaxMP;
         else if (NewMP < 0) MP = 0;
         else MP = NewMP;
+    }
+    public float GetMaxMP()
+    {
+        return MaxMP;
+    }
+    public int GetSoul()
+    {
+        return Soul;
+    }
+    public void SetSoul(int NewSoul)
+    {
+        if (NewSoul > MaxSoul) Soul = MaxSoul;
+        else if (NewSoul < 0) Soul = 0;
+        else Soul = NewSoul;
+    }
+    public int GetMaxSoul()
+    {
+        return MaxSoul;
     }
     public int GetInventoryMax()
     {
@@ -310,8 +327,9 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         Debug.LogFormat("HP: {0}\n" +
                         "MP: {1}\n" +
-                        "ItemNum: {2}\n",
-                        HP,MP,Inventory.Count);
+                        "ItemNum: {2}\n"+
+                        "Soul: {3}\n",
+                        HP,MP,Inventory.Count,Soul);
     }
     #endregion
 

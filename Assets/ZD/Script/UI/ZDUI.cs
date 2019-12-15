@@ -8,7 +8,8 @@ namespace ZoneDepict.UI
 {
     public class ZDUI : MonoBehaviour
     {
-        static public GameObject InstanceObject;
+        
+        static public ZDUI Instance;
         public RectTransform HealthBar;
         public RectTransform HealthBarBG;
         public RectTransform MagicBar;
@@ -17,15 +18,21 @@ namespace ZoneDepict.UI
         public Sprite[] AttackSources;
         public GameObject AttackIndicator;
         public GameObject MoveIndicator;
+        public GameObject SingleSoul;
         private Transform Attack;
         private Transform Move;
         private float FrameFix = 0.01f;
         private float[] ArrowScale = { 0, 0, 0, 0, 0, 0 };
+        private int SoulDisplayed = 0;
+        private List<GameObject> SoulCached = new List<GameObject>();
+
+        
+
         // Start is called before the first frame update
         void Start()
         {
-            if (InstanceObject != null) Destroy(gameObject);
-            else InstanceObject = this.gameObject;
+            if (Instance != null) Destroy(gameObject);
+            else Instance = this;
 
             MoveIndicator = Instantiate(MoveIndicator);
             AttackIndicator = Instantiate(AttackIndicator);
@@ -96,6 +103,46 @@ namespace ZoneDepict.UI
                 HealthBar.sizeDelta += new Vector2(-1, 0);
             }
             
+        }
+
+        private void FixedUpdate()
+        {
+            if (ZDController.TargetCharacter)
+            {
+                int GetSoul = ZDController.TargetCharacter.GetSoul(); 
+                if (SoulDisplayed != GetSoul)
+                {
+                    if (SoulDisplayed < GetSoul)
+                    {
+                        if (SoulCached.Count < GetSoul)
+                        {
+                            for (int i = SoulCached.Count; i < GetSoul; ++i)
+                            {
+                                GameObject NewSoulIndicator = Instantiate(SingleSoul, transform);
+                                NewSoulIndicator.transform.position += new Vector3(-2 + 0.8f*i, ZDGameRule.UnitInWorld, 0);
+                                SoulCached.Add(NewSoulIndicator);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = SoulDisplayed; i < GetSoul; ++i)
+                            {
+                                SoulCached[i].SetActive(true);
+                            }
+                        }
+
+                    }
+                    else if (SoulDisplayed > GetSoul)
+                    {
+                        for (int i = GetSoul; i < SoulDisplayed; i++)
+                        {
+                            SoulCached[i].SetActive(false);
+                        }
+                    }
+                    SoulDisplayed = GetSoul;
+                  
+                }
+            }
         }
     }
 }

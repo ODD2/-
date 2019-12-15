@@ -9,7 +9,7 @@ using ZoneDepict.Map;
 
 
 
-public class Ruso : CrossMoveCharacter
+public class Ruso : CrossTrackCharacter
 {
     public GameObject[] HitEffects;
     private readonly float[] AttackDamage = { 10, 20, 15, 30 };

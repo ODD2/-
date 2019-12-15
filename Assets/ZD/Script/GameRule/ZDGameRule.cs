@@ -44,7 +44,7 @@ namespace ZoneDepict.Rule
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
     }
 
-    public class ZDGameRule : MonoBehaviour
+    public static  class ZDGameRule 
     {
         // Const Game Variable declare
         public const uint MAP_WIDTH_UNIT = 21;
@@ -60,6 +60,11 @@ namespace ZoneDepict.Rule
 
         //Audio
         public const float MAX_AUDIO_DISTANCE = 10 * UnitInWorld;
+
+        public static class CrossTrack
+        {
+            public const float NextTrackDelay = 2.0f;
+        }
 
         // transform the input position from zonedepict unit to world unit.(z axis is remained the same)
         static public Vector3 UnitToWorld(int x, int y, float z)
@@ -173,6 +178,7 @@ namespace ZoneDepict.Rule
             float degree = (input + 45) % 360;
             return 90 * (degree < 0 ? 3 - (int)Mathf.Abs(degree) / 90 : (int)Mathf.Abs(degree) / 90); ;
         }
+
         static public float QuadAngle(Vector2 input)
         {
             return QuadAngle(Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg);
