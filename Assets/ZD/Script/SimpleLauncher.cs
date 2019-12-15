@@ -16,6 +16,10 @@ public class SimpleLauncher
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)

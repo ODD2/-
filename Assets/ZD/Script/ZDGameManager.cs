@@ -29,13 +29,6 @@ namespace ZoneDepict
         EndGame = 100,
     }
 
-    public enum ZDTeams
-    {
-        T0,
-        T1,
-        Total,
-    }
-
     [Serializable]
     public struct SpawnObjectConfig
     {

@@ -411,6 +411,11 @@ PrefabInstance:
       propertyPath: Terrain.Array.data[2].x
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7413191647304837444, guid: 14ac9f8c906ef9a4ca31e518435f9bec,
+        type: 3}
+      propertyPath: viewIdField
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14ac9f8c906ef9a4ca31e518435f9bec, type: 3}
 --- !u!1 &1747025634

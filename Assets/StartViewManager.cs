@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 using ZoneDepict.Rule;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 // If there is another Server in the future , set the server info here and 
 // change server setting in this class
 public class StartViewManager : MonoBehaviourPunCallbacks
@@ -38,10 +39,15 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         StartViewAudio[0].Stop();
         StartViewAudio[2].PlayOneShot(StartViewAudio[2].clip);
         StartViewAudio[1].Play();
+        /*
+         *  Add Player Name by Random
+         */
         switch (ServerIndex)
         {
             case 0:
+                
                 PhotonNetwork.GameVersion = "1";
+                PhotonNetwork.LocalPlayer.NickName = "Player" + UnityEngine.Random.Range(1000, 10000).ToString();
                 PhotonNetwork.ConnectUsingSettings();
                 break;
             
@@ -50,54 +56,35 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         }
         StartButton.enabled = false;
         Connecting.SetActive(true);
-        StartCoroutine(WaitAudioStop());
+        StartCoroutine(WaitConnect());
+        //StartCoroutine(WaitAudioStop());
     }
 
     public override void OnConnectedToMaster()
     {
-        // Connected successed !
-        // If connected successed , plz go to Lobby
-        // PhotonNetwork.JoinLobby();
+        ExitGames.Client.Photon.Hashtable PlayerProps = new ExitGames.Client.Photon.Hashtable();
+        PlayerProps.Add("Alive", true);
+        PlayerProps.Add("RoomState", RoomPlayerState.Enter);
+        PlayerProps.Add("CharacterName", "");
+        PlayerProps.Add("Ready", false);
+        PhotonNetwork.SetPlayerCustomProperties(PlayerProps);
+        PhotonNetwork.LoadLevel("TestScene");
+
     }
 
     IEnumerator  WaitConnect()
     {
         yield return new WaitUntil(()=> PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer);
 
-        //PhotonNetwork.LoadLevel("GameLobbyView");
-        // Only for beta demo and add team is random if
-        // want do some real team-thing , modify here
-        int RandomRoomint = UnityEngine.Random.Range(0, 9999999);
-        ExitGames.Client.Photon.Hashtable PlayerProps = new ExitGames.Client.Photon.Hashtable();
-        PlayerProps.Add("Team",RandomRoomint);
-        PlayerProps.Add("Alive", true);
-        PlayerProps.Add("RoomState", RoomPlayerState.Enter);
-        PhotonNetwork.SetPlayerCustomProperties(PlayerProps);
-        PhotonNetwork.JoinRandomRoom();
-        Debug.Log(RandomRoomint);
-    }
-    IEnumerator WaitAudioStop()
-    {
-        yield return new WaitUntil(() => !StartViewAudio[1].isPlaying);
-        Connecting.SetActive(true);
-
-        StartCoroutine(WaitConnect());
-    }
-    
-
-    public override void OnJoinedRoom()
-    {
-        Debug.Log("Join Room Sucessed ! :) ");
-        PhotonNetwork.LoadLevel("GameRoomView");
-    }
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        PhotonNetwork.CreateRoom("DemoRoom");
+        
+        
+        //Debug.Log(RandomRoomint);
     }
 
     public override void OnJoinedLobby()
     {
         Debug.Log("In Lobby ~~");
     }
+
     
 }
