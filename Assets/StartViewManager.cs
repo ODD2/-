@@ -56,10 +56,12 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         }
         StartButton.enabled = false;
         Connecting.SetActive(true);
-        StartCoroutine(WaitConnect());
+        //StartCoroutine(WaitConnect());
         //StartCoroutine(WaitAudioStop());
     }
 
+
+    #region PUN CallBack
     public override void OnConnectedToMaster()
     {
         ExitGames.Client.Photon.Hashtable PlayerProps = new ExitGames.Client.Photon.Hashtable();
@@ -68,17 +70,8 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         PlayerProps.Add("CharacterName", "");
         PlayerProps.Add("Ready", false);
         PhotonNetwork.SetPlayerCustomProperties(PlayerProps);
-        PhotonNetwork.LoadLevel("TestScene");
+        PhotonNetwork.LoadLevel("GameRoomView");
 
-    }
-
-    IEnumerator  WaitConnect()
-    {
-        yield return new WaitUntil(()=> PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer);
-
-        
-        
-        //Debug.Log(RandomRoomint);
     }
 
     public override void OnJoinedLobby()
@@ -86,5 +79,6 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         Debug.Log("In Lobby ~~");
     }
 
-    
+    #endregion
+
 }

@@ -27,11 +27,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
     
 
     private GameObject[] CastCharactors;
-    
     private string CharacterName;
     private bool ReadyBool = false;
     private Dictionary<string, GameObject> PlayerListEntries;
-    //private int TeamNumber
+    
     void Start()
     {
         CastCharactors = new GameObject[ScrollContent.transform.childCount];
@@ -49,7 +48,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         StartCoroutine(WaitJoinRoom());
     }
 
-    
     void Update()
     {
         if (!ControlView.active)
