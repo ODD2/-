@@ -24,6 +24,9 @@ public abstract class ItemBase
     #endregion
 
     #region ItemBase Interface
+
+    public abstract bool canReuse();
+
     public abstract void Use(Character Caller);
 
     public abstract void ItemEffect(Character Caller);
@@ -33,7 +36,7 @@ public abstract class ItemBase
     public abstract bool IsGarbage();
 
     //回傳狀態 可重複利用者回傳剩餘CD 其他回傳數量
-    public abstract int ItemState();
+    public abstract string ItemState();
     #endregion
 
     protected void SendEffectEvent(string effectName,Vector3 Pos, Quaternion Rot)

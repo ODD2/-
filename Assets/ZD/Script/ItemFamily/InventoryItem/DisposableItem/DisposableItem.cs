@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class DisposableItem : ItemBase
 {
+    public override bool canReuse()
+    {
+        return false;
+    }
+
     public override bool IsGarbage()
     {
         if (!(Amount > 0))
@@ -24,10 +29,10 @@ public class DisposableItem : ItemBase
 
     }
 
-    public override int ItemState()
+    public override string ItemState()
     {
        
-        return (int)Amount;
+        return Amount.ToString();
     }
 
     public override void Use(Character Caller)

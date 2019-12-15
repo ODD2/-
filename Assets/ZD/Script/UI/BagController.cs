@@ -7,9 +7,9 @@ using Photon.Pun;
 
 namespace ZoneDepict.UI
 {
-    public class BagController : MonoBehaviour,IPointerEnterHandler
+    public class BagController : MonoBehaviour, IPointerEnterHandler
     {
-        
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             hover = true;
@@ -51,26 +51,25 @@ namespace ZoneDepict.UI
         }
 
         // Update is called once per frame
-        
+
         void Update()
         {
-            FreshInventory();
-            if (Input.touchCount == 1)
+            if (hover)
             {
-                Touch touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Stationary)
+                if (Input.touchCount == 1)
                 {
-                    if (hover)
+                    Touch touch = Input.GetTouch(0);
+                    if (touch.phase == TouchPhase.Stationary)
                     {
+
                         FreshInventory();
                         showall();
-                    }
-                }
-                else if (touch.phase == TouchPhase.Ended)
-                {
 
-                    if (hover)
+                    }
+                    else if (touch.phase == TouchPhase.Ended)
                     {
+
+
                         if (choosingID != -1)
                         {
                             useItem(choosingID);
@@ -79,19 +78,18 @@ namespace ZoneDepict.UI
 
                         hover = false;
                         hideall();
+
+
                     }
-                   
-                }
-                else if (touch.phase == TouchPhase.Moved)
-                {
-                    if (hover)
+                    else if (touch.phase == TouchPhase.Moved)
                     {
+
                         FreshInventory();
                         bool hasselect = false;
                         for (int i = 0; i < showItem.Count; i++)
                         {
                             if (showItem[i].GetComponent<UIstate>().ishover)
-                            {                        
+                            {
                                 choosingID = i;
                                 hasselect = true;
                                 break;
@@ -101,12 +99,12 @@ namespace ZoneDepict.UI
                         {
                             choosingID = -1;
                         }
+
                     }
                 }
             }
-            
         }
-        
+
         void FreshInventory()
         {
             if (player)
@@ -117,7 +115,7 @@ namespace ZoneDepict.UI
                     if (i < inventory.Count)
                     {
                         showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];
-                        showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState().ToString();
+                        showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState();
                     }
                     else
                     {
@@ -126,7 +124,7 @@ namespace ZoneDepict.UI
                     }
                 }
             }
-          
+
         }
 
         void hideall()
@@ -147,7 +145,7 @@ namespace ZoneDepict.UI
 
         void useItem(int i)
         {
-            
+
             player.GetComponent<Character>().UseItem(i);
 
 
@@ -175,8 +173,8 @@ namespace ZoneDepict.UI
 
         public void OnPointerDown(PointerEventData eventData)
         {
-           // hover = true;
-            
+            // hover = true;
+
         }
     }
 }
