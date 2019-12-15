@@ -15,7 +15,7 @@ public class ZDController : MonoBehaviour
     public static Character TargetCharacter = null;
     private Vector2 TouchPosRecord; // To record the attack start pos (to calculate direction)
 
-    public bool IsPhoneTest = true;
+    private bool IsPhoneTest = true;
 
     #region Check Bools
     private bool IsMovingCharacter; // To judge if do click/touch on target
@@ -65,7 +65,6 @@ public class ZDController : MonoBehaviour
                 #region Touch Input for Single Touch
                 if (Input.touchCount == 1 && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
                 {
-                    Debug.Log("GotFinger");
                     if (BagClass.GetFrameBlock())
                     {
                         BagClass.SetBlockFrame(false);
@@ -73,14 +72,15 @@ public class ZDController : MonoBehaviour
                     }
 
                     Touch TouchTemp = Input.GetTouch(0);
-                    Debug.Log("NotEveSys");
+                    //Debug.Log("NotEveSys");
+
                     // TouchPos is world Position
                     Vector2 TouchPos = Camera.main.ScreenToWorldPoint(TouchTemp.position);
                     // UnitTouchPos is Unit Position
                     Vector2 UnitTouchPos = ZDGameRule.WorldToUnit(TouchPos);
                     Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
-                    List<ZDObject> HitObjects;
 
+                    List<ZDObject> HitObjects;
                     if (TouchTemp.phase == TouchPhase.Began)
                     {
                         if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) != null)
@@ -119,7 +119,6 @@ public class ZDController : MonoBehaviour
                             }
 
                         }
-
                     }
                     else if (TouchTemp.phase == TouchPhase.Moved || TouchTemp.phase == TouchPhase.Stationary)
                     {
@@ -129,7 +128,6 @@ public class ZDController : MonoBehaviour
                     }
                     else if (TouchTemp.phase == TouchPhase.Ended)
                     {
-
                         ZDUIClass.CancelMoveIndicator();
                         if (IsCollectItem)
                         {
@@ -149,20 +147,20 @@ public class ZDController : MonoBehaviour
                         {
                             TargetCharacter.InputSprint(TouchPos);
                             IsTouchMove = false;
-
                         }
                         else if (IsSelectingAttack)
                         {
                             ZDUIClass.CancelAttackIndicator();
                             IsSelectingAttack = false;
                             IsActivateAttackCircle = false;
-                            if ((TouchPos - TouchPosRecord).magnitude < 0.1f) // This Distance is to judge how is "Tap"
+                            Vector2 TouchDelta = TouchPos - TouchPosRecord;
+                            if (TouchDelta.magnitude < 0.1f) // This Distance is to judge how is "Tap"
                             {
-                                TargetCharacter.InputAttack(TouchPos - CharactorPos, EAttackType.N);
+                                TargetCharacter.InputAttack(TouchPosRecord - (Vector2)TargetCharacter.transform.position, EAttackType.N);
                             }
                             else
                             {
-                                TargetCharacter.InputAttack(TouchPosRecord - CharactorPos, ZDGameRule.DirectionToType(Camera.main.ScreenToWorldPoint(Input.mousePosition) - new Vector3(TouchPosRecord.x, TouchPosRecord.y, 0)));
+                                TargetCharacter.InputAttack(TouchDelta, ZDGameRule.DirectionToType(TouchDelta));
                             }
                         }
                         // Tap for Normal attack
@@ -171,7 +169,6 @@ public class ZDController : MonoBehaviour
                             TargetCharacter.InputAttack(TouchPos - CharactorPos, EAttackType.N);
 
                         }
-
                         else if (!IsMovingCharacter) // Other Type Attack
                         {
                             Vector2 Direction = TouchPosRecord - CharactorPos;
@@ -355,7 +352,6 @@ public class ZDController : MonoBehaviour
             ZDUIClass.UpdateMPBar(TargetCharacter.GetMaxMP(), TargetCharacter.GetMP());
         }
     }
-
 
     //IEnumerator WaitToActive()
     //{

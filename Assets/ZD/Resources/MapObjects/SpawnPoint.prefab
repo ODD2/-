@@ -92,6 +92,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnPoint
       objectReference: {fileID: 0}
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+        type: 3}
+      propertyPath: ObjectTypes.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+        type: 3}
+      propertyPath: Configs.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+        type: 3}
+      propertyPath: Types.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+        type: 3}
+      propertyPath: IsMap
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
+        type: 3}
+      propertyPath: ActorType
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 7076630245265640829, guid: 9b22f029b241b49869b2bb0d697a8dcb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -146,31 +171,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: ObjectTypes.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: Configs.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: Types.Array.data[0]
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: IsMap
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7076630245265640828, guid: 9b22f029b241b49869b2bb0d697a8dcb,
-        type: 3}
-      propertyPath: ActorType
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b22f029b241b49869b2bb0d697a8dcb, type: 3}

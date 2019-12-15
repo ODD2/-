@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine;
 using Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
-using UnityEngine;
 using ExitGames.Client.Photon;
 using ZoneDepict.Rule;
 using ZoneDepict.UI;
-using Hashtable =  ExitGames.Client.Photon.Hashtable;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace ZoneDepict
 {
+
     public enum ZDGameState
     {
         Initialize,
@@ -24,6 +24,10 @@ namespace ZoneDepict
 
     public enum ZDGameEvent
     {
+        RestrictAnounce=70,
+        RestrictPrepare,
+        Restrict,
+        RestrictEnd,
         SpawnEffect = 80,
         StartGame = 90,
         EndGame = 100,
@@ -518,12 +522,12 @@ namespace ZoneDepict
 
         public void OnEvent(EventData photonEvent)
         {
-            switch (photonEvent.Code)
+            switch ((ZDGameEvent)photonEvent.Code)
             {
-                case (int)ZDGameEvent.StartGame:
+                case ZDGameEvent.StartGame:
                     GameStart();
                     break;
-                case (int)ZDGameEvent.EndGame:
+                case ZDGameEvent.EndGame:
                     if (audioSource.isPlaying) audioSource.Stop();
                     audioSource.PlayOneShot(EndGameMusic);
                     Debug.Log("Game Ended");
@@ -535,7 +539,7 @@ namespace ZoneDepict
                     // Go back to start view
                     StartCoroutine(WaitToRestart());
                     break;
-                case (int)ZDGameEvent.SpawnEffect:
+                case ZDGameEvent.SpawnEffect:
                     object[] data = (object[])photonEvent.CustomData;
                     Instantiate(ZDAssetTable.GetObject((string)data[0]),(Vector3)data[1],(Quaternion)data[2]);
                     break;

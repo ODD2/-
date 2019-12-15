@@ -17,6 +17,8 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected SpriteRenderer sprite;
     protected AudioSource audioSource;
     //Sound Effects
+    [Header("Test")]
+    [Tooltip("Tooltip")]
     public AudioClip DeathSound;
     public AudioClip MoveSound;
     #endregion
@@ -41,7 +43,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected float RegMP = 2.9f;
     protected float MaxHP = 100;
     protected float MaxMP = 100;
-    protected int MaxSoul = 4;
+    protected const  int MaxSoul = (int)EAttackType.R;
 
     protected Vector2 Velocity = new Vector2(0,0);
     protected float MaxVelocity = 30;

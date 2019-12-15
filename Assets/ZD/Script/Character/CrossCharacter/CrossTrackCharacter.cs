@@ -13,7 +13,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
     protected GameObject TrackAngleIndicator;
     bool TrackAvailable;
     protected float TrackAngle;
-
+    #region Unity
     protected new void Start()
     {
         base.Start();
@@ -25,7 +25,9 @@ public class CrossTrackCharacter : CrossMoveCharacter
             StartCoroutine(GenerateNewTrack());
         }
     }
+    #endregion
 
+    #region Character Interface
     protected override void Sprint(Vector2 Destination)
     {
         base.Sprint(Destination);
@@ -38,7 +40,30 @@ public class CrossTrackCharacter : CrossMoveCharacter
             }
         }
     }
+    public override void InputAttack(Vector2 AttackDirection, EAttackType Type)
+    {
+        switch (Type)
+        {
+            case EAttackType.N:
+                base.InputAttack(AttackDirection, EAttackType.N);
+                break;
+            default:
+                if(Soul >(int)EAttackType.N && Soul <(int)EAttackType.Cancel) base.InputAttack(AttackDirection, (EAttackType)Soul);
+                break;
+        }
+    }
+    protected override void Attack(Vector2 Direction, EAttackType Type)
+    {
+        if (photonView.IsMine)
+        {
+            //Reduce Soul
+            SetSoul(Soul - (int)Type);
+        }
+        base.Attack(Direction, Type);
+    }
+    #endregion
 
+    #region Helper Functions
     private void TrackFullFilled()
     {
         TrackAvailable = false;
@@ -66,5 +91,6 @@ public class CrossTrackCharacter : CrossMoveCharacter
             };
         }
     }
+    #endregion
 }
 
