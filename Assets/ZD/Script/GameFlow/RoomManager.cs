@@ -9,7 +9,9 @@ using ZoneDepict.Rule;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
-
+    [Header("Profile Img and Names")]
+    public Sprite[] Profile;
+    public string[] ProfileName;
     [Header("PlayerEntry Ref")]
     public GameObject PlayerEntry;
     [Header("Content of ScollerView")]
@@ -19,7 +21,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [Header("Teams Field")]
     public GameObject TeamA;
     public GameObject TeamB;
-
+    [Header("Other")]
     public Button ReadyBut;
     public Text StateTxt;
     
@@ -141,6 +143,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     if((bool)p.CustomProperties["Ready"])
                     {
                         PlayerListEntries[p.NickName].transform.GetChild(2).GetComponent<Image>().color = Color.red;
+                        if((string)p.CustomProperties["CharacterName"] != "" )
+                        {
+                            uint index = 0;
+                            foreach (var s in ProfileName)
+                            {
+
+                                if (s == (string)p.CustomProperties["CharacterName"]) break;
+                                else index++;
+                            }
+                            PlayerListEntries[p.NickName].transform.GetChild(1).GetComponent<Image>().sprite = Profile[index];
+                        }
                     }
                     else
                     {
@@ -150,9 +163,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
             else
             {
+                Debug.Log("Create Player");
                 // Create
                 GameObject Entry = Instantiate(PlayerEntry);
                 Entry.transform.GetChild(0).GetComponent<Text>().text = p.NickName;
+                if(p == PhotonNetwork.LocalPlayer)
+                {
+                    Entry.transform.GetChild(0).GetComponent<Text>().color = Color.red;
+                }
                 Entry.name = p.NickName;
                 if ((ZDTeams)p.CustomProperties["Team"] == ZDTeams.T0)
                 {
@@ -180,6 +198,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
         return true;
     }
+
     #region PUN CallBack
 
     public override void OnJoinedRoom()
@@ -244,5 +263,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Debug.Log("Not yet");
         }
     }
+
     #endregion
 }
