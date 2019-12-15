@@ -11,19 +11,23 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 // change server setting in this class
 public class StartViewManager : MonoBehaviourPunCallbacks
 {
-    
+    [Header("Set the Server Setting")]
     public Dropdown ChooseServer;
+    [Header("Button to Start Game")]
     public Button StartButton;
+    [Header("To show PhotonNetwork State")]
     public Text DebugText;
+    [Header("The View of Connecting")]
     public GameObject Connecting;
     // [0] = BGM , [1] = start , [2] = but sound
-    private AudioSource[] StartViewAudio;
+    [Header("Audio array = {BGM,Start Audio,But Sound}")]
+    public AudioSource[] StartViewAudio;
     
     
     void Start()
     {
         StartButton.onClick.AddListener(() => StartGame());
-        StartViewAudio = GetComponents<AudioSource>();
+        //StartViewAudio = GetComponents<AudioSource>();
     }
 
     protected void Update()
