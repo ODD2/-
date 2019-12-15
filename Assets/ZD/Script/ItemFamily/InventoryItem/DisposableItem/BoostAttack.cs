@@ -18,7 +18,9 @@ public class BoostAttack : DisposableItem
        
         Vector3 FXpos = new Vector3(Caller.transform.position.x, Caller.transform.position.y, Caller.transform.position.z-1.0f );
         SendEffectEvent("AttackBoostEffect", FXpos, Quaternion.Euler(-90,0,0));
-       // Caller.basicValues.SetLastValue("HpRecoverRate", 10.0f, 5.0f);
+       
+        
+        // Caller.basicValues.SetLastValue("HpRecoverRate", 10.0f, 5.0f);
     }
    
 }

@@ -138,7 +138,6 @@ MonoBehaviour:
     Terrain: []
   DeathSound: {fileID: 8300000, guid: a381c0619eb284ab29687e36e50c380a, type: 3}
   MoveSound: {fileID: 8300000, guid: f94e662993d4640f69d867ae4ddc2bd7, type: 3}
-  basicValues: {fileID: 0}
   HitEffects:
   - {fileID: 616462768845263527, guid: 9d9391ca01dda4a0899e55c242866f9e, type: 3}
   - {fileID: 4694221737807659796, guid: 470d970b858ac4307823c8755a149108, type: 3}

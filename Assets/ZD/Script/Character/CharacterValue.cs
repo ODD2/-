@@ -19,6 +19,11 @@ public class CharacterValue
     public List<float> SkillMana = new List<float> { 5, 20, 30, 60 };
     public List<float> SkillCD = new List<float> { 0.25f, 3f, 6f, 10 };
 
+    
+    public float HP {
+        get { return ValueSet["HP"]; } 
+        set { ValueSet["HP"] = value; }
+    } 
     Dictionary<string, float> ValueSet = new Dictionary<string, float>()
     {
             { "HP",100f},
@@ -41,7 +46,7 @@ public class CharacterValue
             {"GriticalRate",0.05f},//普功爆擊率
     };
     //直接設定數值
-    public void SetValue(string valueName, float value)
+   /* public void SetValue(string valueName, float value)
     {
         if (ValueSet.ContainsKey(valueName))
         {
@@ -58,8 +63,9 @@ public class CharacterValue
         Debug.LogFormat("No {0} value exist", valueName);
         return -1;
 
-    }
-   /* //設定數值為newValue，持續effectTime秒
+    }*/
+    /*
+   //設定數值為newValue，持續effectTime秒
     public void SetLastValue(string valueName, float newValue, float effectTime)
     {
         if (ValueSet.ContainsKey(valueName))
@@ -75,6 +81,6 @@ public class CharacterValue
         yield return new WaitForSecondsRealtime(effectTime);//等待5s  
         ValueSet[valueName] = preValue;
         Debug.LogFormat("{0} set to {1} end", valueName, newValue);
-    }*/
-
+    }
+    */
 }
