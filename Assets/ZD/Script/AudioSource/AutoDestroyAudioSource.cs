@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ZoneDepict.Audio;
 
 public class AutoDestroyAudioSource : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class AutoDestroyAudioSource : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource)
         {
+            ZDAudioSource.SetupAudioSource(audioSource);
             audioSource.clip = clip;
             audioSource.volume = vol;
             audioSource.loop = loop;

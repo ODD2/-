@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZoneDepict;
 using ZoneDepict.Rule;
+using ZoneDepict.Map;
+using ZoneDepict.Audio;
+
 
 public class Grass : StationaryMapObject
 {
@@ -11,11 +14,14 @@ public class Grass : StationaryMapObject
     protected uint InGrassCount;
     protected AudioSource audioSource;
 
+
+
     protected new void Start()
     {
         base.Start();
         StartCoroutine(PauseAndPlay());
         audioSource = GetComponent<AudioSource>();
+        ZDAudioSource.SetupAudioSource(audioSource);
     }
 
     protected new void Update()
@@ -26,8 +32,10 @@ public class Grass : StationaryMapObject
     protected void FixedUpdate()
     {
         uint NewCount = 0;
-        List<ZDObject> FetchList =  ZDMap.HitAtObject(this, ETypeZDO.Character);
+        List<ZDObject> FetchList =  ZDMap.HitAtObject(this, EObjectType.Character);
         if (FetchList != null) NewCount = (uint)FetchList.Count;
+        else NewCount = 0;
+
         if (NewCount != InGrassCount)
         {
             GrassChangeEffect();

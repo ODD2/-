@@ -4,8 +4,9 @@ using UnityEngine;
 using ZoneDepict;
 using Photon.Pun;
 using ZoneDepict.Rule;
+using ZoneDepict.Map;
 
-public abstract class ItemContainerBase : StationaryMapObject, IADamageObject, IPunObservable
+public abstract class ItemContainerBase : ZDRegisterObject, IADamageObject, IPunObservable
 {
     #region Field
     public float Durability;
@@ -20,15 +21,20 @@ public abstract class ItemContainerBase : StationaryMapObject, IADamageObject, I
     #region Unity
     protected new void Start()
     {
-        base.Start();
-        //Setup Depth
-        Vector3 NewPos = transform.position;
-        NewPos.z = (int)TypeDepth.ItemContainer;
-        transform.position = NewPos;
         //Setup Component
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         Durability = 10;
+
+        //Setup ZDObjectt Unit World  Scale
+        Vector3 NewScale = transform.localScale;
+        NewScale.x *= ZDGameRule.UnitInWorld;
+        NewScale.y *= ZDGameRule.UnitInWorld;
+        transform.localScale = NewScale;
+
+        //Setup Depth
+        ActorType = EActorType.ItemContainer;
+        base.Start();
     }
     protected new void Update()
     {

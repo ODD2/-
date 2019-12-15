@@ -244,7 +244,7 @@ namespace ZoneDepict
             //Tell Everyone I'm Ready To Play
             Hashtable props = new Hashtable
             {
-                {ZDGameRule.CustomPropsKey.PLAYER_LOADED_LEVEL, true}
+                { CustomPropsKey.PLAYER_LOADED_LEVEL, true}
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
@@ -437,7 +437,7 @@ namespace ZoneDepict
             foreach (Player play in PhotonNetwork.PlayerList)
             {
                 object playerLoadedLevel;
-                if (play.CustomProperties.TryGetValue(ZDGameRule.CustomPropsKey.PLAYER_LOADED_LEVEL, out playerLoadedLevel))
+                if (play.CustomProperties.TryGetValue(CustomPropsKey.PLAYER_LOADED_LEVEL, out playerLoadedLevel))
                 {
                     if ((bool)playerLoadedLevel)
                     {
@@ -473,7 +473,7 @@ namespace ZoneDepict
 
             }
 
-            if (changedProps.ContainsKey(ZDGameRule.CustomPropsKey.PLAYER_LOADED_LEVEL))
+            if (changedProps.ContainsKey(CustomPropsKey.PLAYER_LOADED_LEVEL))
             {
                 if (CheckAllPlayerLoadedLevel() && PhotonNetwork.IsMasterClient)
                 {

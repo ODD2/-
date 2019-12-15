@@ -9,7 +9,7 @@ namespace ZoneDepict
         // Update is called once per frame
         protected new void Update()
         {
-            //Do Not Update ZDObject Regulars.
+            //Do Not Update ZDObject Regulars After The First Update.
         }
     }
 

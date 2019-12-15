@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using ZoneDepict.Rule;
 using System;
 using ZoneDepict;
+using ZoneDepict.Rule;
+using ZoneDepict.Audio;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+
 // This class is basic of Charater, and all infos are
 // in this class
 public class Character : ZDObject,IPunObservable, IADamageObject
@@ -15,12 +17,12 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected SpriteRenderer sprite;
     protected AudioSource audioSource;
     //Sound Effects
-    [SerializeField]
-    protected AudioClip DeathSound;
+    public AudioClip DeathSound;
+    public AudioClip MoveSound;
     #endregion
 
     #region Input Wrappers
-    public virtual void InputAttack(Vector2 AttackDirection, AttackType Type)
+    public virtual void InputAttack(Vector2 AttackDirection, EAttackType Type)
     {
     }
 
@@ -34,17 +36,22 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     public int TeamID {get; protected set; } = 0;
     protected float HP = 100;
     protected float MP = 100;
+    protected int Soul;
     protected float RegHP = 0.1f;
     protected float RegMP = 2.9f;
     protected float MaxHP = 100;
     protected float MaxMP = 100;
+    protected int MaxSoul = 4;
+
     protected Vector2 Velocity = new Vector2(0,0);
     protected float MaxVelocity = 30;
     List<ItemBase> Inventory = new List<ItemBase>();
+    protected int InventoryMax = 3;
     protected float MoveMana = 5.0f;
     protected float[] MaxSkillCD = new float[4];
     protected float[] SkillMana = new float[4];
     protected float[] SkillCD = new float[4];
+    
     #endregion
 
     #region Getters/Setters
@@ -60,21 +67,9 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         return RegMP;
     }
-    public float GetMaxHP()
-    {
-        return MaxHP;
-    }
     public float GetHP()
     {
         return HP;
-    }
-    public float GetMaxMP()
-    {
-        return MaxMP;
-    }
-    public float GetMP()
-    {
-        return MP;
     }
     public void SetHP(float NewHP)
     {
@@ -82,21 +77,51 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         else if (NewHP < 0) HP = 0;
         else HP = NewHP;
     }
+    public float GetMaxHP()
+    {
+        return MaxHP;
+    }
+    public float GetMP()
+    {
+        return MP;
+    }
     public void SetMP(float NewMP)
     {
         if (NewMP > MaxMP) MP = MaxMP;
         else if (NewMP < 0) MP = 0;
         else MP = NewMP;
     }
+    public float GetMaxMP()
+    {
+        return MaxMP;
+    }
+    public int GetSoul()
+    {
+        return Soul;
+    }
+    public void SetSoul(int NewSoul)
+    {
+        if (NewSoul > MaxSoul) Soul = MaxSoul;
+        else if (NewSoul < 0) Soul = 0;
+        else Soul = NewSoul;
+    }
+    public int GetMaxSoul()
+    {
+        return MaxSoul;
+    }
+    public int GetInventoryMax()
+    {
+        return InventoryMax;
+    }
     #endregion
 
     #region Character Interfaces
     // This virtual function
-    protected virtual void Attack(Vector2 Direction, AttackType Type)
+    protected virtual void Attack(Vector2 Direction, EAttackType Type)
     {
     }
 
-    protected virtual void ApplyDamage(List<List<ZDObject>> Hits, AttackType Type)
+    protected virtual void ApplyDamage(List<List<ZDObject>> Hits, EAttackType Type)
     {
     }
 
@@ -168,25 +193,24 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     #region UNITY
     protected new  void Start()
     {
-        //Calls ZDObject Start()
-        base.Start();
         //Cache Components.
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
-
-        //Setup Depth
-        Vector3 NewPos = transform.position;
-        if (photonView.IsMine) NewPos.z = (int)TypeDepth.LocalCharacter;
-        else NewPos.z = (int)TypeDepth.RemoteCharacter;
-        transform.position = NewPos;
+        ZDAudioSource.SetupAudioSource(audioSource);
 
         //Setup TeamID.
         if (photonView.Owner.CustomProperties.ContainsKey("Team"))
         {
             TeamID = (int)photonView.Owner.CustomProperties["Team"];
         }
-        
+
+        //Setup Depth
+        if (photonView.IsMine) ActorType = EActorType.LocalCharacter;
+        else ActorType = EActorType.RemoteCharacter;
+
+        //Calls ZDObject Start()
+        base.Start();
     }
 
     protected new void Update()
@@ -278,8 +302,9 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         Debug.LogFormat("HP: {0}\n" +
                         "MP: {1}\n" +
-                        "ItemNum: {2}\n",
-                        HP,MP,Inventory.Count);
+                        "ItemNum: {2}\n"+
+                        "Soul: {3}\n",
+                        HP,MP,Inventory.Count,Soul);
     }
     #endregion
 

@@ -44,8 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b81aa01795f7458ca897a6c4ac172ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Types: 00000000
-  Terrain: []
+  ActorType: 4
+  Configs:
+  - ObjectType: 0
+    Terrain: []
   update: 0
 --- !u!114 &-1568315365529725554
 MonoBehaviour:

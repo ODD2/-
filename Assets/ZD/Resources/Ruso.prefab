@@ -132,9 +132,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75c4d539ad77e49c09d6d1696a3134b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Types: 
-  Terrain: []
-  DeathSound: {fileID: 8300000, guid: 6f8c0fdef0a4849cb9205be9c327e878, type: 3}
+  ActorType: 6
+  Configs:
+  - ObjectType: 0
+    Terrain: []
+  DeathSound: {fileID: 8300000, guid: a381c0619eb284ab29687e36e50c380a, type: 3}
+  MoveSound: {fileID: 8300000, guid: f94e662993d4640f69d867ae4ddc2bd7, type: 3}
+  TrackAngleIndicator: {fileID: 0}
   HitEffects:
   - {fileID: 616462768845263527, guid: 9d9391ca01dda4a0899e55c242866f9e, type: 3}
   - {fileID: 4694221737807659796, guid: 470d970b858ac4307823c8755a149108, type: 3}

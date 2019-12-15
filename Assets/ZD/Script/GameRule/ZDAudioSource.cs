@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ZoneDepict.Rule;
 
-namespace ZoneDepict
+namespace ZoneDepict.Audio
 {
     public class ZDAudioSource
     {
@@ -29,6 +30,15 @@ namespace ZoneDepict
             }
             return AudioPlayer;
        }
+
+        static public void SetupAudioSource(AudioSource audioSource)
+        {
+            audioSource.spatialBlend = 1;
+            audioSource.minDistance = 1;
+            audioSource.maxDistance = ZDGameRule.MAX_AUDIO_DISTANCE;
+            audioSource.dopplerLevel = 0;
+            audioSource.rolloffMode = AudioRolloffMode.Linear;
+        }
     }
 }
 
