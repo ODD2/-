@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4483284284939020561}
+  - component: {fileID: 6014509186512606835}
   - component: {fileID: 7923946618289324828}
   - component: {fileID: -5332454856049956278}
   - component: {fileID: -7998073615777067078}
@@ -22,8 +22,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4483284284939020561
-Transform:
+--- !u!224 &6014509186512606835
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -36,6 +36,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 11.81, y: 11.81}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &7923946618289324828
 SpriteRenderer:
   m_ObjectHideFlags: 0
