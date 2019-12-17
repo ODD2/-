@@ -49,7 +49,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
         ReadyBut.onClick.AddListener(() => Ready());
         // Join Room
-        Hashtable expectedCustomRoomProperties = new Hashtable() { { "Rnuuing Game", false } };
+        Hashtable expectedCustomRoomProperties = new Hashtable() { { "Running Game", false } };
         PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties,MaxPlayers);
         //PhotonNetwork.JoinRandomRoom();
         StartCoroutine(WaitJoinRoom());
@@ -252,9 +252,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Debug.Log("Create Room!!!!");
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = MaxPlayers;
-        string[] roomPropsInLobby = { "Rnuuing Game" };
+        string[] roomPropsInLobby = { "Running Game" };
         roomOptions.CustomRoomPropertiesForLobby = roomPropsInLobby;
-        roomOptions.CustomRoomProperties = new Hashtable { { "Rnuuing Game", false } };
+        roomOptions.CustomRoomProperties = new Hashtable { { "Running Game", false } };
         
         PhotonNetwork.CreateRoom("DemoRoom"+Random.Range(1000,10000).ToString(), roomOptions, null);
     }
@@ -272,7 +272,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 {
                     Hashtable props = new Hashtable
                     {
-                        {"Rnuuing Game", true}
+                        {"Running Game", true}
                     };
                     PhotonNetwork.CurrentRoom.SetCustomProperties(props);
                     PhotonNetwork.LoadLevel("GameGround");
@@ -286,7 +286,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             {
                 Hashtable props = new Hashtable
                     {
-                        {"Rnuuing Game", true}
+                        {"Running Game", true}
                     };
                 PhotonNetwork.CurrentRoom.SetCustomProperties(props);
                 PhotonNetwork.LoadLevel("GameGround");

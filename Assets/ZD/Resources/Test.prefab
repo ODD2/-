@@ -907,7 +907,7 @@ MonoBehaviour:
   HealthBarBG: {fileID: 2849450434938513}
   ManaBar: {fileID: 4343918301325346642}
   ManaBarBG: {fileID: 4799128596068554782}
-  SoulImgSource: {fileID: 21300000, guid: 22276d1d8ee2649feac57c102d104957, type: 3}
+  SoulImgSource: {fileID: 21300000, guid: 809e23b218d8440fd8be4577230c0eda, type: 3}
   Soul: {fileID: 8967924041011204839}
 --- !u!1 &8967924041011204839
 GameObject:

@@ -60,6 +60,10 @@ namespace ZoneDepict
 
     public class ZDGameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
+        //Test Params
+        public bool DoRestrictZone;
+
+
         #region Feilds
         //Saved Infos
         public static ZDGameManager Instance;
@@ -271,8 +275,11 @@ namespace ZoneDepict
                     {
                         if(NextZoneInterval < Time.deltaTime)
                         {
-                            RestrictZone.Instance.ShrinkZone(new Vector2Int((int)(ZDGameRule.MAP_WIDTH_UNIT*0.2),
-                                                                            (int)(ZDGameRule.MAP_HEIGHT_UNIT*0.2)),30);
+                            if (DoRestrictZone)
+                            {
+                                RestrictZone.Instance.ShrinkZone(new Vector2Int((int)(ZDGameRule.MAP_WIDTH_UNIT * 0.2),
+                                                                            (int)(ZDGameRule.MAP_HEIGHT_UNIT * 0.2)), 30);
+                            }
                             NextZoneInterval = 0;
                         }
                         else
@@ -545,9 +552,9 @@ namespace ZoneDepict
         #endregion
 
         #region Game State Helper
-        int IsGameEnd()
+        bool  IsGameEnd(out int SurviveTeam)
         {
-            int SurviveTeam = -1;
+            SurviveTeam = -1;
             foreach (var player in PhotonNetwork.PlayerList)
             {
                 if (player.CustomProperties.ContainsKey("Alive") && (bool)player.CustomProperties["Alive"])
@@ -565,19 +572,19 @@ namespace ZoneDepict
                     }
                     else if (SurviveTeam != playerTeam)
                     {
-                        return SurviveTeam;
+                        return false;
                     }
                 }
             }
-            return SurviveTeam;
+            return true;
         }
 
         void CheckGameEnded()
         {
-            if (PhotonNetwork.IsMasterClient)
+            int SurviveTeam;
+            if (PhotonNetwork.IsMasterClient && IsGameEnd(out SurviveTeam))
             {
-                int WinTeam = IsGameEnd();
-                SendGameEvent(ZDGameEvent.EndGame);
+                SendGameEvent(ZDGameEvent.EndGame, new object[] { SurviveTeam });
             }
         }
         #endregion
