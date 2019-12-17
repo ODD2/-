@@ -114,6 +114,7 @@ namespace ZoneDepict.Rule
                     pos -= UnitInWorld / 2;
                     ret[i] = (neg ? -1 : 1) * (int)(pos / UnitInWorld + 1);
                 }
+                ret[i] = Mathf.Round(ret[i]);
             }
 
             return ret;
