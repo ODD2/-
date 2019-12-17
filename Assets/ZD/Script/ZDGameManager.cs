@@ -60,8 +60,6 @@ namespace ZoneDepict
 
     public class ZDGameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
-        private bool HotKey = false;
-
         #region Feilds
         //Saved Infos
         public static ZDGameManager Instance;
@@ -208,10 +206,6 @@ namespace ZoneDepict
             },
         };
         private string ZoneObjectName = ZDAssetTable.GetPath("ZoneRestrict");
-
-        //Team List
-        Dictionary<Player, int> TeamList = new Dictionary<Player, int>();
-
         //Component
         protected AudioSource audioSource;
         //Audio Clips
@@ -551,7 +545,7 @@ namespace ZoneDepict
         #endregion
 
         #region Game State Helper
-        bool IsGameEnd()
+        int IsGameEnd()
         {
             int SurviveTeam = -1;
             foreach (var player in PhotonNetwork.PlayerList)
@@ -571,16 +565,20 @@ namespace ZoneDepict
                     }
                     else if (SurviveTeam != playerTeam)
                     {
-                        return false;
+                        return SurviveTeam;
                     }
                 }
             }
-            return true;
+            return SurviveTeam;
         }
 
         void CheckGameEnded()
         {
-            if ((PhotonNetwork.IsMasterClient && IsGameEnd()) || HotKey) SendGameEvent(ZDGameEvent.EndGame);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                int WinTeam = IsGameEnd();
+                SendGameEvent(ZDGameEvent.EndGame);
+            }
         }
         #endregion
 
@@ -614,9 +612,6 @@ namespace ZoneDepict
             switch (SendEvent)
             {
                 case ZDGameEvent.EndGame:
-                    int WinningTeam = -1;
-                    if (TeamList.Count > 0) WinningTeam = TeamList.Values.GetEnumerator().Current;
-                    content = new object[] { WinningTeam };
                     evCode = (int)ZDGameEvent.EndGame;
                     break;
                 default:
