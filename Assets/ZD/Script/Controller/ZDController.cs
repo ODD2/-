@@ -86,6 +86,17 @@ public class ZDController : MonoBehaviour
                     {
                         if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) != null)
                         {
+                            List<ZDObject> HitCharacter = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.Character);
+                            bool CharacterOccupy = false;
+                            if (HitCharacter != null)
+                            {
+                                foreach(var obj in HitCharacter)
+                                {
+                                    if ((Character)obj == TargetCharacter) break;
+                                    else CharacterOccupy = true;
+                                }
+                                if (CharacterOccupy) return;
+                            }
                             foreach (var obj in HitObjects)
                             {
                                 if (obj is IACollectObject)
