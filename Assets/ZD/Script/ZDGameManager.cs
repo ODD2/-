@@ -8,6 +8,7 @@ using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
 using ExitGames.Client.Photon;
 using ZoneDepict.Rule;
+using ZoneDepict.Map;
 using ZoneDepict.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
@@ -23,6 +24,7 @@ namespace ZoneDepict
         Play,
         End,
         Close,
+        Unknown,
     };
 
     public enum ZDGameEvent
@@ -69,19 +71,21 @@ namespace ZoneDepict
 
         #region Feilds
         //Saved Infos
-        public static ZDGameState gameState = ZDGameState.Initialize;
         public static ZDGameManager Instance;
-        public static PlayerProps playerProps;
+        protected ZDGameState gameState = ZDGameState.Initialize;
+        protected PlayerProps playerProps;
 
         //Spawn Points
         public static Vector2[] TeamSpawnUnit =
         {
-            new Vector2(-9,7),
-            new Vector2(9,-7),
+            //new Vector2(-9,7),
+            //new Vector2(9,-7),
+            new Vector2(0,0),
+            new Vector2(0,0),
         };
 
         //Map Object Configs
-        private static SpawnObjectConfig[] StaticMapObjectConfigs = {
+        private SpawnObjectConfig[] StaticMapObjectConfigs = {
             new SpawnObjectConfig
             {
                 name = "Grass",
@@ -210,7 +214,7 @@ namespace ZoneDepict
                 flipY = true,
             },
         };
-        private static string ZoneObjectName = ZDAssetTable.GetPath("ZoneRestrict");
+        private string ZoneObjectName = ZDAssetTable.GetPath("ZoneRestrict");
 
         //Team List
         Dictionary<Player, int> TeamList = new Dictionary<Player, int>();
@@ -224,13 +228,12 @@ namespace ZoneDepict
         public GameObject Victory;
 
 
-        //
+        //WaitPlayer State Deps
         bool AllPlayerLoaded;
-
-        //Zone Dependencies
+        //OpenGame State Deps
+        public float CountDownTime = 1.0f;
+        //Play State Deps
         float NextZoneInterval = 2.0f;
-        //
-        //Vector2Int[] ZoneSizeUnit = { new Vector2Int(,)}
         float[] ZoneSizeRate = { 0.9f, 0.7f, 0.5f, 0.3f, 0.2f };
 
         #endregion
@@ -240,6 +243,10 @@ namespace ZoneDepict
         {
             if (Instance && Instance != this) Destroy(this);
             else Instance = this;
+
+            //Initialize Static Values.
+            gameState = ZDGameState.Initialize;
+            playerProps = new PlayerProps();
 
             //Cache Component
             audioSource = GetComponent<AudioSource>();
@@ -278,7 +285,7 @@ namespace ZoneDepict
                         if(NextZoneInterval < Time.deltaTime)
                         {
                             RestrictZone.Instance.ShrinkZone(new Vector2Int((int)(ZDGameRule.MAP_WIDTH_UNIT*0.2),
-                                                                            (int)(ZDGameRule.MAP_HEIGHT_UNIT*0.2)), 5);
+                                                                            (int)(ZDGameRule.MAP_HEIGHT_UNIT*0.2)),5);
                             NextZoneInterval = 0;
                         }
                         else
@@ -288,6 +295,15 @@ namespace ZoneDepict
                     }
                 break;
                     
+            }
+        }
+
+        void OnDestroy()
+        {
+            if(Instance == this)
+            {
+                Instance = null;
+                ZDMap.ResetMap();
             }
         }
         #endregion
@@ -429,10 +445,11 @@ namespace ZoneDepict
             {
                 //int BorderH = (int)(ZDGameRule.MAP_HEIGHT_UNIT * 0.2);
                 //int BorderW = (int)(ZDGameRule.MAP_WIDTH_UNIT * 0.2);
-                Vector2 RandomZoneLocation = new Vector2((int)Random.Range(0, ZDGameRule.MAP_WIDTH_UNIT),
+                Vector3 RandomZoneLocation = new Vector2((int)Random.Range(0, ZDGameRule.MAP_WIDTH_UNIT),
                                                          (int)Random.Range(0, ZDGameRule.MAP_HEIGHT_UNIT));
-                RandomZoneLocation -= (new Vector2((int)ZDGameRule.MAP_WIDTH_UNIT / 2, ZDGameRule.MAP_HEIGHT_UNIT / 2));
+                RandomZoneLocation -= (new Vector3((int)ZDGameRule.MAP_WIDTH_UNIT / 2, ZDGameRule.MAP_HEIGHT_UNIT / 2));
                 RandomZoneLocation *= ZDGameRule.UnitInWorld;
+                RandomZoneLocation.z = -2;
                 PhotonNetwork.InstantiateSceneObject(ZoneObjectName, RandomZoneLocation, Quaternion.identity);
             }
         }
@@ -499,12 +516,12 @@ namespace ZoneDepict
         #region OpenGame Phase Helper
         IEnumerator OpenGameRoutine()
         {
-            int CountDown = 3;
+            float CountDown = CountDownTime;
             while(CountDown > 0)
             {
                 Debug.Log(CountDown);
                 yield return new WaitForSeconds(1);
-                CountDown -= 1;
+                CountDown -= 1.0f;
             }
             if (PhotonNetwork.IsMasterClient)
             {
@@ -531,11 +548,11 @@ namespace ZoneDepict
         }
         #endregion
 
-
         #region End Phase Helper
         IEnumerator WaitToRestart()
         {
             yield return new WaitForSeconds(5);
+            PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel("GameStartView");
         }
         #endregion
@@ -579,6 +596,21 @@ namespace ZoneDepict
         {
             if (Team >= 0 && Team < (int)ZDTeams.Total) return true;
             return false;
+        }
+
+        static public PlayerProps GetPlayerProps()
+        {
+            if(Instance == null)
+            {
+                return new PlayerProps();
+            }
+            return Instance.playerProps;
+        }
+
+        static public ZDGameState GetGameState()
+        {
+            if (Instance == null) return ZDGameState.Unknown;
+            else return Instance.gameState;
         }
         #endregion
 

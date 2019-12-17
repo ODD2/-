@@ -12,7 +12,7 @@ using ZoneDepict.Map;
 public class ZDController : MonoBehaviour
 {
     public static ZDController Instance;
-    public static Character TargetCharacter;
+    protected  Character TargetCharacter;
     private Vector2 TouchPosRecord; // To record the attack start pos (to calculate direction)
 
     public bool IsPhoneTest = false;
@@ -41,10 +41,15 @@ public class ZDController : MonoBehaviour
 
     void Start()
     {
-        if (Instance && Instance != this) Destroy(this);
-        else Instance = this;
-
-        TargetCharacter = ZDGameManager.playerProps.Object.GetComponent<Character>();
+        if (Instance != null)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+        TargetCharacter = ZDGameManager.GetPlayerProps().Script;
         ZDUIClass = GameObject.Find("ZDUI").GetComponent<ZDUI>();
         BagClass = GameObject.Find("Item").GetComponent<BagController>();
    
@@ -53,7 +58,7 @@ public class ZDController : MonoBehaviour
 
     void Update()
     {
-        if(ZDGameManager.gameState == ZDGameState.Play)
+        if(ZDGameManager.GetGameState() == ZDGameState.Play)
         {
             if (IsPhoneTest)
             {
@@ -349,17 +354,23 @@ public class ZDController : MonoBehaviour
         }
     }
 
-    //IEnumerator WaitToActive()
-    //{
-    //    enabled = false;
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(0.1f);
-    //        if (ZDGameManager.gameState == ZDGameState.Play)
-    //        {
-    //            enabled = true;
-    //            break;
-    //        }
-    //    }
-    //}
+    void OnDestroy()
+    {
+        if(Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
+    static public Character GetTargetCharacter()
+    {
+        if (Instance == null || Instance.TargetCharacter == null)
+        {
+            return null;
+        }
+        else
+        {
+            return Instance.TargetCharacter;
+        }
+    }
 }

@@ -230,7 +230,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     protected void FixedUpdate()
     {
         if(currentState == CharacterState.Alive &&
-            ZDGameManager.gameState == ZDGameState.Play)
+           ZDGameManager.GetGameState() == ZDGameState.Play)
         {
             UpdateAnimParams();
             SetHP(GetHP() + Time.fixedDeltaTime * GetRegHP() * 8);

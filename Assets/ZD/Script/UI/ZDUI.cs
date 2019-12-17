@@ -107,9 +107,9 @@ namespace ZoneDepict.UI
 
         private void FixedUpdate()
         {
-            if (ZDController.TargetCharacter)
+            if (ZDController.GetTargetCharacter())
             {
-                int GetSoul = ZDController.TargetCharacter.GetSoul(); 
+                int GetSoul = ZDController.GetTargetCharacter().GetSoul(); 
                 if (SoulDisplayed != GetSoul)
                 {
                     if (SoulDisplayed < GetSoul)

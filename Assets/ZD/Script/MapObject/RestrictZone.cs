@@ -50,7 +50,7 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
 
     void Start()
     {
-        if (Instance) PhotonNetwork.Destroy(photonView);
+        if (Instance!=null && photonView.IsMine)PhotonNetwork.Destroy(photonView);
                 
         if (!Initialize())
         {
@@ -65,11 +65,11 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
 
     void FixedUpdate()
     {
-        if (ZDGameManager.gameState == ZDGameState.Play)
+        if (ZDGameManager.GetGameState()== ZDGameState.Play)
         {
             if (Shrink)
             {
-                Vector3 FramScaleChange = ScaleChangeRate * Time.deltaTime;
+                Vector3 FramScaleChange = ScaleChangeRate * Time.fixedDeltaTime;
                 Vector3 DeltaScale = TargetScale - VisibleArea.localScale;
                 if(DeltaScale.magnitude < FramScaleChange.magnitude)
                 {
@@ -81,9 +81,9 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
                     VisibleArea.localScale += FramScaleChange;
                 }
             }
-            if (IsInRestrict(ZDController.TargetCharacter))
+            if (IsInRestrict(ZDController.GetTargetCharacter()))
             {
-                ZDController.TargetCharacter.Hurt(10);
+                ZDController.GetTargetCharacter().Hurt(10);
             }
         }
     }
@@ -139,7 +139,7 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
 
     public void ShrinkZone(Vector2 Size,float Speed)
     {
-        photonView.RPC("ShrinkZoneRPC", RpcTarget.All, Size, Speed);
+        photonView.RPC("ShrinkZoneRPC", RpcTarget.All , Size, Speed);
     }
 
     void InternalShrinkZone(Vector2 Size,float Speed)
@@ -165,18 +165,18 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
             if (stream.IsWriting)
             {
                 stream.SendNext(transform.position);
-                stream.SendNext(VisibleArea.position);
+                //stream.SendNext(VisibleArea.position);
                 stream.SendNext(VisibleArea.localScale);
-                stream.SendNext(StrictArea.position);
-                stream.SendNext(StrictArea.localScale);
+                //stream.SendNext(StrictArea.position);
+                //stream.SendNext(StrictArea.localScale);
             }
             else
             {
                 transform.position = (Vector3)stream.ReceiveNext();
-                VisibleArea.position = (Vector3)stream.ReceiveNext();
+                //VisibleArea.position = (Vector3)stream.ReceiveNext();
                 VisibleArea.localScale = (Vector3)stream.ReceiveNext();
-                StrictArea.position = (Vector3)stream.ReceiveNext();
-                StrictArea.localScale = (Vector3)stream.ReceiveNext();
+                //StrictArea.position = (Vector3)stream.ReceiveNext();
+                //StrictArea.localScale = (Vector3)stream.ReceiveNext();
             }
         }
         catch (Exception e)
@@ -195,8 +195,6 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
             case ZDGameEvent.RestrictPrepare:
                 break;
             case ZDGameEvent.Restrict:
-                object[] data = (object[])photonEvent.CustomData;
-                ShrinkZone((Vector2Int)data[0], (float)data[1]);
                 break;
             case ZDGameEvent.RestrictEnd:
                 break;
