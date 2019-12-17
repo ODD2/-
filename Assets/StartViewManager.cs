@@ -88,7 +88,8 @@ public class StartViewManager : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         Debug.Log(roomList[0].CustomProperties);
-        Debug.Log("New Room");
+        Debug.Log("New Room:");
+        Debug.Log(roomList[0]);
         
         //Debug.Log();
     }

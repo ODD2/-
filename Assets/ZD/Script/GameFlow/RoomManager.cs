@@ -50,8 +50,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         ReadyBut.onClick.AddListener(() => Ready());
         // Join Room
         Hashtable expectedCustomRoomProperties = new Hashtable() { { "Rnuuing Game", false } };
-        //PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties,MaxPlayers);
-        PhotonNetwork.JoinRandomRoom();
+        PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties,MaxPlayers);
+        //PhotonNetwork.JoinRandomRoom();
         StartCoroutine(WaitJoinRoom());
     }
 
@@ -251,9 +251,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Create Room!!!!");
         RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 6;
-        roomOptions.CustomRoomProperties = new Hashtable{{"Rnuuing Game", false}};
-        PhotonNetwork.CreateRoom("DemoRoom", roomOptions, null);
+        roomOptions.MaxPlayers = MaxPlayers;
+        string[] roomPropsInLobby = { "Rnuuing Game" };
+        roomOptions.CustomRoomPropertiesForLobby = roomPropsInLobby;
+        roomOptions.CustomRoomProperties = new Hashtable { { "Rnuuing Game", false } };
+        
+        PhotonNetwork.CreateRoom("DemoRoom"+Random.Range(1000,10000).ToString(), roomOptions, null);
     }
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
