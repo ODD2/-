@@ -23,6 +23,7 @@ public class CharactorUI : MonoBehaviour
     private int SoulDisplayed = 0;
     private GameObject[] Souls;
 
+    private GameObject[] Temp = new GameObject[2]; 
     void Start()
     {
         Owner = gameObject.transform.parent.gameObject.GetComponent<Character>();
@@ -41,29 +42,14 @@ public class CharactorUI : MonoBehaviour
         {
             Destroy(Soul);
         }
-        
+        for(int i=0;i<2;++i)
+        {
+            Temp[i] = gameObject.transform.GetChild(i).gameObject;
+        }
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L) && ZDController.GetTargetCharacter())
-        {
-            Character target = ZDController.GetTargetCharacter();
-            target.Hurt(10);
-            target.SetMP(target.GetMP() - 10);
-            //Debug.Log(ZDController.TargetCharacter.GetSoul());
-            ManaBar.sizeDelta += new Vector2(-5, 0);
-            Debug.Log(ManaBar.sizeDelta);
-            
-            
-        }
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            Owner.SetSoul(Owner.GetSoul() - 1);
-        }
-        
-    }
+    
 
     public void UpdateHPBar(float maxHP, float HP)
     {
@@ -75,14 +61,10 @@ public class CharactorUI : MonoBehaviour
         ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (Owner)
         {
-            
-            UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
-            UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
-
             if (Owner.GetComponent<PhotonView>().IsMine)
             {
                 int GetSoul = Owner.GetSoul();
@@ -107,16 +89,29 @@ public class CharactorUI : MonoBehaviour
 
                 }
             }
+            if (Owner.GetIsShelter())
+            {
+                if(!Owner.photonView.IsMine)
+                {
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        Temp[i].SetActive(false);
+                    }
+                }
+            }
             else
             {
-                if (Owner.GetIsShelter())
+                if (!Owner.photonView.IsMine)
                 {
-                    gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        Temp[i].SetActive(true);
+                    }
                 }
-                else
-                {
-                    gameObject.transform.GetChild(0).gameObject.SetActive(true);
-                }
+                
+                UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
+                UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
+                
             }
         }
     }

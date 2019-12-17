@@ -438,7 +438,6 @@ GameObject:
   - component: {fileID: 322031467}
   - component: {fileID: 322031466}
   - component: {fileID: 322031468}
-  - component: {fileID: 322031469}
   - component: {fileID: 322031470}
   m_Layer: 0
   m_Name: GameManager
@@ -459,7 +458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91bd28081a9343c6b0df0859c4efd10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DoRestrictZone: 1
+  DoRestrictZone: 0
   EndGameMusic: {fileID: 8300000, guid: 7ef5118ddea5446d088794b0cdf92714, type: 3}
   Lose: {fileID: 48964419}
   Victory: {fileID: 677520119}
@@ -574,19 +573,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &322031469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 322031465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302a5881bcb929a4cbd913288aa5f9f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RandomEnter: 1
 --- !u!114 &322031470
 MonoBehaviour:
   m_ObjectHideFlags: 0

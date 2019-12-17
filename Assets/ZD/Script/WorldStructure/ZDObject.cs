@@ -63,7 +63,9 @@ namespace ZoneDepict
                     {
                         IsShelter = false;
                     }
+                    Debug.Log("Shelter:" + (IsShelter ? "True" : "False"));
                 }
+                Debug.Log("Transform Changed");
                 transform.hasChanged = false;
             }
         }

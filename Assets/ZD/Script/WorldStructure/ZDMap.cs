@@ -167,6 +167,8 @@ namespace ZoneDepict.Map
             {
                 (uint, uint) NewMapLoc = WorldToMap(Caller.transform.position);
                 (uint, uint) PrevMapLoc = Recorder[Caller].Location;
+                Debug.Log(NewMapLoc);
+                Debug.Log(PrevMapLoc);
                 ZDGridBlock PrevBlock= RecordGrid[PrevMapLoc.Item1, PrevMapLoc.Item2];
                 ZDGridBlock NewBlock = RecordGrid[NewMapLoc.Item1, NewMapLoc.Item2];
                 if (NewMapLoc == PrevMapLoc)
@@ -177,6 +179,7 @@ namespace ZoneDepict.Map
                 else if (RemoveFromRecordGrids(Recorder[Caller]))
                 {
                     //TODO: Error Log: This should not happen in general.
+                    Debug.Log("Cannot Remove From Record Grids");
                     return false;
                 }
                 else
@@ -230,8 +233,8 @@ namespace ZoneDepict.Map
 
         static public (uint,uint) UnitToMap(int x,int y)
         {
-            uint _x = (uint)(x + ZDGameRule.MAP_WIDTH_UNIT / 2);
-            uint _y = (uint)(y + ZDGameRule.MAP_HEIGHT_UNIT / 2);
+            uint _x = (uint)Mathf.RoundToInt(x + ZDGameRule.MAP_WIDTH_UNIT / 2);
+            uint _y = (uint)Mathf.RoundToInt(y + ZDGameRule.MAP_HEIGHT_UNIT / 2);
 
             //Constraint the position if it's out of the map's scope
             if (_x >= ZDGameRule.MAP_WIDTH_UNIT) _x = ZDGameRule.MAP_WIDTH_UNIT;
