@@ -43,7 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da42afb12f2240078de4c40f2c24940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HealthBar: {fileID: 0}
+  HealthBarBG: {fileID: 0}
+  MagicBar: {fileID: 0}
+  MagicBarBG: {fileID: 0}
+  AttackSources: []
   AttackIndicator: {fileID: 3073239615737243702, guid: 24511427de02f41e5bffbc73aa6e15f9,
     type: 3}
   MoveIndicator: {fileID: 3864500571154724212, guid: 8c5007d31bafc4de1b0ee2944e35536e,
+    type: 3}
+  SingleSoul: {fileID: 5802979548508717889, guid: 6f532261f494d478c95c9b5c7291354d,
     type: 3}
