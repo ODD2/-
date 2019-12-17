@@ -47,10 +47,11 @@ public class CharactorUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L) && ZDController.GetTargetCharacter())
         {
-            ZDController.TargetCharacter.Hurt(10);
-            ZDController.TargetCharacter.SetMP(ZDController.TargetCharacter.GetMP() - 10);
+            Character target = ZDController.GetTargetCharacter();
+            target.Hurt(10);
+            target.SetMP(target.GetMP() - 10);
             //Debug.Log(ZDController.TargetCharacter.GetSoul());
             ManaBar.sizeDelta += new Vector2(-5, 0);
             Debug.Log(ManaBar.sizeDelta);

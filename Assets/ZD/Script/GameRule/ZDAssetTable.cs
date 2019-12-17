@@ -130,13 +130,20 @@ namespace ZoneDepict
                     path =  "AudioPlayer/AudioPlayer",
                 }
             },
-             {
+            {
                 "TrackAngleIndicator",
                 new DefaultAssetObject
                 {
                     path =  "Misc/TrackAngleIndicator",
                 }
             },
+            {
+                "ZoneRestrict",
+                new DefaultAssetObject
+                {
+                    path = "MapObjects/ZoneRestrict",
+                }
+            }
         };
 
         static public GameObject GetObject(string name)

@@ -45,6 +45,12 @@ namespace ZoneDepict.Rule
         Total,
     }
 
+    public enum CharacterState
+    {
+        Alive,
+        Dead,
+    }
+
     public static class CustomPropsKey
     {
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
@@ -57,10 +63,11 @@ namespace ZoneDepict.Rule
         public const uint MAP_HEIGHT_UNIT = 17;
         public const int MAX_PLAYERS = 4;
         public const float UnitInWorld = 2.5f;
+        public const float WorldInPixel = 100.0f;
+        public const float UnitInPixel = UnitInWorld * 100.0f;
         public const float MAP_WIDTH_WORLD = MAP_WIDTH_UNIT * UnitInWorld;
         public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UnitInWorld;
         public const int TOUCH_TAP_BOUND_FRAMES = 20;
-
         public const float SINGLE_ACTOR_DEPTH = 0.00003051757f;
         public const float UNIT_DEPTH = SINGLE_ACTOR_DEPTH * (int)EActorType.Total;
 

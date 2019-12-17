@@ -94,7 +94,9 @@ namespace ZoneDepict.UI
 
         private void OnDestroy()
         {
-            Instance = null;
+	    if(Instance == this){
+            	Instance = null;
+	    }
         }
 
     }

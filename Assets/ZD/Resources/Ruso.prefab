@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eee8e7b8e8794e19b0df6eab57f718b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPhoneTest: 0
+  IsPhoneTest: 1
 --- !u!114 &-7998073615777067078
 MonoBehaviour:
   m_ObjectHideFlags: 0

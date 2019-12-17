@@ -82,15 +82,24 @@ namespace ZoneDepict.Map
         public ZDObject Owner;
     }
 
-    public class ZDMap
+    public static class ZDMap
     {
         //Create a static 2d array to record all the ZoneDepict Objects in this game.
-        static private ZDGridBlock[,] RecordGrid = new ZDGridBlock[ZDGameRule.MAP_WIDTH_UNIT, ZDGameRule.MAP_HEIGHT_UNIT];
-        static private Dictionary<ZDObject, ZDObjectRecord> Recorder = new Dictionary<ZDObject, ZDObjectRecord>();
+        static private ZDGridBlock[,] RecordGrid;
+        static public Dictionary<ZDObject, ZDObjectRecord> Recorder;
+
         static ZDMap()
         {
+            InitializeMap();
+        }
+
+        static void InitializeMap()
+        {
+            RecordGrid  = new ZDGridBlock[ZDGameRule.MAP_WIDTH_UNIT, ZDGameRule.MAP_HEIGHT_UNIT];
+            Recorder = new Dictionary<ZDObject, ZDObjectRecord>();
+
             //Initilize Record Grid
-            for(int i = 0; i < ZDGameRule.MAP_WIDTH_UNIT; ++i)
+            for (int i = 0; i < ZDGameRule.MAP_WIDTH_UNIT; ++i)
             {
                 for (int j = 0; j < ZDGameRule.MAP_HEIGHT_UNIT; ++j)
                 {
@@ -98,6 +107,12 @@ namespace ZoneDepict.Map
                 }
             }
         }
+
+        static public void ResetMap()
+        {
+            InitializeMap();
+        }
+
 
         static public void Register(ZDObject Caller)
         {
@@ -279,6 +294,18 @@ namespace ZoneDepict.Map
                 UnitLoc.y = (UnitLoc.y > 0 ? 1 : -1) * ZDGameRule.MAP_HEIGHT_UNIT / 2;
             }
             Caller.transform.position = ZDGameRule.UnitToWorld(UnitLoc);
+        }
+
+        static public (uint,uint) GetObjectLocation(ZDObject Target)
+        {
+            if (IsRegistered(Target))
+            {
+                return Recorder[Target].Location;
+            }
+            else
+            {
+                return (0, 0);
+            }
         }
 
         static public List<ZDObject> HitAt(int x,int y,ZDObject Caller)

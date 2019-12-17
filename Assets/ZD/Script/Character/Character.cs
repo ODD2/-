@@ -17,6 +17,8 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
     protected SpriteRenderer sprite;
     protected AudioSource audioSource;
     //Sound Effects
+    [Header("Test")]
+    [Tooltip("Tooltip")]
     public AudioClip DeathSound;
     public AudioClip MoveSound;
     #endregion
@@ -34,6 +36,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
 
     #region Character Attributes
     public int TeamID {get; protected set; } = 0;
+    public CharacterState currentState { get; protected set; } = CharacterState.Alive;
     protected float HP = 100;
     protected float MP = 100;
     protected int Soul;
@@ -41,7 +44,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
     protected float RegMP = 2.9f;
     protected float MaxHP = 100;
     protected float MaxMP = 100;
-    protected int MaxSoul = 4;
+    protected const  int MaxSoul = (int)EAttackType.R;
 
     protected Vector2 Velocity = new Vector2(0,0);
     protected float MaxVelocity = 30;
@@ -136,8 +139,14 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
         if (photonView.IsMine && !HP.Equals(0))
         {
             SetHP(HP - Damage);
-            if (HP.Equals(0))Dead();
-            else photonView.RPC("DoHurtRpc",RpcTarget.AllViaServer);
+            if (HP.Equals(0))
+            {
+                Dead();
+            }
+            else
+            {
+                photonView.RPC("DoHurtRpc", RpcTarget.AllViaServer);
+            }
         }
     }
 
@@ -145,10 +154,9 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
     {
         if (photonView.IsMine)
         {
-            Hashtable NewSetting = new Hashtable();
-            NewSetting.Add("Alive", false);
-            PhotonNetwork.SetPlayerCustomProperties(NewSetting);
+            currentState = CharacterState.Dead;
             photonView.RPC("DoDeadRpc", RpcTarget.AllViaServer);
+            if (ZDGameManager.Instance) ZDGameManager.Instance.PlayerCharacterDied();
         }
     }
 
@@ -233,14 +241,18 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
 
     protected void FixedUpdate()
     {
-        UpdateAnimParams();
-        SetHP(GetHP() + Time.deltaTime * GetRegHP() * 8);
-        SetMP(GetMP() + Time.deltaTime * GetRegMP() * 8);
-        for (int i = 0; i < 4; ++i)
+        if(currentState == CharacterState.Alive &&
+           ZDGameManager.GetGameState() == ZDGameState.Play)
         {
-            if (SkillCD[i] > float.Epsilon)
+            UpdateAnimParams();
+            SetHP(GetHP() + Time.fixedDeltaTime * GetRegHP() * 8);
+            SetMP(GetMP() + Time.fixedDeltaTime * GetRegMP() * 8);
+            for (int i = 0; i < 4; ++i)
             {
-                SkillCD[i] -= Time.deltaTime > SkillCD[i] ? SkillCD[i] : Time.deltaTime;
+                if (SkillCD[i] > float.Epsilon)
+                {
+                    SkillCD[i] -= (Time.fixedDeltaTime > SkillCD[i]) ? SkillCD[i] : Time.fixedDeltaTime;
+                }
             }
         }
     }
