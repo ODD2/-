@@ -174,7 +174,7 @@ namespace ZoneDepict.Map
                     //location remains, no need to update.
                     return false;
                 }
-                else if (RemoveFromRecordGrids(Recorder[Caller]))
+                else if (!RemoveFromRecordGrids(Recorder[Caller]))
                 {
                     //TODO: Error Log: This should not happen in general.
                     return false;
