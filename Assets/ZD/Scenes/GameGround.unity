@@ -459,9 +459,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91bd28081a9343c6b0df0859c4efd10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DoRestrictZone: 1
   EndGameMusic: {fileID: 8300000, guid: 7ef5118ddea5446d088794b0cdf92714, type: 3}
   Lose: {fileID: 48964419}
   Victory: {fileID: 677520119}
+  CountDownTime: 1
 --- !u!4 &322031467
 Transform:
   m_ObjectHideFlags: 0
@@ -1484,8 +1486,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c3966525e0e714f5bb7e405968a2a773, type: 3}
   - {fileID: 21300000, guid: 82d68b380d8474ca2bf1dd58a85be0f3, type: 3}
   MoveIndicator: {fileID: 4230767625700393350, guid: 6153e91dd70bc40e6bef2bed8e26ce09,
-    type: 3}
-  SingleSoul: {fileID: 5802979548508717889, guid: 6f532261f494d478c95c9b5c7291354d,
     type: 3}
 --- !u!1 &2108264073
 GameObject:

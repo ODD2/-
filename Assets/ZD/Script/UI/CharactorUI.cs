@@ -75,15 +75,15 @@ public class CharactorUI : MonoBehaviour
         ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
     }
 
-    
     private void FixedUpdate()
     {
         if (Owner)
         {
+            
             UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
             UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
 
-            if(Owner.GetComponent<PhotonView>().IsMine)
+            if (Owner.GetComponent<PhotonView>().IsMine)
             {
                 int GetSoul = Owner.GetSoul();
                 if (SoulDisplayed != GetSoul)
@@ -107,7 +107,17 @@ public class CharactorUI : MonoBehaviour
 
                 }
             }
-            
+            else
+            {
+                if (Owner.GetIsShelter())
+                {
+                    gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                }
+                else
+                {
+                    gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                }
+            }
         }
     }
 }

@@ -23,10 +23,11 @@ namespace ZoneDepict
     {
         [SerializeField]
         protected EActorType ActorType;
+        protected bool IsShelter = false;
         private float ActorTypeDepth = 0.0f;
         public ObjectConfig[] Configs ;
         public Dictionary<Vector2Int, HashSet<EObjectType>> Regions;
-
+        
         protected void Start()
         {
             InitializeTerrain();
@@ -53,7 +54,15 @@ namespace ZoneDepict
                     SetActorDepth();
 
                     //
-                    if (ZDMap.HitAtObject(this, EObjectType.Shelter) != null) Debug.Log("ENTER SHELTER");
+                    if (ZDMap.HitAtObject(this, EObjectType.Shelter) != null)
+                    {
+                        //Debug.Log("Shelter!!!!!!");
+                        IsShelter = true;
+                    }
+                    else
+                    {
+                        IsShelter = false;
+                    }
                 }
                 transform.hasChanged = false;
             }
@@ -68,6 +77,11 @@ namespace ZoneDepict
         public bool IsRegistered()
         {
             return ZDMap.IsRegistered(this);
+        }
+
+        public bool GetIsShelter()
+        {
+            return IsShelter;
         }
 
         protected void SetActorDepth()
