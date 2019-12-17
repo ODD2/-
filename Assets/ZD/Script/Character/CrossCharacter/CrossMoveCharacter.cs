@@ -21,7 +21,7 @@ public class CrossMoveCharacter : Character
     public override void InputSprint(Vector2 Destination)
     {
         Destination = GetValidDest(Destination);
-        float RequireMana = (Destination - (Vector2)transform.position).magnitude / ZDGameRule.UnitInWorld * MoveMana;
+        float RequireMana = (Destination - (Vector2)transform.position).magnitude / ZDGameRule.UNIT_IN_WORLD * MoveMana;
         if (photonView.IsMine && !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") && RequireMana < MP)
         {
             SetMP(MP - RequireMana);

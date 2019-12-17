@@ -21,7 +21,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
         {
             TrackAngleIndicator = Instantiate(ZDAssetTable.GetObject("TrackAngleIndicator"), transform);
             TrackAngleIndicator.SetActive(false);
-            TrackAngleIndicator.transform.position += new Vector3(0, ZDGameRule.UnitInWorld * 1.2f, 0);
+            TrackAngleIndicator.transform.position += new Vector3(0, ZDGameRule.UNIT_IN_WORLD * 1.2f, 0);
             StartCoroutine(GenerateNewTrack());
         }
     }

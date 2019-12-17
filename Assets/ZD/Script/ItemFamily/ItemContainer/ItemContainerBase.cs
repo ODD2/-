@@ -28,8 +28,8 @@ public abstract class ItemContainerBase : ZDRegisterObject, IADamageObject, IPun
 
         //Setup ZDObjectt Unit World  Scale
         Vector3 NewScale = transform.localScale;
-        NewScale.x *= ZDGameRule.UnitInWorld;
-        NewScale.y *= ZDGameRule.UnitInWorld;
+        NewScale.x *= ZDGameRule.UNIT_IN_WORLD;
+        NewScale.y *= ZDGameRule.UNIT_IN_WORLD;
         transform.localScale = NewScale;
 
         //Setup Depth

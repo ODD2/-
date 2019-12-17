@@ -29,6 +29,7 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
     {
         public Vector3 position;
         public bool InZone;
+        public float InZoneSeconds;
     }
     public static RestrictZone Instance;
     public static bool TryInitialized;
@@ -84,9 +85,21 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
                     VisibleArea.localScale += FramScaleChange;
                 }
             }
-            if (DoDamage && IsInRestrict(ZDController.GetTargetCharacter()))
+            if (DoDamage)
             {
-                ZDController.GetTargetCharacter().Hurt(10);
+                if (IsInRestrict(ZDController.GetTargetCharacter()))
+                {
+                    cachedState.InZoneSeconds += Time.deltaTime;
+                    if(cachedState.InZoneSeconds > ZDGameRule.RestrictZone.HurtThresh)
+                    {
+                        cachedState.InZoneSeconds = 0;
+                        ZDController.GetTargetCharacter().Hurt(10);
+                    }
+                }
+                else if(cachedState.InZoneSeconds.Equals(0))
+                {
+                    cachedState.InZoneSeconds = 0;
+                }
             }
         }
     }
@@ -105,10 +118,10 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
         StrictAreaSpriteRect = StrictAreaSpriteRender.sprite.rect;
         VisibleAreaSpriteRect = VisibleAreaSpriteMask.sprite.rect;
 
-        StrictAreaCachedRatio.x = ZDGameRule.UnitInPixel / StrictAreaSpriteRect.width;
-        StrictAreaCachedRatio.y = ZDGameRule.UnitInPixel / StrictAreaSpriteRect.height;
-        VisibleAreaCachedRatio.x = ZDGameRule.UnitInPixel / VisibleAreaSpriteRect.width;
-        VisibleAreaCachedRatio.y = ZDGameRule.UnitInPixel / VisibleAreaSpriteRect.height;
+        StrictAreaCachedRatio.x = ZDGameRule.UNIT_IN_PIXEL / StrictAreaSpriteRect.width;
+        StrictAreaCachedRatio.y = ZDGameRule.UNIT_IN_PIXEL / StrictAreaSpriteRect.height;
+        VisibleAreaCachedRatio.x = ZDGameRule.UNIT_IN_PIXEL / VisibleAreaSpriteRect.width;
+        VisibleAreaCachedRatio.y = ZDGameRule.UNIT_IN_PIXEL / VisibleAreaSpriteRect.height;
 
         Vector3 StrictAreaScale = new Vector3( StrictAreaCachedRatio.x* ZDGameRule.MAP_WIDTH_UNIT * 2f,
                                                                           StrictAreaCachedRatio.y* ZDGameRule.MAP_HEIGHT_UNIT * 2f, 0);
@@ -122,20 +135,18 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
 
     bool IsInRestrict(Character character)
     {
-        if (character == null) return false;
+        if ( character == null) return false;
         if ( cachedState.position != character.transform.position ||
-             cachedVisibleAreaScale != VisibleArea.localScale)
+              cachedVisibleAreaScale != VisibleArea.localScale)
         {
             cachedState.position = character.transform.position;
             cachedVisibleAreaScale = VisibleArea.localScale;
-            float DeltaX = Mathf.Abs(character.transform.position.x - transform.position.x)/ ZDGameRule.UnitInWorld;
-            float DeltaY = Mathf.Abs(character.transform.position.y - transform.position.y) / ZDGameRule.UnitInWorld;
+            float DeltaX = Mathf.Abs(character.transform.position.x - transform.position.x)/ ZDGameRule.UNIT_IN_WORLD;
+            float DeltaY = Mathf.Abs(character.transform.position.y - transform.position.y) / ZDGameRule.UNIT_IN_WORLD;
             float ThreshX = (VisibleArea.localScale.x / VisibleAreaCachedRatio.x) / 2;
             float ThreshY = (VisibleArea.localScale.y / VisibleAreaCachedRatio.y) / 2;
-            if(DeltaX > ThreshX || DeltaY > ThreshY)
-            {
-                cachedState.InZone = true;
-            }
+            if(DeltaX > ThreshX || DeltaY > ThreshY) cachedState.InZone = true;
+            else  cachedState.InZone = false;
         }
         return cachedState.InZone;
     }

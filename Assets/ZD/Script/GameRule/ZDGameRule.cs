@@ -62,21 +62,26 @@ namespace ZoneDepict.Rule
         public const uint MAP_WIDTH_UNIT = 21;
         public const uint MAP_HEIGHT_UNIT = 17;
         public const int MAX_PLAYERS = 4;
-        public const float UnitInWorld = 2.5f;
-        public const float WorldInPixel = 100.0f;
-        public const float UnitInPixel = UnitInWorld * 100.0f;
-        public const float MAP_WIDTH_WORLD = MAP_WIDTH_UNIT * UnitInWorld;
-        public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UnitInWorld;
+        public const float UNIT_IN_WORLD = 2.5f;
+        public const float WORLD_IN_PIXEL = 100.0f;
+        public const float UNIT_IN_PIXEL = UNIT_IN_WORLD * 100.0f;
+        public const float MAP_WIDTH_WORLD = MAP_WIDTH_UNIT * UNIT_IN_WORLD;
+        public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UNIT_IN_WORLD;
         public const int TOUCH_TAP_BOUND_FRAMES = 20;
         public const float SINGLE_ACTOR_DEPTH = 0.00003051757f;
         public const float UNIT_DEPTH = SINGLE_ACTOR_DEPTH * (int)EActorType.Total;
 
         //Audio
-        public const float MAX_AUDIO_DISTANCE = 10 * UnitInWorld;
+        public const float MAX_AUDIO_DISTANCE = 10 * UNIT_IN_WORLD;
 
         public static class CrossTrack
         {
             public const float NextTrackDelay = 2.0f;
+        }
+
+        public static class RestrictZone
+        {
+            public const float HurtThresh = 2.0f;
         }
 
         // transform the input position from zonedepict unit to world unit.(z axis is remained the same)
@@ -84,7 +89,7 @@ namespace ZoneDepict.Rule
         {
             Vector3 ret = new Vector3(x, y, 0);
             //只對x,y縮放
-            ret *= UnitInWorld;
+            ret *= UNIT_IN_WORLD;
             ret.z = z;
             return ret;
         }
@@ -105,14 +110,14 @@ namespace ZoneDepict.Rule
                 float pos = ret[i];
                 bool neg = pos < 0;
                 pos = Mathf.Abs(pos);
-                if (pos < UnitInWorld / 2)
+                if (pos < UNIT_IN_WORLD / 2)
                 {
                     ret[i] = 0;
                 }
                 else
                 {
-                    pos -= UnitInWorld / 2;
-                    ret[i] = (neg ? -1 : 1) * (int)(pos / UnitInWorld + 1);
+                    pos -= UNIT_IN_WORLD / 2;
+                    ret[i] = (neg ? -1 : 1) * (int)(pos / UNIT_IN_WORLD + 1);
                 }
                 ret[i] = Mathf.Round(ret[i]);
             }
@@ -213,7 +218,7 @@ namespace ZoneDepict.Rule
         }
         static public float WorldDepth(float y)
         {
-            return Mathf.Round(y / UnitInWorld) * UNIT_DEPTH;
+            return Mathf.Round(y / UNIT_IN_WORLD) * UNIT_DEPTH;
         }
         static public float WorldActorDepth(float y, EActorType eActorType)
         {

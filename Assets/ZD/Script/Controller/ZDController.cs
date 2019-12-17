@@ -114,7 +114,7 @@ public class ZDController : MonoBehaviour
                             }
                             return;
                         }
-                        else if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UnitInWorld * ClickOnFix)
+                        else if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UNIT_IN_WORLD * ClickOnFix)
                         {
                             IsMovingCharacter = true;
                         }
@@ -288,7 +288,7 @@ public class ZDController : MonoBehaviour
                             }
                         }
                     }
-                    else if ((HitLoc - CharactorPos).magnitude <= ZDGameRule.UnitInWorld * ClickOnFix)
+                    else if ((HitLoc - CharactorPos).magnitude <= ZDGameRule.UNIT_IN_WORLD * ClickOnFix)
                     {
                         Debug.Log("IsMoving");
                         IsMovingCharacter = true; // Moveing Charactor
@@ -298,7 +298,7 @@ public class ZDController : MonoBehaviour
                     {
                         // Is Activate Attack System
                         Debug.Log("Dis : " + (HitLoc - CharactorPos).magnitude);
-                        Debug.Log("Judge : " + ZDGameRule.UnitInWorld * ClickOnFix);
+                        Debug.Log("Judge : " + ZDGameRule.UNIT_IN_WORLD * ClickOnFix);
                         if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, EObjectType.ACollect)) == null && !BagClass.GetHover())
                         {
 

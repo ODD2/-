@@ -445,7 +445,7 @@ namespace ZoneDepict
                 Vector3 RandomZoneLocation = new Vector2((int)Random.Range(0, ZDGameRule.MAP_WIDTH_UNIT),
                                                          (int)Random.Range(0, ZDGameRule.MAP_HEIGHT_UNIT));
                 RandomZoneLocation -= (new Vector3((int)ZDGameRule.MAP_WIDTH_UNIT / 2, ZDGameRule.MAP_HEIGHT_UNIT / 2));
-                RandomZoneLocation *= ZDGameRule.UnitInWorld;
+                RandomZoneLocation *= ZDGameRule.UNIT_IN_WORLD;
                 RandomZoneLocation.z = -2;
                 PhotonNetwork.InstantiateSceneObject(ZoneObjectName, RandomZoneLocation, Quaternion.identity);
             }
@@ -456,7 +456,7 @@ namespace ZoneDepict
             //Spawn Character
             object[] CharacterCustomData = { PhotonNetwork.LocalPlayer.NickName };
             playerProps.Object = PhotonNetwork.Instantiate(playerProps.CharacterType,
-                                                           TeamSpawnUnit[playerProps.Team] * ZDGameRule.UnitInWorld,
+                                                           TeamSpawnUnit[playerProps.Team] * ZDGameRule.UNIT_IN_WORLD,
                                                            Quaternion.identity,0, CharacterCustomData);
             playerProps.Script = playerProps.Object.GetComponent<Character>();
             //Setup Camera
@@ -465,7 +465,7 @@ namespace ZoneDepict
 
         void SpawnObjectUnitPos(SpawnObjectConfig target, Vector3 Pos)
         {
-            Pos *= ZDGameRule.UnitInWorld;
+            Pos *= ZDGameRule.UNIT_IN_WORLD;
             string ObjPath = ZDAssetTable.GetPath(target.name);
             PhotonNetwork.InstantiateSceneObject(ObjPath, Pos, Quaternion.identity);
             if (target.flipX || target.flipY)

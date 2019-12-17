@@ -43,9 +43,9 @@ namespace ZoneDepict.UI
 
             for (int i = 0; i < 6; i++)
             {
-                ArrowScale[i] = ((ZDGameRule.UnitInWorld / 3) * i);
+                ArrowScale[i] = ((ZDGameRule.UNIT_IN_WORLD / 3) * i);
             }
-            MoveIndicator.transform.localScale = new Vector3(ZDGameRule.UnitInWorld, ZDGameRule.UnitInWorld, 1);
+            MoveIndicator.transform.localScale = new Vector3(ZDGameRule.UNIT_IN_WORLD, ZDGameRule.UNIT_IN_WORLD, 1);
         }
 
         public void SetAttackIndicator(Vector2 Position)
@@ -72,7 +72,7 @@ namespace ZoneDepict.UI
             Move.position = Pos;
             if ((int)Scale > 5) Scale = 5;
             float DoScale = ArrowScale[(int)Scale]; // Fix 
-            Move.localScale = new Vector3(ZDGameRule.UnitInWorld, DoScale, 0);
+            Move.localScale = new Vector3(ZDGameRule.UNIT_IN_WORLD, DoScale, 0);
             MoveIndicator.SetActive(true);
         }
 

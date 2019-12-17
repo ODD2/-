@@ -56,16 +56,13 @@ namespace ZoneDepict
                     //
                     if (ZDMap.HitAtObject(this, EObjectType.Shelter) != null)
                     {
-                        //Debug.Log("Shelter!!!!!!");
                         IsShelter = true;
                     }
                     else
                     {
                         IsShelter = false;
                     }
-                    Debug.Log("Shelter:" + (IsShelter ? "True" : "False"));
                 }
-                Debug.Log("Transform Changed");
                 transform.hasChanged = false;
             }
         }
