@@ -141,7 +141,7 @@ namespace ZoneDepict
                 "ZoneRestrict",
                 new DefaultAssetObject
                 {
-                    path = "MapObjects/ZoneRestrict",
+                    path = "GameObjects/ZoneRestrict",
                 }
             }
         };

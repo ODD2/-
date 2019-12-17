@@ -16,6 +16,9 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
 {
+    public bool DoDamage;
+
+
     public enum RestrictZoneState
     {
         Initializing,
@@ -81,7 +84,7 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
                     VisibleArea.localScale += FramScaleChange;
                 }
             }
-            if (IsInRestrict(ZDController.GetTargetCharacter()))
+            if (DoDamage && IsInRestrict(ZDController.GetTargetCharacter()))
             {
                 ZDController.GetTargetCharacter().Hurt(10);
             }
