@@ -135,60 +135,68 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
         
     }
-    public void EntryUpdate(Player player)
+    public void EntryUpdate(Player player,bool Remove)
     {
-        foreach (var p in PhotonNetwork.PlayerList)
+        if (Remove)
         {
-            if(PlayerListEntries.ContainsKey(p.NickName))
+            PlayerListEntries.Remove(player.NickName);
+            Destroy(GameObject.Find(player.NickName));
+        }
+        else
+        {
+            foreach (var p in PhotonNetwork.PlayerList)
             {
-                // Update
-                if(p.CustomProperties.ContainsKey("Ready"))
+                if (PlayerListEntries.ContainsKey(p.NickName))
                 {
-                    if((bool)p.CustomProperties["Ready"])
+                    // Update
+                    if (p.CustomProperties.ContainsKey("Ready"))
                     {
-                        PlayerListEntries[p.NickName].transform.GetChild(2).GetComponent<Image>().color = Color.red;
-                        if((string)p.CustomProperties["CharacterName"] != "" )
+                        if ((bool)p.CustomProperties["Ready"])
                         {
-                            uint index = 0;
-                            foreach (var s in ProfileName)
+                            PlayerListEntries[p.NickName].transform.GetChild(2).GetComponent<Image>().color = Color.red;
+                            if ((string)p.CustomProperties["CharacterName"] != "")
                             {
+                                uint index = 0;
+                                foreach (var s in ProfileName)
+                                {
 
-                                if (s == (string)p.CustomProperties["CharacterName"]) break;
-                                else index++;
+                                    if (s == (string)p.CustomProperties["CharacterName"]) break;
+                                    else index++;
+                                }
+                                PlayerListEntries[p.NickName].transform.GetChild(1).GetComponent<Image>().sprite = Profile[index];
                             }
-                            PlayerListEntries[p.NickName].transform.GetChild(1).GetComponent<Image>().sprite = Profile[index];
+                        }
+                        else
+                        {
+                            PlayerListEntries[p.NickName].transform.GetChild(2).GetComponent<Image>().color = Color.white;
                         }
                     }
-                    else
-                    {
-                        PlayerListEntries[p.NickName].transform.GetChild(2).GetComponent<Image>().color = Color.white;
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("Create Player");
-                // Create
-                GameObject Entry = Instantiate(PlayerEntry);
-                Entry.transform.GetChild(0).GetComponent<Text>().text = p.NickName;
-                if(p == PhotonNetwork.LocalPlayer)
-                {
-                    Entry.transform.GetChild(0).GetComponent<Text>().color = Color.red;
-                }
-                Entry.name = p.NickName;
-                if ((ZDTeams)p.CustomProperties["Team"] == ZDTeams.T0)
-                {
-                    Entry.transform.SetParent(TeamA.transform);
-                    Entry.transform.localScale = new Vector3(0.5f, 0.5f, 1);
                 }
                 else
                 {
-                    Entry.transform.SetParent(TeamB.transform);
-                    Entry.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                    Debug.Log("Create Player");
+                    // Create
+                    GameObject Entry = Instantiate(PlayerEntry);
+                    Entry.transform.GetChild(0).GetComponent<Text>().text = p.NickName;
+                    if (p == PhotonNetwork.LocalPlayer)
+                    {
+                        Entry.transform.GetChild(0).GetComponent<Text>().color = Color.red;
+                    }
+                    Entry.name = p.NickName;
+                    if ((ZDTeams)p.CustomProperties["Team"] == ZDTeams.T0)
+                    {
+                        Entry.transform.SetParent(TeamA.transform);
+                        Entry.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                    }
+                    else
+                    {
+                        Entry.transform.SetParent(TeamB.transform);
+                        Entry.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                    }
+                    PlayerListEntries.Add(p.NickName, Entry);
                 }
-                PlayerListEntries.Add(p.NickName, Entry);
+
             }
-            
         }
     }
     public bool CheackAllReady()
@@ -261,7 +269,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         
-        EntryUpdate(targetPlayer);
+        EntryUpdate(targetPlayer,false);
         if (CheackAllReady())
         {
             // Battle
@@ -297,10 +305,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Debug.Log("Not All Ready yet");
         }
     }
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log(roomList);
+        EntryUpdate(otherPlayer,true);
     }
+    
 
     #endregion
 }
