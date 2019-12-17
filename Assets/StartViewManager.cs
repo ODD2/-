@@ -74,6 +74,7 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         PlayerProps.Add("CharacterName", "");
         PlayerProps.Add("Ready", false);
         PhotonNetwork.SetPlayerCustomProperties(PlayerProps);
+        //PhotonNetwork.JoinLobby();
         PhotonNetwork.LoadLevel("GameRoomView");
 
     }
@@ -81,6 +82,15 @@ public class StartViewManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("In Lobby ~~");
+        Debug.Log(PhotonNetwork.CountOfRooms);
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        Debug.Log(roomList[0].CustomProperties);
+        Debug.Log("New Room");
+        
+        //Debug.Log();
     }
 
     #endregion

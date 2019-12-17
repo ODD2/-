@@ -45,5 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackIndicator: {fileID: 3073239615737243702, guid: 24511427de02f41e5bffbc73aa6e15f9,
     type: 3}
+  AttackSources: []
   MoveIndicator: {fileID: 3864500571154724212, guid: 8c5007d31bafc4de1b0ee2944e35536e,
     type: 3}
+  SingleSoul: {fileID: 0}

@@ -21,6 +21,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [Header("Teams Field")]
     public GameObject TeamA;
     public GameObject TeamB;
+    [Header("If Game is Banlance or Not")]
+    public bool GameBalance;
+    private bool IsBalance;
     [Header("Other")]
     public Button ReadyBut;
     public Text StateTxt;
@@ -30,7 +33,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private string CharacterName;
     private bool ReadyBool = false;
     private Dictionary<string, GameObject> PlayerListEntries;
-    
+
+    //Const the number of MaxPlayers
+    private const int MaxPlayers = 6;
+
     void Start()
     {
         CastCharactors = new GameObject[ScrollContent.transform.childCount];
@@ -42,8 +48,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
             
         }
         ReadyBut.onClick.AddListener(() => Ready());
-        
         // Join Room
+        Hashtable expectedCustomRoomProperties = new Hashtable() { { "Rnuuing Game", false } };
+        //PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties,MaxPlayers);
         PhotonNetwork.JoinRandomRoom();
         StartCoroutine(WaitJoinRoom());
     }
@@ -65,7 +72,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 Debug.Log(p.CustomProperties);
             }
         }
-        //debugtxt.text = PhotonNetwork.CurrentRoom.Name;
     }
 
     IEnumerator WaitJoinRoom()
@@ -201,6 +207,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        
         int T0 = 0;
         int T1 = 0;
         foreach(var p in PhotonNetwork.PlayerList)
@@ -223,10 +230,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
         }
         ZDTeams teams = T0 > T1 ? ZDTeams.T1 : ZDTeams.T0;
+        if (teams == ZDTeams.T0) T0++;
+        else T1++;
+        if (T0 == T1) IsBalance = true;
+        else IsBalance = false;
         Hashtable props = new Hashtable
-            {
-                {"Team", teams}
-            };
+        {
+            {"Team", teams}
+        };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
         if(PlayerListEntries == null)
@@ -238,28 +249,54 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("Here");
+        Debug.Log("Create Room!!!!");
         RoomOptions roomOptions = new RoomOptions();
-        roomOptions.IsVisible = true;
-        roomOptions.IsOpen = true;
         roomOptions.MaxPlayers = 6;
-
+        roomOptions.CustomRoomProperties = new Hashtable{{"Rnuuing Game", false}};
         PhotonNetwork.CreateRoom("DemoRoom", roomOptions, null);
     }
-
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
+        
         EntryUpdate(targetPlayer);
         if (CheackAllReady())
         {
             // Battle
             Debug.Log("All Ready");
-            PhotonNetwork.LoadLevel("GameGround");
+            if (GameBalance)
+            {
+                if (IsBalance)
+                {
+                    Hashtable props = new Hashtable
+                    {
+                        {"Rnuuing Game", true}
+                    };
+                    PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+                    PhotonNetwork.LoadLevel("GameGround");
+                }
+                else
+                {
+                    Debug.Log("Is Not a Balance Game, Can't Start");
+                }
+            }
+            else
+            {
+                Hashtable props = new Hashtable
+                    {
+                        {"Rnuuing Game", true}
+                    };
+                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+                PhotonNetwork.LoadLevel("GameGround");
+            } 
         }
         else
         {
-            Debug.Log("Not yet");
+            Debug.Log("Not All Ready yet");
         }
+    }
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        Debug.Log(roomList);
     }
 
     #endregion

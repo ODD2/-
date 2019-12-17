@@ -9,9 +9,6 @@ EditorBuildSettings:
     path: Assets/ZD/Scenes/GameStartView.unity
     guid: fba4aa4f9a1fe48c8a1c71892c6b4869
   - enabled: 1
-    path: Assets/ZD/Scenes/GameRoomView.unity
-    guid: 5d7a4eec69fa14f66a1ef28c2bd84b20
-  - enabled: 1
     path: Assets/ZD/Scenes/GameLaunch.unity
     guid: a1a07bbf49ed4459c9abf5ba8c8f14c2
   - enabled: 1

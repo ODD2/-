@@ -45,6 +45,7 @@ namespace ZoneDepict
         public bool Alive;
         public string CharacterType;
         public GameObject Object;
+        public GameObject VisualCharactorInfo;
     }
 
     public class ZDGameManager : MonoBehaviourPunCallbacks, IOnEventCallback
@@ -220,6 +221,11 @@ namespace ZoneDepict
                 Debug.Log(PhotonNetwork.LocalPlayer.CustomProperties["Team"]);
             }
         }
+        void FixedUpdate()
+        {
+            // Update All Info Bar
+
+        }
         #endregion
 
         #region Game Process
@@ -330,12 +336,12 @@ namespace ZoneDepict
         void CreatePlayerCharacter()
         {
             //Spawn Character
+            object[] myCustomInitData = new object[] { PhotonNetwork.LocalPlayer.NickName };
             playerProps.Object = PhotonNetwork.Instantiate(playerProps.CharacterType,
                                                            TeamSpawnUnit[playerProps.Team] * ZDGameRule.UnitInWorld,
-                                                           Quaternion.identity);
+                                                           Quaternion.identity, 0, myCustomInitData);
             //Setup Camera
             CameraController.SetTarget(playerProps.Object);
-
         }
 
         void BuildTeamList()
@@ -534,6 +540,7 @@ namespace ZoneDepict
                     break;
             }
         }
+       
         #endregion
     }
 }

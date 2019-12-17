@@ -10,21 +10,21 @@ namespace ZoneDepict.UI
     {
         
         static public ZDUI Instance;
-        public RectTransform HealthBar;
-        public RectTransform HealthBarBG;
-        public RectTransform MagicBar;
-        public RectTransform MagicBarBG;
+        
 
-        public Sprite[] AttackSources;
+        [Header("The Indicator img of Attacking")]
         public GameObject AttackIndicator;
+        public Sprite[] AttackSources;
+        
+        
+        [Header("The Indicator img of Moving")]
         public GameObject MoveIndicator;
-        public GameObject SingleSoul;
+        
         private Transform Attack;
         private Transform Move;
         private float FrameFix = 0.01f;
         private float[] ArrowScale = { 0, 0, 0, 0, 0, 0 };
-        private int SoulDisplayed = 0;
-        private List<GameObject> SoulCached = new List<GameObject>();
+        
 
         
 
@@ -86,64 +86,17 @@ namespace ZoneDepict.UI
             AttackIndicator.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, Frame * FrameFix);
         }
 
-        public void UpdateHPBar(float maxHP,float HP)
-        {
-            HealthBar.sizeDelta = new Vector2((maxHP / HealthBarBG.rect.width) * HP, HealthBar.rect.height);
-        }
-      
-        public void UpdateMPBar(float maxMP, float MP)
-        {
-            MagicBar.sizeDelta = new Vector2((maxMP / MagicBarBG.rect.width) * MP, MagicBar.rect.height);
-        }
-
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha9))
-            {
-                HealthBar.sizeDelta += new Vector2(-1, 0);
-            }
+            
             
         }
 
-        private void FixedUpdate()
+        private void OnDestroy()
         {
-            if (ZDController.TargetCharacter)
-            {
-                int GetSoul = ZDController.TargetCharacter.GetSoul(); 
-                if (SoulDisplayed != GetSoul)
-                {
-                    if (SoulDisplayed < GetSoul)
-                    {
-                        if (SoulCached.Count < GetSoul)
-                        {
-                            for (int i = SoulCached.Count; i < GetSoul; ++i)
-                            {
-                                GameObject NewSoulIndicator = Instantiate(SingleSoul, transform);
-                                NewSoulIndicator.transform.position += new Vector3(-2 + 0.8f*i, ZDGameRule.UnitInWorld, 0);
-                                SoulCached.Add(NewSoulIndicator);
-                            }
-                        }
-                        else
-                        {
-                            for (int i = SoulDisplayed; i < GetSoul; ++i)
-                            {
-                                SoulCached[i].SetActive(true);
-                            }
-                        }
-
-                    }
-                    else if (SoulDisplayed > GetSoul)
-                    {
-                        for (int i = GetSoul; i < SoulDisplayed; i++)
-                        {
-                            SoulCached[i].SetActive(false);
-                        }
-                    }
-                    SoulDisplayed = GetSoul;
-                  
-                }
-            }
+            Instance = null;
         }
+
     }
 }
 

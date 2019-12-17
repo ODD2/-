@@ -30,7 +30,7 @@ public class ZDController : MonoBehaviour
     private const float ClickOnFix = 0.8f; // To fix the radius of "TochOn Circle"
     private const float TouchMoveFix = 1.7f; // To fix what is "Move"
     #endregion
-  
+
     #region UI CallBack Class
     private ZDUI ZDUIClass;
     private BagController BagClass;
@@ -44,11 +44,7 @@ public class ZDController : MonoBehaviour
         if (Instance && Instance != this) Destroy(this);
         else Instance = this;
 
-        TargetCharacter = GetComponent<Character>();
-        if (!TargetCharacter.photonView.IsMine)
-        {
-            Destroy(this);
-        }
+        TargetCharacter = ZDGameManager.playerProps.Object.GetComponent<Character>();
         ZDUIClass = GameObject.Find("ZDUI").GetComponent<ZDUI>();
         BagClass = GameObject.Find("Item").GetComponent<BagController>();
    
@@ -256,14 +252,16 @@ public class ZDController : MonoBehaviour
                     // World
                     Vector2 HitLoc = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
+                    Debug.Log("ChPos : " + CharactorPos);
                     // Unit
                     Vector2 UnitLoc = ZDGameRule.WorldToUnit(HitLoc);
                     Vector2 UnitCharactorPos = ZDGameRule.WorldToUnit(CharactorPos);
 
                     List<ZDObject> HitObjects;
-
+                    
                     if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, EObjectType.ACollect)) != null)
                     {
+                        Debug.Log("Hit is CollectObj");
                         foreach (var obj in HitObjects)
                         {
                             if (TargetCharacter.GetInventory().Count < TargetCharacter.GetInventoryMax())
@@ -279,12 +277,15 @@ public class ZDController : MonoBehaviour
                     }
                     else if ((HitLoc - CharactorPos).magnitude <= ZDGameRule.UnitInWorld * ClickOnFix)
                     {
+                        Debug.Log("IsMoving");
                         IsMovingCharacter = true; // Moveing Charactor
                     }
 
                     else
                     {
                         // Is Activate Attack System
+                        Debug.Log("Dis : " + (HitLoc - CharactorPos).magnitude);
+                        Debug.Log("Judge : " + ZDGameRule.UnitInWorld * ClickOnFix);
                         if ((HitObjects = ZDMap.HitAtUnit(UnitLoc, EObjectType.ACollect)) == null && !BagClass.GetHover())
                         {
 
@@ -351,8 +352,8 @@ public class ZDController : MonoBehaviour
                 TargetCharacter.SetMP(TargetCharacter.GetMP() - 10);
             }
             // Update HP/MP
-            ZDUIClass.UpdateHPBar(TargetCharacter.GetMaxHP(), TargetCharacter.GetHP());
-            ZDUIClass.UpdateMPBar(TargetCharacter.GetMaxMP(), TargetCharacter.GetMP());
+            //ZDUIClass.UpdateHPBar(TargetCharacter.GetMaxHP(), TargetCharacter.GetHP());
+            //ZDUIClass.UpdateMPBar(TargetCharacter.GetMaxMP(), TargetCharacter.GetMP());
         }
     }
 
