@@ -39,13 +39,6 @@ namespace ZoneDepict
         EndGame = 100,
     }
 
-    public enum ZDTeams
-    {
-        T0,
-        T1,
-        Total,
-    }
-
     [Serializable]
     public struct SpawnObjectConfig
     {
@@ -285,7 +278,7 @@ namespace ZoneDepict
                         if(NextZoneInterval < Time.deltaTime)
                         {
                             RestrictZone.Instance.ShrinkZone(new Vector2Int((int)(ZDGameRule.MAP_WIDTH_UNIT*0.2),
-                                                                            (int)(ZDGameRule.MAP_HEIGHT_UNIT*0.2)),5);
+                                                                            (int)(ZDGameRule.MAP_HEIGHT_UNIT*0.2)),30);
                             NextZoneInterval = 0;
                         }
                         else
@@ -457,13 +450,13 @@ namespace ZoneDepict
         void CreatePlayerCharacter()
         {
             //Spawn Character
+            object[] CharacterCustomData = { PhotonNetwork.LocalPlayer.NickName };
             playerProps.Object = PhotonNetwork.Instantiate(playerProps.CharacterType,
                                                            TeamSpawnUnit[playerProps.Team] * ZDGameRule.UnitInWorld,
-                                                           Quaternion.identity);
+                                                           Quaternion.identity,0, CharacterCustomData);
             playerProps.Script = playerProps.Object.GetComponent<Character>();
             //Setup Camera
             CameraController.SetTarget(playerProps.Object);
-
         }
 
         void SpawnObjectUnitPos(SpawnObjectConfig target, Vector3 Pos)
@@ -700,6 +693,7 @@ namespace ZoneDepict
                     break;
             }
         }
+       
         #endregion
     }
 }

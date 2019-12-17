@@ -10,7 +10,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 // This class is basic of Charater, and all infos are
 // in this class
-public class Character : ZDObject,IPunObservable, IADamageObject
+public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiateMagicCallback
 {
     #region Components
     protected Animator animator;
@@ -93,6 +93,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         if (NewMP > MaxMP) MP = MaxMP;
         else if (NewMP < 0) MP = 0;
         else MP = NewMP;
+        
     }
     public float GetMaxMP()
     {
@@ -216,7 +217,18 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         //Setup Depth
         if (photonView.IsMine) ActorType = EActorType.LocalCharacter;
         else ActorType = EActorType.RemoteCharacter;
-
+        
+        //Setup UI
+        
+        //GameObject obj = PhotonNetwork.Instantiate("Test", gameObject.transform.position, Quaternion.identity);
+        ////Debug.Log("Create one");
+        //if (photonView.IsMine)
+        //{
+        //    obj.transform.SetParent(gameObject.transform);
+        //}
+        //else
+        //    Destroy(obj);
+        
         //Calls ZDObject Start()
         base.Start();
     }
@@ -322,4 +334,9 @@ public class Character : ZDObject,IPunObservable, IADamageObject
 
     #region Routines
     #endregion
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        gameObject.name = (string)info.photonView.InstantiationData[0];
+    }
+
 }

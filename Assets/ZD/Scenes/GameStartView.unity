@@ -1139,6 +1139,10 @@ MonoBehaviour:
   StartButton: {fileID: 1872273561}
   DebugText: {fileID: 2100004243}
   Connecting: {fileID: 508042948}
+  StartViewAudio:
+  - {fileID: 1496877652}
+  - {fileID: 1496877653}
+  - {fileID: 1496877654}
 --- !u!4 &1496877651
 Transform:
   m_ObjectHideFlags: 0

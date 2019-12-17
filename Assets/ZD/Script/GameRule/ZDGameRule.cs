@@ -38,6 +38,12 @@ namespace ZoneDepict.Rule
     {
         Enter , Casting, Ready
     }
+    public enum ZDTeams
+    {
+        T0,
+        T1,
+        Total,
+    }
 
     public enum CharacterState
     {
