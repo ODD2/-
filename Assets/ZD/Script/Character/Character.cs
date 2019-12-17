@@ -36,6 +36,7 @@ public class Character : ZDObject,IPunObservable, IADamageObject
 
     #region Character Attributes
     public int TeamID {get; protected set; } = 0;
+    public CharacterState currentState { get; protected set; } = CharacterState.Alive;
     protected float HP = 100;
     protected float MP = 100;
     protected int Soul;
@@ -137,8 +138,14 @@ public class Character : ZDObject,IPunObservable, IADamageObject
         if (photonView.IsMine && !HP.Equals(0))
         {
             SetHP(HP - Damage);
-            if (HP.Equals(0))Dead();
-            else photonView.RPC("DoHurtRpc",RpcTarget.AllViaServer);
+            if (HP.Equals(0))
+            {
+                Dead();
+            }
+            else
+            {
+                photonView.RPC("DoHurtRpc", RpcTarget.AllViaServer);
+            }
         }
     }
 
@@ -146,10 +153,9 @@ public class Character : ZDObject,IPunObservable, IADamageObject
     {
         if (photonView.IsMine)
         {
-            Hashtable NewSetting = new Hashtable();
-            NewSetting.Add("Alive", false);
-            PhotonNetwork.SetPlayerCustomProperties(NewSetting);
+            currentState = CharacterState.Dead;
             photonView.RPC("DoDeadRpc", RpcTarget.AllViaServer);
+            if (ZDGameManager.Instance) ZDGameManager.Instance.PlayerCharacterDied();
         }
     }
 
@@ -223,14 +229,18 @@ public class Character : ZDObject,IPunObservable, IADamageObject
 
     protected void FixedUpdate()
     {
-        UpdateAnimParams();
-        SetHP(GetHP() + Time.deltaTime * GetRegHP() * 8);
-        SetMP(GetMP() + Time.deltaTime * GetRegMP() * 8);
-        for (int i = 0; i < 4; ++i)
+        if(currentState == CharacterState.Alive &&
+            ZDGameManager.gameState == ZDGameState.Play)
         {
-            if (SkillCD[i] > float.Epsilon)
+            UpdateAnimParams();
+            SetHP(GetHP() + Time.fixedDeltaTime * GetRegHP() * 8);
+            SetMP(GetMP() + Time.fixedDeltaTime * GetRegMP() * 8);
+            for (int i = 0; i < 4; ++i)
             {
-                SkillCD[i] -= Time.deltaTime > SkillCD[i] ? SkillCD[i] : Time.deltaTime;
+                if (SkillCD[i] > float.Epsilon)
+                {
+                    SkillCD[i] -= (Time.fixedDeltaTime > SkillCD[i]) ? SkillCD[i] : Time.fixedDeltaTime;
+                }
             }
         }
     }

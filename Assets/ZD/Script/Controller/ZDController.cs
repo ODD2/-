@@ -12,10 +12,10 @@ using ZoneDepict.Map;
 public class ZDController : MonoBehaviour
 {
     public static ZDController Instance;
-    public static Character TargetCharacter = null;
+    public static Character TargetCharacter;
     private Vector2 TouchPosRecord; // To record the attack start pos (to calculate direction)
 
-    private bool IsPhoneTest = true;
+    public bool IsPhoneTest = false;
 
     #region Check Bools
     private bool IsMovingCharacter; // To judge if do click/touch on target
@@ -44,11 +44,7 @@ public class ZDController : MonoBehaviour
         if (Instance && Instance != this) Destroy(this);
         else Instance = this;
 
-        TargetCharacter = GetComponent<Character>();
-        if (!TargetCharacter.photonView.IsMine)
-        {
-            Destroy(this);
-        }
+        TargetCharacter = ZDGameManager.playerProps.Object.GetComponent<Character>();
         ZDUIClass = GameObject.Find("ZDUI").GetComponent<ZDUI>();
         BagClass = GameObject.Find("Item").GetComponent<BagController>();
    

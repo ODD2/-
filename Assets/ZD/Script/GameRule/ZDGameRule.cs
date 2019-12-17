@@ -39,6 +39,12 @@ namespace ZoneDepict.Rule
         Enter , Casting, Ready
     }
 
+    public enum CharacterState
+    {
+        Alive,
+        Dead,
+    }
+
     public static class CustomPropsKey
     {
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";

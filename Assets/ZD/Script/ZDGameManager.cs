@@ -10,6 +10,7 @@ using ExitGames.Client.Photon;
 using ZoneDepict.Rule;
 using ZoneDepict.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Random = UnityEngine.Random;
 
 namespace ZoneDepict
 {
@@ -17,6 +18,8 @@ namespace ZoneDepict
     public enum ZDGameState
     {
         Initialize,
+        WaitPlayer,
+        OpenGame,
         Play,
         End,
         Close,
@@ -29,7 +32,8 @@ namespace ZoneDepict
         Restrict,
         RestrictEnd,
         SpawnEffect = 80,
-        StartGame = 90,
+        OpenGame = 90,
+        StartGame,
         EndGame = 100,
     }
 
@@ -56,6 +60,7 @@ namespace ZoneDepict
         public bool Alive;
         public string CharacterType;
         public GameObject Object;
+        public Character Script;
     }
 
     public class ZDGameManager : MonoBehaviourPunCallbacks, IOnEventCallback
@@ -63,14 +68,19 @@ namespace ZoneDepict
         private bool HotKey = false;
 
         #region Feilds
+        //Saved Infos
         public static ZDGameState gameState = ZDGameState.Initialize;
         public static ZDGameManager Instance;
         public static PlayerProps playerProps;
+
+        //Spawn Points
         public static Vector2[] TeamSpawnUnit =
         {
             new Vector2(-9,7),
             new Vector2(9,-7),
         };
+
+        //Map Object Configs
         private static SpawnObjectConfig[] StaticMapObjectConfigs = {
             new SpawnObjectConfig
             {
@@ -200,8 +210,11 @@ namespace ZoneDepict
                 flipY = true,
             },
         };
+        private static string ZoneObjectName = ZDAssetTable.GetPath("ZoneRestrict");
 
-        Dictionary<Player, int> TeamList = new Dictionary<Player, int>();   
+        //Team List
+        Dictionary<Player, int> TeamList = new Dictionary<Player, int>();
+
         //Component
         protected AudioSource audioSource;
         //Audio Clips
@@ -209,6 +222,17 @@ namespace ZoneDepict
         //Scene Objects
         public GameObject Lose;
         public GameObject Victory;
+
+
+        //
+        bool AllPlayerLoaded;
+
+        //Zone Dependencies
+        float NextZoneInterval = 2.0f;
+        //
+        //Vector2Int[] ZoneSizeUnit = { new Vector2Int(,)}
+        float[] ZoneSizeRate = { 0.9f, 0.7f, 0.5f, 0.3f, 0.2f };
+
         #endregion
 
         #region Unity
@@ -224,16 +248,51 @@ namespace ZoneDepict
             Initialize();
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if(Input.GetKeyDown(KeyCode.G))
             {
                 Debug.Log(PhotonNetwork.LocalPlayer.CustomProperties["Team"]);
             }
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                MasterClientRoutine();
+            }
+            else
+            {
+
+            }
+        }
+
+        void MasterClientRoutine()
+        {
+            switch (gameState)
+            {
+                case ZDGameState.WaitPlayer:
+                    if (AllPlayerLoaded && CheckZonePrepared()) SendGameEvent(ZDGameEvent.OpenGame);
+                break;
+                case ZDGameState.Play:
+                    if (RestrictZone.Instance !=null && NextZoneInterval > 0f)
+                    {
+                        if(NextZoneInterval < Time.deltaTime)
+                        {
+                            RestrictZone.Instance.ShrinkZone(new Vector2Int((int)(ZDGameRule.MAP_WIDTH_UNIT*0.2),
+                                                                            (int)(ZDGameRule.MAP_HEIGHT_UNIT*0.2)), 5);
+                            NextZoneInterval = 0;
+                        }
+                        else
+                        {
+                            NextZoneInterval -= Time.deltaTime;
+                        }
+                    }
+                break;
+                    
+            }
         }
         #endregion
 
-        #region Game Process
+        #region Game Process Functions
         void Initialize()
         {
             //if (ZDUI.InstanceObject) ZDUI.InstanceObject.SetActive(false);
@@ -245,12 +304,10 @@ namespace ZoneDepict
             if (PhotonNetwork.IsMasterClient)
             {
                 GenerateStaticMapObjects();
+                GenerateZone();
             }
             //Create Character
             CreatePlayerCharacter();
-            //Record Team 
-            BuildTeamList();
-            
 
             //Tell Everyone I'm Ready To Play
             Hashtable props = new Hashtable
@@ -258,14 +315,42 @@ namespace ZoneDepict
                 { CustomPropsKey.PLAYER_LOADED_LEVEL, true}
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
+            //Set Game State To Wait Player
+            gameState = ZDGameState.WaitPlayer;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                CheckPlayersLoadedLevel();
+            }
         }
 
-        void GameStart()
+        void OpenGame()
         {
-            //if(ZDUI.InstanceObject)ZDUI.InstanceObject.SetActive(true);
+            gameState = ZDGameState.OpenGame;
+            StartCoroutine(OpenGameRoutine());
+        }
+
+        void StartGame()
+        {
             gameState = ZDGameState.Play;
         }
 
+        void EndGame(object InData)
+        {
+            gameState = ZDGameState.End;
+            if (audioSource.isPlaying) audioSource.Stop();
+            audioSource.PlayOneShot(EndGameMusic);
+            object[] data = (object[])InData;
+            if ((int)PhotonNetwork.LocalPlayer.CustomProperties["Team"] == (int)data[0])
+                Victory.SetActive(true);
+            else
+                Lose.SetActive(true);
+            // Go back to start view
+            StartCoroutine(WaitToRestart());
+        }
+        #endregion
+
+        #region Initialize Phase Helper
         void SetupPlayerProps()
         {
             Hashtable PlayerCustomProps = PhotonNetwork.LocalPlayer.CustomProperties;
@@ -318,7 +403,7 @@ namespace ZoneDepict
                             {
                                 for (int ty = y; ; ty += dy)
                                 {
-                                    InstantiateAtUnit(config, new Vector3(tx, ty, 0));
+                                    SpawnObjectUnitPos(config, new Vector3(tx, ty, 0));
                                     if (ty == _y) break;
                                 }
                                 if (tx == _x) break;
@@ -329,7 +414,7 @@ namespace ZoneDepict
                     {
                         foreach (var pos in config.pos)
                         {
-                            InstantiateAtUnit(config, pos);
+                            SpawnObjectUnitPos(config, pos);
                         }
                     }
                 }
@@ -338,99 +423,33 @@ namespace ZoneDepict
             StaticMapObjectConfigs = null;
         }
 
+        void GenerateZone()
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                //int BorderH = (int)(ZDGameRule.MAP_HEIGHT_UNIT * 0.2);
+                //int BorderW = (int)(ZDGameRule.MAP_WIDTH_UNIT * 0.2);
+                Vector2 RandomZoneLocation = new Vector2((int)Random.Range(0, ZDGameRule.MAP_WIDTH_UNIT),
+                                                         (int)Random.Range(0, ZDGameRule.MAP_HEIGHT_UNIT));
+                RandomZoneLocation -= (new Vector2((int)ZDGameRule.MAP_WIDTH_UNIT / 2, ZDGameRule.MAP_HEIGHT_UNIT / 2));
+                RandomZoneLocation *= ZDGameRule.UnitInWorld;
+                PhotonNetwork.InstantiateSceneObject(ZoneObjectName, RandomZoneLocation, Quaternion.identity);
+            }
+        }
+
         void CreatePlayerCharacter()
         {
             //Spawn Character
             playerProps.Object = PhotonNetwork.Instantiate(playerProps.CharacterType,
                                                            TeamSpawnUnit[playerProps.Team] * ZDGameRule.UnitInWorld,
                                                            Quaternion.identity);
+            playerProps.Script = playerProps.Object.GetComponent<Character>();
             //Setup Camera
             CameraController.SetTarget(playerProps.Object);
 
         }
 
-        void BuildTeamList()
-        {
-            //Initialize Current TeamList
-            foreach (var player in PhotonNetwork.PlayerList)
-            {
-                if (player.CustomProperties.ContainsKey("Alive") && (bool)player.CustomProperties["Alive"])
-                {
-                    int Team = 0;
-                    if (player.CustomProperties.ContainsKey("Team"))
-                    {
-                        int playerTeam = (int)player.CustomProperties["Team"];
-                        if (TeamIsValid(playerTeam)) Team = playerTeam;
-                    }
-                    AddTeam((int)player.CustomProperties["Team"], player);
-                }
-            }
-        }
-        #endregion
-
-        #region Helper
-        bool TeamIsValid(int Team)
-        {
-            if (Team >= 0 && Team < (int)ZDTeams.Total) return true;
-            return false;
-        }
-
-        void AddTeam(int teamID, Player player)
-        {
-            if (!TeamList.ContainsKey(player)) TeamList[player] = teamID;
-        }
-
-        bool IsGameEnd()
-        {
-            if (TeamList.Count != 0)
-            {
-                
-                var enumerator = TeamList.Values.GetEnumerator();
-                enumerator.MoveNext();
-                int AliveTeam = enumerator.Current;
-                foreach (var player in TeamList)
-                {
-                    if (player.Value != AliveTeam)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        void CheckGameEnded()
-        {
-            if ((PhotonNetwork.IsMasterClient && IsGameEnd()) || HotKey) SendGameEvent(ZDGameEvent.EndGame);
-        }
-
-        void SendGameEvent(ZDGameEvent SendEvent)
-        {
-            byte evCode; // Custom Event 1: Used as "MoveUnitsToTargetPosition" event
-            object[] content = { }; // Array contains the target position and the IDs of the selected units
-            //Setup evCode and Contents
-            switch (SendEvent)
-            {
-                case ZDGameEvent.StartGame:
-                    evCode = (int)ZDGameEvent.StartGame;
-                    break;
-                case ZDGameEvent.EndGame:
-                    int WinningTeam = -1;
-                    if (TeamList.Count > 0) WinningTeam = TeamList.Values.GetEnumerator().Current;
-                    content = new object[] { WinningTeam };
-                    evCode = (int)ZDGameEvent.EndGame;
-                    break;
-                default:
-                    return;
-            }
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; // You would have to set the Receivers to All in order to receive this event on the local client as well
-            SendOptions sendOptions = new SendOptions { Reliability = true };
-            PhotonNetwork.RaiseEvent(evCode, content, raiseEventOptions, sendOptions);
-            return;
-
-        }
-
-        void InstantiateAtUnit(SpawnObjectConfig target, Vector3 Pos)
+        void SpawnObjectUnitPos(SpawnObjectConfig target, Vector3 Pos)
         {
             Pos *= ZDGameRule.UnitInWorld;
             string ObjPath = ZDAssetTable.GetPath(target.name);
@@ -442,8 +461,18 @@ namespace ZoneDepict
                 PhotonNetwork.InstantiateSceneObject(ObjPath, Pos, Quaternion.identity);
             }
         }
+        #endregion
 
-        protected bool CheckAllPlayerLoadedLevel()
+        #region WaitPlayer Phase Helper
+        protected void CheckPlayersLoadedLevel()
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                AllPlayerLoaded = HasAllPlayerLoadedLevel();
+            }
+        }
+
+        protected bool HasAllPlayerLoadedLevel()
         {
             foreach (Player play in PhotonNetwork.PlayerList)
             {
@@ -460,62 +489,162 @@ namespace ZoneDepict
             return true;
         }
 
+        protected bool CheckZonePrepared()
+        {
+            if (RestrictZone.Instance != null || RestrictZone.TryInitialized) return true;
+            return false;
+        }
+        #endregion
+
+        #region OpenGame Phase Helper
+        IEnumerator OpenGameRoutine()
+        {
+            int CountDown = 3;
+            while(CountDown > 0)
+            {
+                Debug.Log(CountDown);
+                yield return new WaitForSeconds(1);
+                CountDown -= 1;
+            }
+            if (PhotonNetwork.IsMasterClient)
+            {
+                SendGameEvent(ZDGameEvent.StartGame);
+            }
+        }
+        #endregion
+
+        #region Play Phase Helper
+        public void PlayerCharacterDied()
+        {
+            if(playerProps.Script &&
+               playerProps.Script.photonView.IsMine &&
+               playerProps.Script.currentState == CharacterState.Dead)
+            {
+                Hashtable NewSetting = new Hashtable();
+                NewSetting.Add("Alive", false);
+                PhotonNetwork.SetPlayerCustomProperties(NewSetting);
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    CheckGameEnded();
+                }
+            }
+        }
+        #endregion
+
+
+        #region End Phase Helper
         IEnumerator WaitToRestart()
         {
             yield return new WaitForSeconds(5);
             PhotonNetwork.LoadLevel("GameStartView");
         }
+        #endregion
 
+        #region Game State Helper
+        bool IsGameEnd()
+        {
+            int SurviveTeam = -1;
+            foreach (var player in PhotonNetwork.PlayerList)
+            {
+                if (player.CustomProperties.ContainsKey("Alive") && (bool)player.CustomProperties["Alive"])
+                {
+                    int playerTeam = 0;
+                    if (player.CustomProperties.ContainsKey("Team"))
+                    {
+                        playerTeam = (int)player.CustomProperties["Team"];
+                    }
+
+
+                    if (SurviveTeam < 0)
+                    {
+                        SurviveTeam = playerTeam;
+                    }
+                    else if (SurviveTeam != playerTeam)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        void CheckGameEnded()
+        {
+            if ((PhotonNetwork.IsMasterClient && IsGameEnd()) || HotKey) SendGameEvent(ZDGameEvent.EndGame);
+        }
+        #endregion
+
+        #region Helper
+        bool TeamIsValid(int Team)
+        {
+            if (Team >= 0 && Team < (int)ZDTeams.Total) return true;
+            return false;
+        }
+        #endregion
+
+        #region Game Event Helper
+        void SendGameEvent(ZDGameEvent SendEvent, object[] content = null)
+        {
+            byte evCode;
+            switch (SendEvent)
+            {
+                case ZDGameEvent.EndGame:
+                    int WinningTeam = -1;
+                    if (TeamList.Count > 0) WinningTeam = TeamList.Values.GetEnumerator().Current;
+                    content = new object[] { WinningTeam };
+                    evCode = (int)ZDGameEvent.EndGame;
+                    break;
+                default:
+                    evCode = (byte)SendEvent;
+                    break;
+            }
+            if (content == null) content = new object[] { };
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; // You would have to set the Receivers to All in order to receive this event on the local client as well
+            SendOptions sendOptions = new SendOptions { Reliability = true };
+            PhotonNetwork.RaiseEvent(evCode, content, raiseEventOptions, sendOptions);
+            return;
+
+        }
         #endregion
 
         #region Photon Callbacks
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
         {
-            if (changedProps.ContainsKey("Alive") && !(bool)changedProps["Alive"])
+            
+            switch (gameState)
             {
-                if (TeamList.ContainsKey(targetPlayer))
-                {
-                    TeamList.Remove(targetPlayer);
-                    if (PhotonNetwork.IsMasterClient)
+                case ZDGameState.WaitPlayer:
+                    if (changedProps.ContainsKey(CustomPropsKey.PLAYER_LOADED_LEVEL))
                     {
-                        CheckGameEnded();
+                        CheckPlayersLoadedLevel();
                     }
-                }
-
-            }
-
-            if (changedProps.ContainsKey(CustomPropsKey.PLAYER_LOADED_LEVEL))
-            {
-                if (CheckAllPlayerLoadedLevel() && PhotonNetwork.IsMasterClient)
-                {
-                    SendGameEvent(ZDGameEvent.StartGame);
-                }
+                break;
+                case ZDGameState.OpenGame:
+                case ZDGameState.Play:
+                    if (changedProps.ContainsKey("Alive") &&
+                        !(bool)changedProps["Alive"] &&
+                        PhotonNetwork.IsMasterClient) CheckGameEnded();
+               break;
             }
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            if (newPlayer.CustomProperties.ContainsKey("Alive") && (bool)newPlayer.CustomProperties["Alive"])
-            {
-                if (!newPlayer.CustomProperties.ContainsKey("Team"))
-                {
-                    AddTeam(0, newPlayer);
-                }
-                else
-                {
-                    AddTeam((int)newPlayer.CustomProperties["Team"], newPlayer);
-                }
-            }
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            if (TeamList.ContainsKey(otherPlayer))
+            if (PhotonNetwork.IsMasterClient)
             {
-                TeamList.Remove(otherPlayer);
-                if (PhotonNetwork.IsMasterClient)
+                switch (gameState)
                 {
-                    CheckGameEnded();
+                    case ZDGameState.WaitPlayer:
+                        CheckPlayersLoadedLevel();
+                        break;
+                    case ZDGameState.OpenGame:
+                    case ZDGameState.Play:
+                        CheckGameEnded();
+                        break;
                 }
             }
         }
@@ -524,20 +653,14 @@ namespace ZoneDepict
         {
             switch ((ZDGameEvent)photonEvent.Code)
             {
+                case ZDGameEvent.OpenGame:
+                    OpenGame();
+                    break;
                 case ZDGameEvent.StartGame:
-                    GameStart();
+                    StartGame();
                     break;
                 case ZDGameEvent.EndGame:
-                    if (audioSource.isPlaying) audioSource.Stop();
-                    audioSource.PlayOneShot(EndGameMusic);
-                    Debug.Log("Game Ended");
-                    object[] dataEnd = (object[])photonEvent.CustomData;
-                    Debug.Log(dataEnd[0] + " is winner!");
-                    Debug.Log((int)PhotonNetwork.LocalPlayer.CustomProperties["Team"]);
-                    if ((int)PhotonNetwork.LocalPlayer.CustomProperties["Team"] == (int)dataEnd[0]) Victory.SetActive(true);
-                    else Lose.SetActive(true);
-                    // Go back to start view
-                    StartCoroutine(WaitToRestart());
+                    EndGame(photonEvent.CustomData);
                     break;
                 case ZDGameEvent.SpawnEffect:
                     object[] data = (object[])photonEvent.CustomData;

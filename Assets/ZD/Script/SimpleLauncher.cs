@@ -12,14 +12,17 @@ public class SimpleLauncher
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     void Update()
     {
+
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+
     }
 
     public override void OnConnectedToMaster()

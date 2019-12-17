@@ -14,17 +14,23 @@ using ZoneDepict.Map;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
-class RestrictZone : MonoBehaviourPun , IOnEventCallback
+class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
 {
-    public class CachedCharacterState
+    public enum RestrictZoneState
+    {
+        Initializing,
+        Available,
+    }
+
+    public struct CachedCharacterState
     {
         public Vector3 position;
         public bool InZone;
     }
     public static RestrictZone Instance;
-    public float ShrinkSpeed = 50f;
+    public static bool TryInitialized;
 
-    private CachedCharacterState cachedState;
+    //preperation informations.
     private Transform VisibleArea;
     private Transform StrictArea;
     private Rect StrictAreaSpriteRect;
@@ -32,14 +38,29 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback
     private Vector2 StrictAreaCachedRatio;
     private Vector2 VisibleAreaCachedRatio;
 
-    private Vector3 DeltaScale,ScaleChangeRate;
-    private bool Shrink = false;
+    //The difference of current scale and the rate to change the scale.
+    private Vector3 TargetScale,ScaleChangeRate;
+
+    //Cached Informations.
+    private CachedCharacterState cachedState;
+    private Vector3 cachedVisibleAreaScale;
+
+    //Zone Depends
+    private bool Shrink;
+
     void Start()
     {
-        if (Instance) Destroy(this);
-        else Instance = this;
-        if (!CanInitialize()) enabled = false;
-        ShrinkVisible(new Vector2(7, 5));
+        if (Instance) PhotonNetwork.Destroy(photonView);
+                
+        if (!Initialize())
+        {
+            if (photonView.IsMine)
+            {
+                TryInitialized = true;
+                PhotonNetwork.Destroy(photonView);
+            }
+        }        
+        Instance = this;
     }
 
     void FixedUpdate()
@@ -49,25 +70,25 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback
             if (Shrink)
             {
                 Vector3 FramScaleChange = ScaleChangeRate * Time.deltaTime;
+                Vector3 DeltaScale = TargetScale - VisibleArea.localScale;
                 if(DeltaScale.magnitude < FramScaleChange.magnitude)
                 {
                     Shrink = false;
-                    VisibleArea.localScale += DeltaScale;
+                    VisibleArea.localScale = TargetScale;
                 }
                 else
                 {
                     VisibleArea.localScale += FramScaleChange;
-                    DeltaScale -= FramScaleChange;
                 }
             }
-            //if (IsInRestrict(ZDController.TargetCharacter))
-            //{
-            //    ZDController.TargetCharacter.Hurt(10);
-            //}
+            if (IsInRestrict(ZDController.TargetCharacter))
+            {
+                ZDController.TargetCharacter.Hurt(10);
+            }
         }
     }
 
-    bool CanInitialize()
+    bool Initialize()
     {
         SpriteRenderer StrictAreaSpriteRender;
         SpriteMask VisibleAreaSpriteMask;
@@ -99,12 +120,70 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback
     bool IsInRestrict(Character character)
     {
         if (character == null) return false;
-        else if(cachedState.position != character.transform.position)
+        if ( cachedState.position != character.transform.position ||
+             cachedVisibleAreaScale != VisibleArea.localScale)
         {
             cachedState.position = character.transform.position;
-            int deltaUnit = Mathf.FloorToInt(((character.transform.position - transform.position).magnitude) / ZDGameRule.UnitInWorld);
+            cachedVisibleAreaScale = VisibleArea.localScale;
+            float DeltaX = Mathf.Abs(character.transform.position.x - transform.position.x)/ ZDGameRule.UnitInWorld;
+            float DeltaY = Mathf.Abs(character.transform.position.y - transform.position.y) / ZDGameRule.UnitInWorld;
+            float ThreshX = (VisibleArea.localScale.x / VisibleAreaCachedRatio.x) / 2;
+            float ThreshY = (VisibleArea.localScale.y / VisibleAreaCachedRatio.y) / 2;
+            if(DeltaX > ThreshX || DeltaY > ThreshY)
+            {
+                cachedState.InZone = true;
+            }
         }
         return cachedState.InZone;
+    }
+
+    public void ShrinkZone(Vector2 Size,float Speed)
+    {
+        photonView.RPC("ShrinkZoneRPC", RpcTarget.All, Size, Speed);
+    }
+
+    void InternalShrinkZone(Vector2 Size,float Speed)
+    {
+        TargetScale = (Size * VisibleAreaCachedRatio);
+        ScaleChangeRate = (TargetScale - VisibleArea.localScale) / Speed;
+        Shrink = true;
+    }
+
+    #region Photon RPC
+    [PunRPC]
+    void ShrinkZoneRPC(Vector2 Size, float Speed)
+    {
+        InternalShrinkZone(Size, Speed);
+    }
+    #endregion
+
+    #region Photon Callbacks
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        try
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(transform.position);
+                stream.SendNext(VisibleArea.position);
+                stream.SendNext(VisibleArea.localScale);
+                stream.SendNext(StrictArea.position);
+                stream.SendNext(StrictArea.localScale);
+            }
+            else
+            {
+                transform.position = (Vector3)stream.ReceiveNext();
+                VisibleArea.position = (Vector3)stream.ReceiveNext();
+                VisibleArea.localScale = (Vector3)stream.ReceiveNext();
+                StrictArea.position = (Vector3)stream.ReceiveNext();
+                StrictArea.localScale = (Vector3)stream.ReceiveNext();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Restrict Zone Error");
+        }
+        
     }
 
     public void OnEvent(EventData photonEvent)
@@ -116,17 +195,13 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback
             case ZDGameEvent.RestrictPrepare:
                 break;
             case ZDGameEvent.Restrict:
+                object[] data = (object[])photonEvent.CustomData;
+                ShrinkZone((Vector2Int)data[0], (float)data[1]);
                 break;
             case ZDGameEvent.RestrictEnd:
                 break;
         }
     }
+    #endregion
 
-    void ShrinkVisible(Vector2 Size)
-    {
-        Vector3 TargetScale = Size * VisibleAreaCachedRatio;
-        DeltaScale = TargetScale - VisibleArea.localScale;
-        ScaleChangeRate = (DeltaScale / ShrinkSpeed);
-        Shrink = true;
-    }
 }
