@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using ZoneDepict;
 using ZoneDepict.Rule;
 using UnityEngine.UI;
 
@@ -26,23 +27,18 @@ public class CharactorUI : MonoBehaviour
     private GameObject[] Temp = new GameObject[2]; 
     void Start()
     {
-        Owner = gameObject.transform.parent.gameObject.GetComponent<Character>();
+        Owner = gameObject.GetComponentInParent<Character>();
+        if (Owner == null) Destroy(this.gameObject);
+        Owner.ShelterStateChanged += ShelterStateUpdated;
         gameObject.name = Owner.name + "'s UI Object";
-        if (Owner.GetComponent<PhotonView>().IsMine)
+        Souls = new GameObject[5];
+        for (int i = 0; i < 5; ++i)
         {
-            Souls = new GameObject[5];
-            for (int i = 0; i < 5; ++i)
-            {
-                Souls[i] = Soul.transform.GetChild(i).gameObject;
-                Souls[i].GetComponent<Image>().sprite = SoulImgSource;
-                Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
-            }
+            Souls[i] = Soul.transform.GetChild(i).gameObject;
+            Souls[i].GetComponent<Image>().sprite = SoulImgSource;
+            Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
         }
-        else
-        {
-            Destroy(Soul);
-        }
-        for(int i=0;i<2;++i)
+        for (int i=0;i<2;++i)
         {
             Temp[i] = gameObject.transform.GetChild(i).gameObject;
         }
@@ -50,6 +46,23 @@ public class CharactorUI : MonoBehaviour
 
     // Update is called once per frame
     
+    protected void ShelterStateUpdated(object sender, ZDObject.ShelterStateChangeArgs args)
+    {
+        if (args.InShelter && !Owner.photonView.IsMine)
+        {
+            for (int i = 0; i < 2; ++i)
+            {
+                Temp[i].SetActive(false);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 2; ++i)
+            {
+                Temp[i].SetActive(true);
+            }
+        }
+    }
 
     public void UpdateHPBar(float maxHP, float HP)
     {
@@ -89,30 +102,8 @@ public class CharactorUI : MonoBehaviour
 
                 }
             }
-            if (Owner.GetIsShelter())
-            {
-                if(!Owner.photonView.IsMine)
-                {
-                    for (int i = 0; i < 2; ++i)
-                    {
-                        Temp[i].SetActive(false);
-                    }
-                }
-            }
-            else
-            {
-                if (!Owner.photonView.IsMine)
-                {
-                    for (int i = 0; i < 2; ++i)
-                    {
-                        Temp[i].SetActive(true);
-                    }
-                }
-                
-                UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
-                UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
-                
-            }
+            UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
+            UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
         }
     }
 }

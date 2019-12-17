@@ -167,8 +167,6 @@ namespace ZoneDepict.Map
             {
                 (uint, uint) NewMapLoc = WorldToMap(Caller.transform.position);
                 (uint, uint) PrevMapLoc = Recorder[Caller].Location;
-                Debug.Log(NewMapLoc);
-                Debug.Log(PrevMapLoc);
                 ZDGridBlock PrevBlock= RecordGrid[PrevMapLoc.Item1, PrevMapLoc.Item2];
                 ZDGridBlock NewBlock = RecordGrid[NewMapLoc.Item1, NewMapLoc.Item2];
                 if (NewMapLoc == PrevMapLoc)
@@ -179,7 +177,7 @@ namespace ZoneDepict.Map
                 else if (!RemoveFromRecordGrids(Recorder[Caller]))
                 {
                     //TODO: Error Log: This should not happen in general.
-                    Debug.Log("Cannot Remove From Record Grids");
+                    Debug.LogError("Cannot Remove From Record Grids");
                     return false;
                 }
                 else
@@ -345,7 +343,6 @@ namespace ZoneDepict.Map
         static public List<ZDObject> HitAtUnit(int x, int y)
         {
             (uint, uint) MapLoc = UnitToMap(x, y);
-            Debug.Log("ZDMap - HitAt: " + MapLoc.Item1 + ", " + MapLoc.Item2);
             if (MapLoc.Item1 < 0 || MapLoc.Item2 < 0 ||
                 !(MapLoc.Item1 < ZDGameRule.MAP_WIDTH_UNIT && MapLoc.Item2 < ZDGameRule.MAP_HEIGHT_UNIT))
             {
@@ -360,7 +357,6 @@ namespace ZoneDepict.Map
         static public List<ZDObject> HitAtUnit(int x, int y, EObjectType Type)
         {
             (uint, uint) MapLoc = UnitToMap(x, y);
-            //Debug.Log("ZDMap - HitAt: " + MapLoc.Item1 + ", " + MapLoc.Item2);
             if (MapLoc.Item1 < 0 || MapLoc.Item2 < 0 ||
                 !(MapLoc.Item1 < ZDGameRule.MAP_WIDTH_UNIT && MapLoc.Item2 < ZDGameRule.MAP_HEIGHT_UNIT))
             {

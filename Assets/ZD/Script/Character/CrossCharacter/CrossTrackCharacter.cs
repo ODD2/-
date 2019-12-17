@@ -40,6 +40,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
             }
         }
     }
+
     public override void InputAttack(Vector2 AttackDirection, EAttackType Type)
     {
         switch (Type)
@@ -48,7 +49,11 @@ public class CrossTrackCharacter : CrossMoveCharacter
                 base.InputAttack(AttackDirection, EAttackType.N);
                 break;
             default:
-                if(Soul >(int)EAttackType.N && Soul <(int)EAttackType.Cancel) base.InputAttack(AttackDirection, (EAttackType)Soul);
+                if (Soul > 0)
+                {
+                    if(Soul > (int)EAttackType.R) base.InputAttack(AttackDirection, EAttackType.R);
+                    else base.InputAttack(AttackDirection, (EAttackType)Soul);
+                }
                 break;
         }
     }

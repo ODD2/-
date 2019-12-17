@@ -23,7 +23,7 @@ namespace ZoneDepict
     {
         [SerializeField]
         protected EActorType ActorType;
-        protected bool IsShelter = false;
+        protected bool InShelter = false;
         private float ActorTypeDepth = 0.0f;
         public ObjectConfig[] Configs ;
         public Dictionary<Vector2Int, HashSet<EObjectType>> Regions;
@@ -34,7 +34,7 @@ namespace ZoneDepict
             ZDMap.Register(this);
             if (!IsRegistered())
             {
-                Debug.Log("Error! Cannot Register ZDObject, Object Out of Bound!");
+                Debug.LogError("Error! Cannot Register ZDObject, Object Out of Bound!");
             }
 
             //Cache ActorTypeDepth
@@ -53,15 +53,16 @@ namespace ZoneDepict
                     //Update Z axis to correct the in block layers.
                     SetActorDepth();
 
-                    //
-                    if (ZDMap.HitAtObject(this, EObjectType.Shelter) != null)
+                    Vector3 NewUnitLocation =  ZDGameRule.WorldToUnit(transform.position);
+
+                    LocationChanged?.Invoke(this, new LocationChangeArgs(new Vector2Int((int)NewUnitLocation.x,(int)NewUnitLocation.y)));
+
+                    if (InShelter != (ZDMap.HitAtObject(this, EObjectType.Shelter) != null))
                     {
-                        IsShelter = true;
+                        InShelter = !InShelter ;
+                        ShelterStateChanged?.Invoke(this, new ShelterStateChangeArgs(InShelter));
                     }
-                    else
-                    {
-                        IsShelter = false;
-                    }
+
                 }
                 transform.hasChanged = false;
             }
@@ -80,7 +81,7 @@ namespace ZoneDepict
 
         public bool GetIsShelter()
         {
-            return IsShelter;
+            return InShelter;
         }
 
         protected void SetActorDepth()
@@ -156,6 +157,33 @@ namespace ZoneDepict
                     region.Value.UnionWith(eObjectTypes);
             }
         }
+        #endregion
+
+        #region Delegates
+        public event ShelterStateChangeEventHandler ShelterStateChanged;
+        public event LocationChangeEventHandler LocationChanged;
+        #endregion
+
+        #region Delegates Defines
+        public class ShelterStateChangeArgs :EventArgs
+        {
+            public ShelterStateChangeArgs(bool InShelter)
+            {
+                this.InShelter = InShelter;
+            }
+            public bool InShelter { get; } = false;
+        }
+        public  delegate void ShelterStateChangeEventHandler(object sender, ShelterStateChangeArgs e);
+
+        public class LocationChangeArgs
+        {
+            public LocationChangeArgs(Vector2Int NewUnitLocation)
+            {
+                this.NewUnitLocation = NewUnitLocation;
+            }
+            public Vector2Int NewUnitLocation;
+        }
+        public delegate void LocationChangeEventHandler(object sender, LocationChangeArgs e);
         #endregion
     }
 }

@@ -81,7 +81,7 @@ namespace ZoneDepict.Rule
 
         public static class RestrictZone
         {
-            public const float HurtThresh = 2.0f;
+            public const float HurtThresh = 1.0f;
         }
 
         // transform the input position from zonedepict unit to world unit.(z axis is remained the same)
