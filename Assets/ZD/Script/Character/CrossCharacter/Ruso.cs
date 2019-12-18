@@ -12,14 +12,14 @@ using ZoneDepict.Map;
 public class Ruso : CrossTrackCharacter
 {
     public GameObject[] HitEffects;
-    private readonly float[] AttackDamage = { 5, 10, 15, 20 };
+    private readonly float[] AttackDamage = { 10, 20, 15, 30 };
     
     #region UNITY
     protected new void Start()
     {
         base.Start();
-        SkillMana = new float[]{ 15, 25, 35, 50 };
-        MaxSkillCD = new float[] { 0.25f, 0.5f, 2f, 5 };
+        SkillMana = new float[]{ 5, 20, 30, 60 };
+        MaxSkillCD = new float[] { 0.25f, 3f, 6f, 10 };
     }
 
     protected new void Update()

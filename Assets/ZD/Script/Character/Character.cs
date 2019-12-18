@@ -23,9 +23,14 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     public AudioClip MoveSound;
     #endregion
 
+    //public CharacterValue basicValues = new CharacterValue();
+    
+   
+
     #region Input Wrappers
     public virtual void InputAttack(Vector2 AttackDirection, EAttackType Type)
     {
+      
     }
 
     public virtual void InputSprint(Vector2 Destination)
@@ -195,6 +200,23 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     public void GetItem(ItemBase i)
     {
         Debug.LogFormat("Inventory Add: {0} ", i);
+        // 重複利用道具不可重複拿
+        foreach (ItemBase  item in Inventory)
+        {
+            if(item.id == i.id )
+            {
+                if (i.canReuse())
+                {
+                    return;
+                }
+                /*else
+                {
+                    item.Amount += i.Amount;
+                    return;
+                }*/
+                
+            }
+        }
         Inventory.Add(i);
     }
     #endregion
@@ -212,6 +234,9 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     #region UNITY
     protected new  void Start()
     {
+
+       
+
         //Cache Components.
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
