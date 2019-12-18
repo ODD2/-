@@ -24,6 +24,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [Header("If Game is Banlance or Not")]
     public bool GameBalance;
     private bool IsBalance;
+    [Header("Audios")]
+    public AudioSource BGM;
+    public AudioSource GetChoose;
+    public AudioSource Choose;
     [Header("Other")]
     public Button ReadyBut;
     public Text StateTxt;
@@ -39,6 +43,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        //BGM.Play();
         CastCharactors = new GameObject[ScrollContent.transform.childCount];
         for (int i = 0; i < ScrollContent.transform.childCount; i++)
         {
@@ -84,9 +89,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!ReadyBool)
         {
-            /*
-            * Play choose audio
-            */
+            Choose.Play();
             CharacterName = name;
             foreach (var obj in CastCharactors)
             {
@@ -104,10 +107,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void Ready()
     {
         if (CharacterName == null) return;
-        /*
-         *  Play ready but audio
-         */
-        if(!ReadyBool)
+        GetChoose.Play();
+        if (!ReadyBool)
         {
             ReadyBool = true;
             Debug.Log("Confirm with " + CharacterName);

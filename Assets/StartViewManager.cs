@@ -37,7 +37,9 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         StartButton.onClick.AddListener(() => StartGame());
         TeachingButton.onClick.AddListener(() => ActivateTeaching());
         BackButton.onClick.AddListener(() => Back());
+        
         //StartViewAudio = GetComponents<AudioSource>();
+       
     }
 
     protected void Update()
@@ -72,10 +74,12 @@ public class StartViewManager : MonoBehaviourPunCallbacks
 
     private void ActivateTeaching()
     {
+        StartViewAudio[2].Play();
         Teaching.SetActive(true);
     }
     private void Back()
     {
+        StartViewAudio[2].Play();
         Teaching.SetActive(false);
     }
 

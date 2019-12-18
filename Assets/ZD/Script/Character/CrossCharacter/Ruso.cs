@@ -49,7 +49,7 @@ public class Ruso : CrossTrackCharacter
                         {
                             continue;
                         }
-                        HitObj.Hurt(AttackDamage[(int)Type]);
+                        HitObj.Hurt(AttackDamage[(int)Type] * basicValues.AttackBuff);
                         CreateHitEffectAt(Obj.transform.position);
                     }
                 }

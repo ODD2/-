@@ -35,6 +35,7 @@ namespace ZoneDepict.UI
             else Instance = this;
 
             MoveIndicator = Instantiate(MoveIndicator);
+            MoveIndicator.transform.position += new Vector3(0, 0, -4);
             AttackIndicator = Instantiate(AttackIndicator);
             MoveIndicator.SetActive(false);
             AttackIndicator.SetActive(false);
@@ -68,8 +69,9 @@ namespace ZoneDepict.UI
 
         public void SetMoveIndicator(Vector2 Pos, float Degree, float Scale)
         {
+            Vector3 ZPos = new Vector3(Pos.x, Pos.y, -4);
             Move.rotation = Quaternion.Euler(0, 0, Degree - 90); // Fix Assets's 90 degree
-            Move.position = Pos;
+            Move.position = ZPos;
             if ((int)Scale > 5) Scale = 5;
             float DoScale = ArrowScale[(int)Scale]; // Fix 
             Move.localScale = new Vector3(ZDGameRule.UNIT_IN_WORLD, DoScale, 0);

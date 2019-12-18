@@ -6,6 +6,7 @@ using System;
 using ZoneDepict;
 using ZoneDepict.Rule;
 using ZoneDepict.Audio;
+using ExitGames.Client.Photon;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 // This class is basic of Charater, and all infos are
@@ -23,10 +24,6 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     public AudioClip MoveSound;
     #endregion
 
-    //public CharacterValue basicValues = new CharacterValue();
-    
-   
-
     #region Input Wrappers
     public virtual void InputAttack(Vector2 AttackDirection, EAttackType Type)
     {
@@ -42,23 +39,25 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     #region Character Attributes
     public int TeamID { get; protected set; } = 0;
     public CharacterState currentState { get; protected set; } = CharacterState.Alive;
-    protected float HP = 100;
-    protected float MP = 100;
+
+    public CharacterValue basicValues = new CharacterValue();
+
     protected int Soul = 0;
-    protected float RegHP = 0.1f;
-    protected float RegMP = 2.9f;
-    protected float MaxHP = 100;
-    protected float MaxMP = 100;
     protected const int MaxSoul = 5;
 
     protected Vector2 Velocity = new Vector2(0, 0);
     protected float MaxVelocity = 30;
+
     List<ItemBase> Inventory = new List<ItemBase>();
     protected int InventoryMax = 3;
+
     protected float MoveMana = 5.0f;
+
     protected float[] MaxSkillCD = new float[4];
     protected float[] SkillMana = new float[4];
     protected float[] SkillCD = new float[4];
+
+    protected int PosZLayer = -4;
     #endregion
 
     #region Getters/Setters
@@ -68,39 +67,47 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     }
     public float GetRegHP()
     {
-        return RegHP;
+        return basicValues.RegHP;
     }
     public float GetRegMP()
     {
-        return RegMP;
+        return basicValues.RegMP;
     }
     public float GetHP()
     {
-        return HP;
+        return basicValues.HP;
     }
     public void SetHP(float NewHP)
     {
-        if (NewHP > MaxHP) HP = MaxHP;
-        else if (NewHP < 0) HP = 0;
-        else HP = NewHP;
+        if (NewHP > basicValues.MaxHP) basicValues.HP = basicValues.MaxHP;
+        else if (NewHP < 0) basicValues.HP = 0;
+        else basicValues.HP = NewHP;
+    }
+    public void SetMaxHP(float maxHP)
+    {
+        basicValues.MaxHP = maxHP;
+    }
+    public void SetMaxMP(float maxMP)
+    {
+        basicValues.MaxMP = maxMP;
     }
     public float GetMaxHP()
     {
-        return MaxHP;
+        return basicValues.MaxHP;
     }
     public float GetMP()
     {
-        return MP;
+        return basicValues.MP;
     }
     public void SetMP(float NewMP)
     {
-        if (NewMP > MaxMP) MP = MaxMP;
-        else if (NewMP < 0) MP = 0;
-        else MP = NewMP;
+        if (NewMP > basicValues.MaxMP) basicValues.MP = basicValues.MaxMP;
+        else if (NewMP < 0) basicValues.MP = 0;
+        else basicValues.MP = NewMP;
     }
     public float GetMaxMP()
     {
-        return MaxMP;
+        return basicValues.MaxMP;
     }
     public int GetSoul()
     {
@@ -151,10 +158,10 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     public virtual void Hurt(float Damage)
     {
         Debug.LogFormat("Player Received {0} Damage.", Damage);
-        if (photonView.IsMine && !HP.Equals(0))
+        if (photonView.IsMine && !GetHP().Equals(0))
         {
-            SetHP(HP - Damage);
-            if (HP.Equals(0))
+            SetHP(GetHP() - Damage);
+            if (GetHP().Equals(0))
             {
                 Dead();
             }
@@ -209,12 +216,6 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
                 {
                     return;
                 }
-                /*else
-                {
-                    item.Amount += i.Amount;
-                    return;
-                }*/
-                
             }
         }
         Inventory.Add(i);
@@ -233,10 +234,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
 
     #region UNITY
     protected new  void Start()
-    {
-
-       
-
+    { 
         //Cache Components.
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
@@ -252,19 +250,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
         //Setup Depth
         if (photonView.IsMine) ActorType = EActorType.LocalCharacter;
         else ActorType = EActorType.RemoteCharacter;
-        
-        //Setup UI
-        
-        //GameObject obj = PhotonNetwork.Instantiate("Test", gameObject.transform.position, Quaternion.identity);
-        ////Debug.Log("Create one");
-        //if (photonView.IsMine)
-        //{
-        //    obj.transform.SetParent(gameObject.transform);
-        //}
-        //else
-        //    Destroy(obj);
-        
-        //Calls ZDObject Start()
+
         base.Start();
     }
 
@@ -300,7 +286,6 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
 
     private void UpdateAnimParams()
     {
-
         animator.SetBool("Sprinting", Velocity.magnitude > 0);
         if (Velocity.magnitude > 0)
         {
@@ -318,26 +303,35 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     #region PUN CallBack
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
             stream.SendNext(transform.localScale);
-            stream.SendNext(HP);
-            stream.SendNext(MP);
-            stream.SendNext(MaxHP);
-            stream.SendNext(MaxMP);
             stream.SendNext(MaxVelocity);
+            stream.SendNext(basicValues.HP);
+            stream.SendNext(basicValues.MaxHP);
+            stream.SendNext(basicValues.MP);
+            stream.SendNext(basicValues.MaxMP);
+            stream.SendNext(basicValues.RegHP);
+            stream.SendNext(basicValues.RegMP);
+            stream.SendNext(basicValues.CDR);
+            stream.SendNext(basicValues.ReduceManaCost);
+            stream.SendNext(basicValues.AttackBuff);
         }
         else if (stream.IsReading)
         {
             transform.position = (Vector3)stream.ReceiveNext();
             transform.localScale = (Vector3)stream.ReceiveNext();
-            HP = (float)stream.ReceiveNext();
-            MP = (float)stream.ReceiveNext();
-            MaxHP = (float)stream.ReceiveNext();
-            MaxMP = (float)stream.ReceiveNext();
             MaxVelocity = (float)stream.ReceiveNext();
+            basicValues.HP = (float)stream.ReceiveNext();
+            basicValues.MaxHP = (float)stream.ReceiveNext();
+            basicValues.MP = (float)stream.ReceiveNext();
+            basicValues.MaxMP = (float)stream.ReceiveNext();
+            basicValues.RegHP = (float)stream.ReceiveNext();
+            basicValues.RegMP = (float)stream.ReceiveNext();
+            basicValues.CDR = (float)stream.ReceiveNext();
+            basicValues.ReduceManaCost = (float)stream.ReceiveNext();
+            basicValues.AttackBuff = (float)stream.ReceiveNext();
         }
     }
     public void OnPhotonInstantiate(PhotonMessageInfo info)
@@ -367,7 +361,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
                         "MP: {1}\n" +
                         "ItemNum: {2}\n"+
                         "Soul: {3}\n",
-                        HP,MP,Inventory.Count,Soul);
+                        GetHP(),GetMP(),Inventory.Count,Soul);
     }
     #endregion
 

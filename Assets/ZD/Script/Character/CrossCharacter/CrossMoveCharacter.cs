@@ -20,11 +20,12 @@ public class CrossMoveCharacter : Character
     #region Character Override
     public override void InputSprint(Vector2 Destination)
     {
+        
         Destination = GetValidDest(Destination);
         float RequireMana = (Destination - (Vector2)transform.position).magnitude / ZDGameRule.UNIT_IN_WORLD * MoveMana;
-        if (photonView.IsMine && !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") && RequireMana < MP)
+        if (photonView.IsMine && !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") && RequireMana < GetMP())
         {
-            SetMP(MP - RequireMana);
+            SetMP(GetMP() - RequireMana * basicValues.ReduceManaCost);
             photonView.RPC("SprintRPC", RpcTarget.All,Destination);
         }
     }
@@ -33,11 +34,11 @@ public class CrossMoveCharacter : Character
     { 
         if (photonView.IsMine &&
             !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") &&
-            SkillMana[(int)Type] < MP &&
+            SkillMana[(int)Type] < GetMP() &&
             !(SkillCD[(int)Type] > float.Epsilon))
         {
-            SetMP(MP - SkillMana[(int)Type]);
-            SkillCD[(int)Type] = MaxSkillCD[(int)Type];
+            SetMP(GetMP() - SkillMana[(int)Type] * basicValues.ReduceManaCost);
+            SkillCD[(int)Type] = MaxSkillCD[(int)Type] * basicValues.CDR;
             photonView.RPC("RPCAttack", RpcTarget.AllViaServer, AttackDirection, Type);
         }
     }
@@ -102,7 +103,7 @@ public class CrossMoveCharacter : Character
             {
                 transform.position = new Vector3(SprintDestination.x,
                                                  SprintDestination.y,
-                                                 transform.position.z);
+                                                 PosZLayer);
                 Velocity = Vector2.zero;
                 NewDestination = false;
                 if (audioSource && audioSource.isPlaying) audioSource.Stop();
@@ -111,9 +112,7 @@ public class CrossMoveCharacter : Character
             else
             {
                 Vector3 NewPos = transform.position;
-                NewPos.x += MoveDelta.x;
-                NewPos.y += MoveDelta.y;
-                transform.position = NewPos;
+                transform.position = new Vector3(NewPos.x + MoveDelta.x, NewPos.y += MoveDelta.y,PosZLayer);
                 //Adjust Facing Direction
                 if (!MoveDelta.x.Equals(0)) sprite.flipX = MoveDelta.x > 0 ? true : false;
             }

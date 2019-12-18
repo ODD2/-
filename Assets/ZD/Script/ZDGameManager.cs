@@ -239,6 +239,7 @@ namespace ZoneDepict
         //Scene Objects
         public GameObject Lose;
         public GameObject Victory;
+        public GameObject StartGameView;
 
         #endregion
 
@@ -261,10 +262,6 @@ namespace ZoneDepict
 
         void FixedUpdate()
         {
-            if(Input.GetKeyDown(KeyCode.G))
-            {
-                Debug.Log(PhotonNetwork.LocalPlayer.CustomProperties["Team"]);
-            }
 
             if (PhotonNetwork.IsMasterClient)
             {
@@ -516,10 +513,12 @@ namespace ZoneDepict
             float CountDown = CountDownTime;
             while(CountDown > 0)
             {
+                Debug.Log("CountDown");
                 Debug.Log(CountDown);
                 yield return new WaitForSeconds(1);
                 CountDown -= 1.0f;
             }
+            StartGameView.SetActive(false);
             if (PhotonNetwork.IsMasterClient)
             {
                 SendGameEvent(ZDGameEvent.StartGame);

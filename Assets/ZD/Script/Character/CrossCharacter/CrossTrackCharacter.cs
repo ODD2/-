@@ -30,6 +30,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
     #region Character Interface
     protected override void Sprint(Vector2 Destination)
     {
+
         base.Sprint(Destination);
         if (photonView.IsMine && TrackAvailable)
         {

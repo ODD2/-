@@ -24,7 +24,7 @@ public class CharacterUI : MonoBehaviour
     private int SoulDisplayed = 0;
     private GameObject[] Souls;
 
-    private GameObject[] Temp = new GameObject[2]; 
+    private GameObject Temp; 
     void Start()
     {
         Owner = gameObject.GetComponentInParent<Character>();
@@ -41,10 +41,9 @@ public class CharacterUI : MonoBehaviour
             Souls[i].GetComponent<Image>().sprite = SoulImgSource;
             Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
         }
-        for (int i=0;i<2;++i)
-        {
-            Temp[i] = gameObject.transform.gameObject.transform.GetChild(0).gameObject.transform.GetChild(i).gameObject;
-        }
+        
+        Temp = gameObject.transform.gameObject.transform.GetChild(0).gameObject;
+        
         //TrackAngleIndicator.SetActive(false);
         if (Owner is CrossTrackCharacter CrossTrackOwner)
         {
@@ -61,17 +60,11 @@ public class CharacterUI : MonoBehaviour
     {
         if (args.InShelter && !Owner.photonView.IsMine)
         {
-            for (int i = 0; i < 2; ++i)
-            {
-                Temp[i].SetActive(false);
-            }
+            Temp.SetActive(false);
         }
         else
         {
-            for (int i = 0; i < 2; ++i)
-            {
-                Temp[i].SetActive(true);
-            }
+            Temp.SetActive(true);
         }
     }
 
