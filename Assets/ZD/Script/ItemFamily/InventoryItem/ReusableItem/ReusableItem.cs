@@ -41,12 +41,21 @@ public class ReusableItem : ItemBase
         Amount = MaxAmount;
     }
 
-    public override int ItemState()
+    public override string ItemState()
     {
         if (NextValidTime>Time.time)
         {
-            return (int)(NextValidTime - Time.time);
+            if (System.Math.Ceiling(NextValidTime - Time.time)!=0)
+            {
+                return (System.Math.Ceiling(NextValidTime - Time.time)).ToString();
+            }
+          
         }
-        return 1;
+        return "";
+    }
+
+    public override bool canReuse()
+    {
+        return true;
     }
 }
