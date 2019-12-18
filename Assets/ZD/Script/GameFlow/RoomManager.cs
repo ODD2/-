@@ -135,6 +135,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
         
     }
+
     public void EntryUpdate(Player player,bool Remove)
     {
         if (Remove)
@@ -153,7 +154,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     {
                         if ((bool)p.CustomProperties["Ready"])
                         {
-                            PlayerListEntries[p.NickName].transform.GetChild(2).GetComponent<Image>().color = Color.red;
+                            PlayerListEntries[p.NickName].transform.GetChild(2).gameObject.SetActive(true);
                             if ((string)p.CustomProperties["CharacterName"] != "")
                             {
                                 uint index = 0;
@@ -164,20 +165,23 @@ public class RoomManager : MonoBehaviourPunCallbacks
                                     else index++;
                                 }
                                 PlayerListEntries[p.NickName].transform.GetChild(1).GetComponent<Image>().sprite = Profile[index];
+                                PlayerListEntries[p.NickName].transform.GetChild(1).gameObject.SetActive(true);
                             }
                         }
                         else
                         {
-                            PlayerListEntries[p.NickName].transform.GetChild(2).GetComponent<Image>().color = Color.white;
+                            PlayerListEntries[p.NickName].transform.GetChild(2).gameObject.SetActive(false);
                         }
                     }
                 }
                 else
                 {
+                    
                     Debug.Log("Create Player");
                     // Create
                     GameObject Entry = Instantiate(PlayerEntry);
                     Entry.transform.GetChild(0).GetComponent<Text>().text = p.NickName;
+                    Debug.Log(p);
                     if (p == PhotonNetwork.LocalPlayer)
                     {
                         Entry.transform.GetChild(0).GetComponent<Text>().color = Color.red;
@@ -199,6 +203,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
     public bool CheackAllReady()
     {
         foreach(var p in PhotonNetwork.PlayerList)

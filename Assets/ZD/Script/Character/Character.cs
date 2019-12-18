@@ -305,6 +305,10 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
             MaxVelocity = (float)stream.ReceiveNext();
         }
     }
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        gameObject.name = (string)info.photonView.InstantiationData[0];
+    }
     #endregion
 
     #region RPC
@@ -334,9 +338,5 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
 
     #region Routines
     #endregion
-    public void OnPhotonInstantiate(PhotonMessageInfo info)
-    {
-        gameObject.name = (string)info.photonView.InstantiationData[0];
-    }
 
 }

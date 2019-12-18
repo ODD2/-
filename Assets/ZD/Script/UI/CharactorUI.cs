@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Photon.Pun;
 using ZoneDepict.Rule;
@@ -23,7 +24,7 @@ public class CharactorUI : MonoBehaviour
     private int SoulDisplayed = 0;
     private GameObject[] Souls;
 
-    private GameObject[] Temp = new GameObject[2]; 
+    private GameObject[] Temp = new GameObject[2];
     void Start()
     {
         Owner = gameObject.transform.parent.gameObject.GetComponent<Character>();
@@ -42,77 +43,65 @@ public class CharactorUI : MonoBehaviour
         {
             Destroy(Soul);
         }
-        for(int i=0;i<2;++i)
+        for (int i = 0; i < 2; ++i)
         {
             Temp[i] = gameObject.transform.GetChild(i).gameObject;
         }
+
     }
+        // Update is called once per frame
 
-    // Update is called once per frame
-    
 
-    public void UpdateHPBar(float maxHP, float HP)
-    {
-        HealthBar.sizeDelta = new Vector2((maxHP / HealthBarBG.rect.width) * HP, HealthBar.rect.height);
-    }
-
-    public void UpdateMPBar(float maxMP, float MP)
-    {
-        ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
-    }
-
-    private void Update()
-    {
-        if (Owner)
+        public void UpdateHPBar(float maxHP, float HP)
         {
+            HealthBar.sizeDelta = new Vector2((maxHP / HealthBarBG.rect.width) * HP, HealthBar.rect.height);
+        }
+
+        public void UpdateMPBar(float maxMP, float MP)
+        {
+            ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
+        }
+
+        private void Update()
+        {
+            if (Owner)
+            {
+            UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
+            UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
             if (Owner.GetComponent<PhotonView>().IsMine)
-            {
-                int GetSoul = Owner.GetSoul();
-                if (SoulDisplayed != GetSoul)
                 {
-                    if (SoulDisplayed < GetSoul)
+                    int GetSoul = Owner.GetSoul();
+                    if (SoulDisplayed != GetSoul)
                     {
-                        for (int i = SoulDisplayed; i < GetSoul; ++i)
+                        if (SoulDisplayed < GetSoul)
                         {
-                            Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                            for (int i = SoulDisplayed; i < GetSoul; ++i)
+                            {
+                                Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                            }
+
                         }
+                        else if (SoulDisplayed > GetSoul)
+                        {
+                            for (int i = GetSoul; i < SoulDisplayed; i++)
+                            {
+                                Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
+                            }
+                        }
+                        SoulDisplayed = GetSoul;
 
                     }
-                    else if (SoulDisplayed > GetSoul)
-                    {
-                        for (int i = GetSoul; i < SoulDisplayed; i++)
-                        {
-                            Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
-                        }
-                    }
-                    SoulDisplayed = GetSoul;
+                }
+
+                if (Owner.GetIsShelter())
+                {
+                    
+                }
+                else
+                {
+                    
 
                 }
-            }
-            if (Owner.GetIsShelter())
-            {
-                if(!Owner.photonView.IsMine)
-                {
-                    for (int i = 0; i < 2; ++i)
-                    {
-                        Temp[i].SetActive(false);
-                    }
-                }
-            }
-            else
-            {
-                if (!Owner.photonView.IsMine)
-                {
-                    for (int i = 0; i < 2; ++i)
-                    {
-                        Temp[i].SetActive(true);
-                    }
-                }
-                
-                UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
-                UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
-                
             }
         }
-    }
 }

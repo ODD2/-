@@ -27,7 +27,7 @@ namespace ZoneDepict
         private float ActorTypeDepth = 0.0f;
         public ObjectConfig[] Configs ;
         public Dictionary<Vector2Int, HashSet<EObjectType>> Regions;
-        
+
         protected void Start()
         {
             InitializeTerrain();
@@ -160,6 +160,10 @@ namespace ZoneDepict
             }
         }
         #endregion
+
+        // Event
+        
+        //public static event  sendEvent;
     }
 }
 
