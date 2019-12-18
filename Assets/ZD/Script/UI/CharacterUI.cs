@@ -9,12 +9,10 @@ using UnityEngine.UI;
 public class CharacterUI : MonoBehaviour
 {
     [Header("Objects of Bar")]
-    //public RectTransform HealthBar;
-    //public RectTransform HealthBarBG;
-    //public RectTransform ManaBar;
-    //public RectTransform ManaBarBG;
     public Image HealthBar;
     public Image ManaBar;
+    [Header("Object of AngleIndicator")]
+    public GameObject TrackAngleIndicator;
 
     [Header("Object of Soul")]
     public Sprite SoulImgSource;
@@ -30,7 +28,10 @@ public class CharacterUI : MonoBehaviour
     void Start()
     {
         Owner = gameObject.GetComponentInParent<Character>();
+
         if (Owner == null) Destroy(this.gameObject);
+        if (!Owner.photonView.IsMine) Destroy(TrackAngleIndicator);
+
         Owner.ShelterStateChanged += ShelterStateUpdated;
         gameObject.name = Owner.name + "'s UI Object";
         Souls = new GameObject[5];
@@ -42,8 +43,16 @@ public class CharacterUI : MonoBehaviour
         }
         for (int i=0;i<2;++i)
         {
-            Temp[i] = gameObject.transform.GetChild(i).gameObject;
+            Temp[i] = gameObject.transform.gameObject.transform.GetChild(0).gameObject.transform.GetChild(i).gameObject;
         }
+        //TrackAngleIndicator.SetActive(false);
+        if (Owner is CrossTrackCharacter CrossTrackOwner)
+        {
+            CrossTrackOwner.TrackAngleIndicator = TrackAngleIndicator;
+            CrossTrackOwner.TrackAngleIndicator.SetActive(false);
+        }
+        
+        
     }
 
     // Update is called once per frame

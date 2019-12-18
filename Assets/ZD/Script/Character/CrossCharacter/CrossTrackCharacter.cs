@@ -10,18 +10,18 @@ public class CrossTrackCharacter : CrossMoveCharacter
 {
 
     [SerializeField]
-    protected GameObject TrackAngleIndicator;
-    bool TrackAvailable;
-    protected float TrackAngle;
+    public GameObject TrackAngleIndicator;
+    public bool TrackAvailable { get; protected set; }
+    public float TrackAngle { get; protected set; }
     #region Unity
     protected new void Start()
     {
         base.Start();
         if (photonView.IsMine)
         {
-            TrackAngleIndicator = Instantiate(ZDAssetTable.GetObject("TrackAngleIndicator"), transform);
-            TrackAngleIndicator.SetActive(false);
-            TrackAngleIndicator.transform.position += new Vector3(0, ZDGameRule.UNIT_IN_WORLD * 1.2f, 0);
+            //TrackAngleIndicator = Instantiate(ZDAssetTable.GetObject("TrackAngleIndicator"), transform);
+            //TrackAngleIndicator.SetActive(false);
+            //TrackAngleIndicator.transform.position += new Vector3(0, ZDGameRule.UNIT_IN_WORLD * 1.2f, 0);
             StartCoroutine(GenerateNewTrack());
         }
     }
