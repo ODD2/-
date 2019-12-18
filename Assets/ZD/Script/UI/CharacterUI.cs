@@ -6,13 +6,15 @@ using ZoneDepict;
 using ZoneDepict.Rule;
 using UnityEngine.UI;
 
-public class CharactorUI : MonoBehaviour
+public class CharacterUI : MonoBehaviour
 {
     [Header("Objects of Bar")]
-    public RectTransform HealthBar;
-    public RectTransform HealthBarBG;
-    public RectTransform ManaBar;
-    public RectTransform ManaBarBG;
+    //public RectTransform HealthBar;
+    //public RectTransform HealthBarBG;
+    //public RectTransform ManaBar;
+    //public RectTransform ManaBarBG;
+    public Image HealthBar;
+    public Image ManaBar;
 
     [Header("Object of Soul")]
     public Sprite SoulImgSource;
@@ -66,12 +68,14 @@ public class CharactorUI : MonoBehaviour
 
     public void UpdateHPBar(float maxHP, float HP)
     {
-        HealthBar.sizeDelta = new Vector2((maxHP / HealthBarBG.rect.width) * HP, HealthBar.rect.height);
+        //HealthBar.sizeDelta = new Vector2((maxHP / HealthBarBG.rect.width) * HP, HealthBar.rect.height);
+        HealthBar.fillAmount = HP / maxHP;
     }
 
     public void UpdateMPBar(float maxMP, float MP)
     {
-        ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
+        //ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
+        ManaBar.fillAmount = MP / maxMP;
     }
 
     private void Update()
@@ -104,6 +108,10 @@ public class CharactorUI : MonoBehaviour
             }
             UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
             UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
+        }
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            Owner.Hurt(10);
         }
     }
 }
