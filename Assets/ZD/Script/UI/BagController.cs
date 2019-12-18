@@ -45,10 +45,6 @@ namespace ZoneDepict.UI
             {
                 Debug.Log("UI connect to player");
             }
-            foreach (GameObject i in showItem)
-            {
-                Destroy(this);
-            }
         }
 
         // Update is called once per frame
