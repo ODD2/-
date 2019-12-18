@@ -16,6 +16,9 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
 {
+    public bool DoDamage = false;
+
+
     public enum RestrictZoneState
     {
         Initializing,
@@ -26,6 +29,7 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
     {
         public Vector3 position;
         public bool InZone;
+        public float InZoneSeconds;
     }
     public static RestrictZone Instance;
     public static bool TryInitialized;
@@ -44,6 +48,7 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
     //Cached Informations.
     private CachedCharacterState cachedState;
     private Vector3 cachedVisibleAreaScale;
+    private Character TargetCharacter;
 
     //Zone Depends
     private bool Shrink;
@@ -61,6 +66,10 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
             }
         }        
         Instance = this;
+        if (ZDGameManager.GetPlayerProps().Script != null) {
+            TargetCharacter = ZDGameManager.GetPlayerProps().Script;
+            TargetCharacter.LocationChanged += OnPlayerLocationChanged ;
+        }
     }
 
     void FixedUpdate()
@@ -81,9 +90,21 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
                     VisibleArea.localScale += FramScaleChange;
                 }
             }
-            if (IsInRestrict(ZDController.GetTargetCharacter()))
+            if (DoDamage)
             {
-                ZDController.GetTargetCharacter().Hurt(10);
+                if (GetCachedInRestrict(ZDController.GetTargetCharacter()))
+                {
+                    cachedState.InZoneSeconds += Time.deltaTime;
+                    if(cachedState.InZoneSeconds > ZDGameRule.RestrictZone.HurtThresh)
+                    {
+                        cachedState.InZoneSeconds = 0;
+                        ZDController.GetTargetCharacter().Hurt(10);
+                    }
+                }
+                else if(cachedState.InZoneSeconds.Equals(0))
+                {
+                    cachedState.InZoneSeconds = 0;
+                }
             }
         }
     }
@@ -102,10 +123,10 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
         StrictAreaSpriteRect = StrictAreaSpriteRender.sprite.rect;
         VisibleAreaSpriteRect = VisibleAreaSpriteMask.sprite.rect;
 
-        StrictAreaCachedRatio.x = ZDGameRule.UnitInPixel / StrictAreaSpriteRect.width;
-        StrictAreaCachedRatio.y = ZDGameRule.UnitInPixel / StrictAreaSpriteRect.height;
-        VisibleAreaCachedRatio.x = ZDGameRule.UnitInPixel / VisibleAreaSpriteRect.width;
-        VisibleAreaCachedRatio.y = ZDGameRule.UnitInPixel / VisibleAreaSpriteRect.height;
+        StrictAreaCachedRatio.x = ZDGameRule.UNIT_IN_PIXEL / StrictAreaSpriteRect.width;
+        StrictAreaCachedRatio.y = ZDGameRule.UNIT_IN_PIXEL / StrictAreaSpriteRect.height;
+        VisibleAreaCachedRatio.x = ZDGameRule.UNIT_IN_PIXEL / VisibleAreaSpriteRect.width;
+        VisibleAreaCachedRatio.y = ZDGameRule.UNIT_IN_PIXEL / VisibleAreaSpriteRect.height;
 
         Vector3 StrictAreaScale = new Vector3( StrictAreaCachedRatio.x* ZDGameRule.MAP_WIDTH_UNIT * 2f,
                                                                           StrictAreaCachedRatio.y* ZDGameRule.MAP_HEIGHT_UNIT * 2f, 0);
@@ -117,24 +138,30 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
         return true;
     }
 
-    bool IsInRestrict(Character character)
+    bool GetCachedInRestrict(Character character)
     {
-        if (character == null) return false;
-        if ( cachedState.position != character.transform.position ||
-             cachedVisibleAreaScale != VisibleArea.localScale)
+        if ( character == null) return false;
+        else if(cachedVisibleAreaScale != VisibleArea.localScale)
         {
-            cachedState.position = character.transform.position;
             cachedVisibleAreaScale = VisibleArea.localScale;
-            float DeltaX = Mathf.Abs(character.transform.position.x - transform.position.x)/ ZDGameRule.UnitInWorld;
-            float DeltaY = Mathf.Abs(character.transform.position.y - transform.position.y) / ZDGameRule.UnitInWorld;
-            float ThreshX = (VisibleArea.localScale.x / VisibleAreaCachedRatio.x) / 2;
-            float ThreshY = (VisibleArea.localScale.y / VisibleAreaCachedRatio.y) / 2;
-            if(DeltaX > ThreshX || DeltaY > ThreshY)
-            {
-                cachedState.InZone = true;
-            }
+            cachedState.InZone = CheckPlayerInZone();
         }
         return cachedState.InZone;
+    }
+
+    protected void OnPlayerLocationChanged(object sender, ZDObject.LocationChangeArgs args)
+    {
+        cachedState.InZone = CheckPlayerInZone();
+    }
+
+    bool CheckPlayerInZone()
+    {
+        float DeltaX = Mathf.Abs(TargetCharacter.transform.position.x - transform.position.x) / ZDGameRule.UNIT_IN_WORLD;
+        float DeltaY = Mathf.Abs(TargetCharacter.transform.position.y - transform.position.y) / ZDGameRule.UNIT_IN_WORLD;
+        float ThreshX = (VisibleArea.localScale.x / VisibleAreaCachedRatio.x) / 2;
+        float ThreshY = (VisibleArea.localScale.y / VisibleAreaCachedRatio.y) / 2;
+        if (DeltaX > ThreshX || DeltaY > ThreshY)return  true;
+        else return false;
     }
 
     public void ShrinkZone(Vector2 Size,float Speed)
@@ -179,7 +206,7 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
                 //StrictArea.localScale = (Vector3)stream.ReceiveNext();
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
             Debug.Log("Restrict Zone Error");
         }

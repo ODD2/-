@@ -12,7 +12,7 @@ using Photon.Pun.UtilityScripts;
 class SmoothTransform : MonoBehaviour, IPunObservable
 {
     public bool position=true;
-    public bool rotation;
+    public bool rotation=false;
     public bool scale=true;
     public Vector2 diffPosBound = new Vector2(0.2f,2), 
                              diffScaleBound = new Vector2(0.2f, 2),

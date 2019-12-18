@@ -210,22 +210,35 @@ namespace ZoneDepict
             },
         };
         private string ZoneObjectName = ZDAssetTable.GetPath("ZoneRestrict");
-        //Component
+
+
+        //WaitPlayer State Deps
+        bool AllPlayerLoaded;
+        bool hasOpenGame;
+
+        //OpenGame State Deps
+        public float CountDownTime = 1.0f;
+
+        //Play State Deps
+        const int ZoneWaves = 5;
+        const float ZoneRestrictSpeed = 5;
+        readonly float[] ZoneInterval = {2 + ZoneRestrictSpeed,
+                                         2 + ZoneRestrictSpeed,
+                                         2 + ZoneRestrictSpeed,
+                                         2 + ZoneRestrictSpeed,
+                                         2 + ZoneRestrictSpeed };
+        readonly float[] ZoneSizeRate = { 0.9f, 0.7f, 0.5f, 0.3f, 0.2f};
+        int CurrentWave;
+
+
+
+        //Components
         protected AudioSource audioSource;
         //Audio Clips
         public AudioClip EndGameMusic;
         //Scene Objects
         public GameObject Lose;
         public GameObject Victory;
-
-
-        //WaitPlayer State Deps
-        bool AllPlayerLoaded;
-        //OpenGame State Deps
-        public float CountDownTime = 1.0f;
-        //Play State Deps
-        float NextZoneInterval = 2.0f;
-        float[] ZoneSizeRate = { 0.9f, 0.7f, 0.5f, 0.3f, 0.2f };
 
         #endregion
 
@@ -268,25 +281,15 @@ namespace ZoneDepict
             switch (gameState)
             {
                 case ZDGameState.WaitPlayer:
-                    if (AllPlayerLoaded && CheckZonePrepared()) SendGameEvent(ZDGameEvent.OpenGame);
+                    if (!hasOpenGame &&
+                        AllPlayerLoaded &&
+                        CheckZonePrepared())
+                    {
+                        hasOpenGame = true;
+                        SendGameEvent(ZDGameEvent.OpenGame);
+                    }
                 break;
                 case ZDGameState.Play:
-                    if (RestrictZone.Instance !=null && NextZoneInterval > 0f)
-                    {
-                        if(NextZoneInterval < Time.deltaTime)
-                        {
-                            if (DoRestrictZone)
-                            {
-                                RestrictZone.Instance.ShrinkZone(new Vector2Int((int)(ZDGameRule.MAP_WIDTH_UNIT * 0.2),
-                                                                            (int)(ZDGameRule.MAP_HEIGHT_UNIT * 0.2)), 30);
-                            }
-                            NextZoneInterval = 0;
-                        }
-                        else
-                        {
-                            NextZoneInterval -= Time.deltaTime;
-                        }
-                    }
                 break;
                     
             }
@@ -442,7 +445,7 @@ namespace ZoneDepict
                 Vector3 RandomZoneLocation = new Vector2((int)Random.Range(0, ZDGameRule.MAP_WIDTH_UNIT),
                                                          (int)Random.Range(0, ZDGameRule.MAP_HEIGHT_UNIT));
                 RandomZoneLocation -= (new Vector3((int)ZDGameRule.MAP_WIDTH_UNIT / 2, ZDGameRule.MAP_HEIGHT_UNIT / 2));
-                RandomZoneLocation *= ZDGameRule.UnitInWorld;
+                RandomZoneLocation *= ZDGameRule.UNIT_IN_WORLD;
                 RandomZoneLocation.z = -2;
                 PhotonNetwork.InstantiateSceneObject(ZoneObjectName, RandomZoneLocation, Quaternion.identity);
             }
@@ -453,7 +456,7 @@ namespace ZoneDepict
             //Spawn Character
             object[] CharacterCustomData = { PhotonNetwork.LocalPlayer.NickName };
             playerProps.Object = PhotonNetwork.Instantiate(playerProps.CharacterType,
-                                                           TeamSpawnUnit[playerProps.Team] * ZDGameRule.UnitInWorld,
+                                                           TeamSpawnUnit[playerProps.Team] * ZDGameRule.UNIT_IN_WORLD,
                                                            Quaternion.identity,0, CharacterCustomData);
             playerProps.Script = playerProps.Object.GetComponent<Character>();
             //Setup Camera
@@ -462,7 +465,7 @@ namespace ZoneDepict
 
         void SpawnObjectUnitPos(SpawnObjectConfig target, Vector3 Pos)
         {
-            Pos *= ZDGameRule.UnitInWorld;
+            Pos *= ZDGameRule.UNIT_IN_WORLD;
             string ObjPath = ZDAssetTable.GetPath(target.name);
             PhotonNetwork.InstantiateSceneObject(ObjPath, Pos, Quaternion.identity);
             if (target.flipX || target.flipY)
@@ -520,6 +523,7 @@ namespace ZoneDepict
             if (PhotonNetwork.IsMasterClient)
             {
                 SendGameEvent(ZDGameEvent.StartGame);
+                StartCoroutine(ZoneRestrictRoutine());
             }
         }
         #endregion
@@ -538,6 +542,30 @@ namespace ZoneDepict
                 {
                     CheckGameEnded();
                 }
+            }
+        }
+
+        IEnumerator ZoneRestrictRoutine()
+        {
+            if (RestrictZone.Instance && CurrentWave < ZoneWaves && DoRestrictZone)
+            {
+                float LeftTime = ZoneInterval[CurrentWave];
+                while (LeftTime > 0)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    if (gameState == ZDGameState.Play)
+                    {
+                        LeftTime -= 0.1f;
+                    }
+                }
+
+                if (DoRestrictZone)
+                {
+                    RestrictZone.Instance.ShrinkZone(new Vector2Int((int)(ZDGameRule.MAP_WIDTH_UNIT * ZoneSizeRate[CurrentWave]),
+                                                                    (int)(ZDGameRule.MAP_HEIGHT_UNIT * ZoneSizeRate[CurrentWave])),ZoneRestrictSpeed);
+                }
+                CurrentWave += 1;
+                StartCoroutine(ZoneRestrictRoutine());
             }
         }
         #endregion
@@ -695,7 +723,6 @@ namespace ZoneDepict
                     break;
             }
         }
-       
         #endregion
     }
 }

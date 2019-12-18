@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using Photon.Pun;
+using ZoneDepict;
 using ZoneDepict.Rule;
 using UnityEngine.UI;
 
@@ -24,84 +24,86 @@ public class CharactorUI : MonoBehaviour
     private int SoulDisplayed = 0;
     private GameObject[] Souls;
 
-    private GameObject[] Temp = new GameObject[2];
+    private GameObject[] Temp = new GameObject[2]; 
     void Start()
     {
-        Owner = gameObject.transform.parent.gameObject.GetComponent<Character>();
+        Owner = gameObject.GetComponentInParent<Character>();
+        if (Owner == null) Destroy(this.gameObject);
+        Owner.ShelterStateChanged += ShelterStateUpdated;
         gameObject.name = Owner.name + "'s UI Object";
-        if (Owner.GetComponent<PhotonView>().IsMine)
+        Souls = new GameObject[5];
+        for (int i = 0; i < 5; ++i)
         {
-            Souls = new GameObject[5];
-            for (int i = 0; i < 5; ++i)
+            Souls[i] = Soul.transform.GetChild(i).gameObject;
+            Souls[i].GetComponent<Image>().sprite = SoulImgSource;
+            Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        }
+        for (int i=0;i<2;++i)
+        {
+            Temp[i] = gameObject.transform.GetChild(i).gameObject;
+        }
+    }
+
+    // Update is called once per frame
+    
+    protected void ShelterStateUpdated(object sender, ZDObject.ShelterStateChangeArgs args)
+    {
+        if (args.InShelter && !Owner.photonView.IsMine)
+        {
+            for (int i = 0; i < 2; ++i)
             {
-                Souls[i] = Soul.transform.GetChild(i).gameObject;
-                Souls[i].GetComponent<Image>().sprite = SoulImgSource;
-                Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
+                Temp[i].SetActive(false);
             }
         }
         else
         {
-            Destroy(Soul);
-        }
-        for (int i = 0; i < 2; ++i)
-        {
-            Temp[i] = gameObject.transform.GetChild(i).gameObject;
-        }
-
-    }
-        // Update is called once per frame
-
-
-        public void UpdateHPBar(float maxHP, float HP)
-        {
-            HealthBar.sizeDelta = new Vector2((maxHP / HealthBarBG.rect.width) * HP, HealthBar.rect.height);
-        }
-
-        public void UpdateMPBar(float maxMP, float MP)
-        {
-            ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
-        }
-
-        private void Update()
-        {
-            if (Owner)
+            for (int i = 0; i < 2; ++i)
             {
-            UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
-            UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
-            if (Owner.GetComponent<PhotonView>().IsMine)
-                {
-                    int GetSoul = Owner.GetSoul();
-                    if (SoulDisplayed != GetSoul)
-                    {
-                        if (SoulDisplayed < GetSoul)
-                        {
-                            for (int i = SoulDisplayed; i < GetSoul; ++i)
-                            {
-                                Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                            }
+                Temp[i].SetActive(true);
+            }
+        }
+    }
 
-                        }
-                        else if (SoulDisplayed > GetSoul)
+    public void UpdateHPBar(float maxHP, float HP)
+    {
+        HealthBar.sizeDelta = new Vector2((maxHP / HealthBarBG.rect.width) * HP, HealthBar.rect.height);
+    }
+
+    public void UpdateMPBar(float maxMP, float MP)
+    {
+        ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
+    }
+
+    private void Update()
+    {
+        if (Owner)
+        {
+            if (Owner.GetComponent<PhotonView>().IsMine)
+            {
+                int GetSoul = Owner.GetSoul();
+                if (SoulDisplayed != GetSoul)
+                {
+                    if (SoulDisplayed < GetSoul)
+                    {
+                        for (int i = SoulDisplayed; i < GetSoul; ++i)
                         {
-                            for (int i = GetSoul; i < SoulDisplayed; i++)
-                            {
-                                Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
-                            }
+                            Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 1);
                         }
-                        SoulDisplayed = GetSoul;
 
                     }
-                }
-
-                if (Owner.GetIsShelter())
-                {
-                    
-                }
-                else
-                {
-                    
+                    else if (SoulDisplayed > GetSoul)
+                    {
+                        for (int i = GetSoul; i < SoulDisplayed; i++)
+                        {
+                            Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
+                        }
+                    }
+                    SoulDisplayed = GetSoul;
 
                 }
             }
+            UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
+            UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
         }
+    }
 }

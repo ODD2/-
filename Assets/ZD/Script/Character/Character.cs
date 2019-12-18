@@ -10,7 +10,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 // This class is basic of Charater, and all infos are
 // in this class
-public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiateMagicCallback
+public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantiateMagicCallback
 {
     #region Components
     protected Animator animator;
@@ -35,18 +35,18 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
     #endregion
 
     #region Character Attributes
-    public int TeamID {get; protected set; } = 0;
+    public int TeamID { get; protected set; } = 0;
     public CharacterState currentState { get; protected set; } = CharacterState.Alive;
     protected float HP = 100;
     protected float MP = 100;
-    protected int Soul;
+    protected int Soul = 0;
     protected float RegHP = 0.1f;
     protected float RegMP = 2.9f;
     protected float MaxHP = 100;
     protected float MaxMP = 100;
-    protected const  int MaxSoul = (int)EAttackType.R;
+    protected const int MaxSoul = 5;
 
-    protected Vector2 Velocity = new Vector2(0,0);
+    protected Vector2 Velocity = new Vector2(0, 0);
     protected float MaxVelocity = 30;
     List<ItemBase> Inventory = new List<ItemBase>();
     protected int InventoryMax = 3;
@@ -54,11 +54,10 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
     protected float[] MaxSkillCD = new float[4];
     protected float[] SkillMana = new float[4];
     protected float[] SkillCD = new float[4];
-    
     #endregion
 
     #region Getters/Setters
-    public List<ItemBase>  GetInventory()
+    public List<ItemBase> GetInventory()
     {
         return Inventory;
     }
@@ -93,7 +92,6 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
         if (NewMP > MaxMP) MP = MaxMP;
         else if (NewMP < 0) MP = 0;
         else MP = NewMP;
-        
     }
     public float GetMaxMP()
     {
@@ -117,6 +115,18 @@ public class Character : ZDObject,IPunObservable, IADamageObject, IPunInstantiat
     {
         return InventoryMax;
     }
+    #endregion
+
+    #region Delegates
+    //public class SingleFloatEventArgs : EventArgs
+    //{
+    //    public SingleFloatEventArgs(float value)
+    //    {
+    //        this.value = value;
+    //    }
+    //    public float value;
+    //}
+    //public event EventHandler<SingleFloatEventArgs> SoulChanged;
     #endregion
 
     #region Character Interfaces
