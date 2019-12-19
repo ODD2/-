@@ -45,11 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91bd28081a9343c6b0df0859c4efd10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DoRestrictZone: 1
+  DoRestrictZone: 0
   CountDownTime: 1
   EndGameMusic: {fileID: 8300000, guid: 7ef5118ddea5446d088794b0cdf92714, type: 3}
   Lose: {fileID: 0}
   Victory: {fileID: 0}
+  StartGameView: {fileID: 0}
 --- !u!82 &8074271086645641486
 AudioSource:
   m_ObjectHideFlags: 0

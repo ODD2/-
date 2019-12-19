@@ -10,9 +10,13 @@ using ZoneDepict.Map;
 public class CrossMoveCharacter : Character
 {
     #region Fields
+    //Hit Effect
+    public GameObject[] HitEffects;
+
     //Movement
     private bool NewDestination = false;
     protected Vector2 SprintDestination;
+    protected float[] AttackDamage = { 0, 0, 0, 0 };
     //Attack
     protected float AttackRad;
     #endregion
@@ -75,6 +79,30 @@ public class CrossMoveCharacter : Character
                 break;
         }
     }
+
+    protected override void ApplyDamage(List<List<ZDObject>> Hits, EAttackType Type)
+    {
+        if (Hits != null)
+        {
+            foreach (var HitList in Hits)
+            {
+                if (HitList == null) continue;
+                for (int i = 0, _i = HitList.Count; i < _i; ++i)
+                {
+                    var Obj = HitList[i];
+                    if (Obj is IADamageObject HitObj)
+                    {
+                        if (HitObj is Character HitChar && HitChar.TeamID == this.TeamID)
+                        {
+                            continue;
+                        }
+                        HitObj.Hurt(AttackDamage[(int)Type] * basicValues.AttackBuff);
+                        CreateHitEffectAt(Obj.transform.position);
+                    }
+                }
+            }
+        }
+    }
     #endregion
 
     #region UNITY
@@ -123,6 +151,15 @@ public class CrossMoveCharacter : Character
     #endregion
 
     #region Helper Functions
+    void CreateHitEffectAt(Vector3 pos, int nums = 1, bool rand = true, int which = 0)
+    {
+        Quaternion rot = new Quaternion
+        {
+            eulerAngles = new Vector3(0, 0, Random.Range(0, 180))
+        };
+        Instantiate(HitEffects[Random.Range(0, HitEffects.Length)], pos, rot);
+    }
+
     void FaceTo(Vector2 Direction)
     {
         //Save Attack Direction

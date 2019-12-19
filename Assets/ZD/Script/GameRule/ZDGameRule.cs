@@ -38,6 +38,7 @@ namespace ZoneDepict.Rule
     {
         Enter , Casting, Ready
     }
+
     public enum ZDTeams
     {
         T0,
@@ -49,6 +50,15 @@ namespace ZoneDepict.Rule
     {
         Alive,
         Dead,
+    }
+
+    public enum GameActorLayers
+    {
+        MapObjectMin = 1,
+        MapObjectMax = -1,
+        RestrictZone = -2,
+        CharacterInfo = -3,
+        MainCamera = -5,
     }
 
     public static class CustomPropsKey
@@ -195,7 +205,7 @@ namespace ZoneDepict.Rule
         static public float QuadAngle(float input)
         {
             float degree = (input + 45) % 360;
-            return 90 * (degree < 0 ? 3 - (int)Mathf.Abs(degree) / 90 : (int)Mathf.Abs(degree) / 90); ;
+            return Mathf.Round(90 * (degree < 0 ? 3 - (int)Mathf.Abs(degree) / 90 : (int)Mathf.Abs(degree) / 90));
         }
 
         static public float QuadAngle(Vector2 input)

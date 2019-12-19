@@ -12,7 +12,7 @@ public class CharacterUI : MonoBehaviour
     public Image HealthBar;
     public Image ManaBar;
     [Header("Object of AngleIndicator")]
-    public GameObject TrackAngleIndicator;
+    public GameObject TrackIndicator;
 
     [Header("Object of Soul")]
     public Sprite SoulImgSource;
@@ -24,16 +24,32 @@ public class CharacterUI : MonoBehaviour
     private int SoulDisplayed = 0;
     private GameObject[] Souls;
 
-    private GameObject Temp; 
+    private GameObject Temp;
+
     void Start()
     {
         Owner = gameObject.GetComponentInParent<Character>();
 
-        if (Owner == null) Destroy(this.gameObject);
-        if (!Owner.photonView.IsMine) Destroy(TrackAngleIndicator);
+        if (Owner == null)
+        {
+            Destroy(gameObject);
+        }
+        if (!Owner.photonView.IsMine)
+        {
+            Destroy(TrackIndicator);
+        }
+        //Setup UI Layer.
+        Vector3 Pos = transform.position;
+        Pos.z = (float)GameActorLayers.CharacterInfo;
+        transform.position = Pos;
 
-        Owner.ShelterStateChanged += ShelterStateUpdated;
+        //Set Name
         gameObject.name = Owner.name + "'s UI Object";
+
+        //Listen To Event
+        Owner.ShelterStateChanged += ShelterStateUpdated;
+
+        //Setup Soul (Cache)
         Souls = new GameObject[5];
         for (int i = 0; i < 5; ++i)
         {
@@ -41,20 +57,10 @@ public class CharacterUI : MonoBehaviour
             Souls[i].GetComponent<Image>().sprite = SoulImgSource;
             Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
         }
-        
-        Temp = gameObject.transform.gameObject.transform.GetChild(0).gameObject;
-        
-        //TrackAngleIndicator.SetActive(false);
-        if (Owner is CrossTrackCharacter CrossTrackOwner)
-        {
-            CrossTrackOwner.TrackAngleIndicator = TrackAngleIndicator;
-            CrossTrackOwner.TrackAngleIndicator.SetActive(false);
-        }
-        
-        
-    }
 
-    // Update is called once per frame
+
+        Temp = gameObject.transform.gameObject.transform.GetChild(0).gameObject;
+    }
     
     protected void ShelterStateUpdated(object sender, ZDObject.ShelterStateChangeArgs args)
     {
@@ -84,30 +90,33 @@ public class CharacterUI : MonoBehaviour
     {
         if (Owner)
         {
-            if (Owner.GetComponent<PhotonView>().IsMine)
+            if (Owner.photonView.IsMine)
             {
-                int GetSoul = Owner.GetSoul();
-                if (SoulDisplayed != GetSoul)
                 {
-                    if (SoulDisplayed < GetSoul)
+                    int GetSoul = Owner.GetSoul();
+                    if (SoulDisplayed != GetSoul)
                     {
-                        for (int i = SoulDisplayed; i < GetSoul; ++i)
+                        if (SoulDisplayed < GetSoul)
                         {
-                            Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                            for (int i = SoulDisplayed; i < GetSoul; ++i)
+                            {
+                                Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                            }
+
                         }
+                        else if (SoulDisplayed > GetSoul)
+                        {
+                            for (int i = GetSoul; i < SoulDisplayed; i++)
+                            {
+                                Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
+                            }
+                        }
+                        SoulDisplayed = GetSoul;
 
                     }
-                    else if (SoulDisplayed > GetSoul)
-                    {
-                        for (int i = GetSoul; i < SoulDisplayed; i++)
-                        {
-                            Souls[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
-                        }
-                    }
-                    SoulDisplayed = GetSoul;
-
                 }
             }
+
             UpdateHPBar(Owner.GetMaxHP(), Owner.GetHP());
             UpdateMPBar(Owner.GetMaxMP(), Owner.GetMP());
         }

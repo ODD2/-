@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &7858309257076342345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7076002209027354510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a56aef10300461da89ce0768087b23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Arrow: {fileID: 9209017842906849071}
+  Circle: {fileID: 6999612131866506626}
 --- !u!1 &7575852524050853603
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,7 +154,6 @@ MonoBehaviour:
     Terrain: []
   DeathSound: {fileID: 8300000, guid: a381c0619eb284ab29687e36e50c380a, type: 3}
   MoveSound: {fileID: 8300000, guid: f94e662993d4640f69d867ae4ddc2bd7, type: 3}
-  TrackAngleIndicator: {fileID: 0}
   HitEffects:
   - {fileID: 616462768845263527, guid: 9d9391ca01dda4a0899e55c242866f9e, type: 3}
   - {fileID: 4694221737807659796, guid: 470d970b858ac4307823c8755a149108, type: 3}
@@ -336,6 +349,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4667417012646888634, guid: 5ca716847a17746b38af0e32aecf32af,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e2bff02fb77fc4ad89948921a157bbe6, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ca716847a17746b38af0e32aecf32af, type: 3}
 --- !u!1 &7076002209027354510 stripped
@@ -347,6 +365,18 @@ GameObject:
 --- !u!4 &1878586960648670093 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3115550694428683838, guid: 5ca716847a17746b38af0e32aecf32af,
+    type: 3}
+  m_PrefabInstance: {fileID: 3543976917034182067}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9209017842906849071 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5684594779710814876, guid: 5ca716847a17746b38af0e32aecf32af,
+    type: 3}
+  m_PrefabInstance: {fileID: 3543976917034182067}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6999612131866506626 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5768304215569682481, guid: 5ca716847a17746b38af0e32aecf32af,
     type: 3}
   m_PrefabInstance: {fileID: 3543976917034182067}
   m_PrefabAsset: {fileID: 0}
@@ -440,6 +470,11 @@ PrefabInstance:
     - target: {fileID: 22844450460789621, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}
       propertyPath: TrackAngleIndicator
+      value: 
+      objectReference: {fileID: 7076002209027354510}
+    - target: {fileID: 22844450460789621, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: TrackIndicator
       value: 
       objectReference: {fileID: 7076002209027354510}
     - target: {fileID: 2068717161607393347, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,

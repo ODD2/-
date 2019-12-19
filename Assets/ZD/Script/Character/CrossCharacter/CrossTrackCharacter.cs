@@ -1,29 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Photon.Pun;
 using ZoneDepict;
 using ZoneDepict.Rule;
 using ZoneDepict.Map;
-
+using Random = UnityEngine.Random;
 public class CrossTrackCharacter : CrossMoveCharacter
 {
+    //TrackCharacter Setup.
+    public float TrackDurationConst = 10.0f;
+    public int TrackCountsConst = 2;
+    public float MissionFailedPunish = 5.0f;
 
-    [SerializeField]
-    public GameObject TrackAngleIndicator;
     public bool TrackAvailable { get; protected set; }
-    public float TrackAngle { get; protected set; }
+    public List<float> TrackAngles { get; protected set; } = new List<float>();
+    public float TrackRemainTime { get; protected set; }
+    public float TrackDurationTime { get; protected set; }
+
     #region Unity
     protected new void Start()
     {
         base.Start();
         if (photonView.IsMine)
         {
-            //TrackAngleIndicator = Instantiate(ZDAssetTable.GetObject("TrackAngleIndicator"), transform);
-            //TrackAngleIndicator.SetActive(false);
-            //TrackAngleIndicator.transform.position += new Vector3(0, ZDGameRule.UNIT_IN_WORLD * 1.2f, 0);
-            StartCoroutine(GenerateNewTrack());
+            StartCoroutine(WaitSecondsToGenerateTrack(0));
         }
+    }
+
+    protected new void FixedUpdate()
+    {
+        if (TrackAvailable)
+        {
+            TrackRemainTime -= Time.fixedDeltaTime;
+            if ( TrackRemainTime < 0)
+            {
+                TrackMissionFailed();
+            }
+        }
+        base.FixedUpdate();
     }
     #endregion
 
@@ -35,7 +51,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
         if (photonView.IsMine && TrackAvailable)
         {
             float SprintAngle = ZDGameRule.QuadAngle(SprintDestination - (Vector2)transform.position);
-            if (TrackAngle.Equals(SprintAngle))
+            if (TrackAngles[0].Equals(SprintAngle))
             {
                 TrackFullFilled();
             }
@@ -72,31 +88,64 @@ public class CrossTrackCharacter : CrossMoveCharacter
     #region Helper Functions
     private void TrackFullFilled()
     {
-        TrackAvailable = false;
-        SetSoul(Soul + 1);  
-        if (TrackAngleIndicator) TrackAngleIndicator.SetActive(false);
-        StartCoroutine(GenerateNewTrack());
+       
+        if(TrackAngles.Count == 1)
+        {
+            TrackMissionSuccess();
+        }
+        else
+        {
+            TrackAngles.RemoveAt(0);
+        }
+        TrackInfoChanged?.Invoke(this, new TrackInfoChangeArgs(TrackAvailable, TrackAngles[0]));
+        //Debug.Break();
     }
-
-    private IEnumerator GenerateNewTrack()
+    private void TrackMissionSuccess()
     {
-        yield return new WaitForSeconds(ZDGameRule.CrossTrack.NextTrackDelay);
-        DisplayNewTrack(ZDGameRule.QuadAngle(Random.Range(0, 359)));
+        SetSoul(Soul + 1);
+        StartCoroutine(WaitSecondsToGenerateTrack(0.0f));
     }
 
-    private void DisplayNewTrack(float angle)
+    private void TrackMissionFailed()
+    {
+        StartCoroutine(WaitSecondsToGenerateTrack(MissionFailedPunish));
+    }
+
+    private IEnumerator WaitSecondsToGenerateTrack(float AdditionTime)
+    {
+        TrackAvailable = false;
+        TrackInfoChanged?.Invoke(this, new TrackInfoChangeArgs(TrackAvailable, 0));
+        yield return new WaitForSeconds(ZDGameRule.CrossTrack.NextTrackDelay + AdditionTime);
+        SpawnNewTrackMission();
+    }
+
+    private void SpawnNewTrackMission()
     {
         TrackAvailable = true;
-        TrackAngle = angle;
-        if (TrackAngleIndicator)
+        TrackDurationTime = (GetMaxSoul() - GetSoul())*TrackDurationConst;
+        TrackRemainTime = TrackDurationTime;
+        TrackAngles.Clear();
+        for( int i = 0 , _i = (GetSoul()+1)*TrackCountsConst; i < _i; ++i)
         {
-            TrackAngleIndicator.SetActive(true);
-            TrackAngleIndicator.transform.rotation = new Quaternion
-            {
-                eulerAngles = new Vector3(0, 0, angle)
-            };
+            TrackAngles.Add(ZDGameRule.QuadAngle(Random.Range(0, 359)));
         }
+        TrackInfoChanged?.Invoke(this, new TrackInfoChangeArgs(TrackAvailable, TrackAngles[0]));
     }
+    #endregion
+
+    #region Delegates
+    public class TrackInfoChangeArgs : EventArgs
+    {
+        public TrackInfoChangeArgs(bool HasTrack, float Angle)
+        {
+            this.HasTrack = HasTrack;
+            this.Angle = Angle;
+        }
+        public bool HasTrack { get; } = false;
+        public float Angle { get; } = 0;
+    }
+
+    public event EventHandler<TrackInfoChangeArgs> TrackInfoChanged;
     #endregion
 }
 

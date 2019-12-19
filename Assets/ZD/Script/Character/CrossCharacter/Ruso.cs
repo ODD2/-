@@ -10,14 +10,12 @@ using ZoneDepict.Map;
 
 
 public class Ruso : CrossTrackCharacter
-{
-    public GameObject[] HitEffects;
-    private readonly float[] AttackDamage = { 10, 20, 15, 30 };
-    
+{       
     #region UNITY
     protected new void Start()
     {
         base.Start();
+        AttackDamage = new float[] { 10, 20, 15, 30 };
         SkillMana = new float[]{ 5, 20, 30, 60 };
         MaxSkillCD = new float[] { 0.25f, 3f, 6f, 10 };
     }
@@ -29,43 +27,6 @@ public class Ruso : CrossTrackCharacter
         {
             Hurt(100);
         }
-    }
-    #endregion
-
-    #region Charater Override
-    protected override void ApplyDamage(List<List<ZDObject>> Hits,EAttackType Type)
-    {
-        if (Hits != null)
-        {
-            foreach (var HitList in Hits)
-            {
-                if (HitList == null) continue;
-                for(int i = 0 ,_i = HitList.Count; i < _i; ++i)
-                {
-                    var Obj = HitList[i];
-                    if (Obj is IADamageObject HitObj)
-                    {
-                        if (HitObj is Character HitChar && HitChar.TeamID == this.TeamID)
-                        {
-                            continue;
-                        }
-                        HitObj.Hurt(AttackDamage[(int)Type] * basicValues.AttackBuff);
-                        CreateHitEffectAt(Obj.transform.position);
-                    }
-                }
-            }
-        }
-    }
-    #endregion
-
-    #region Helpers
-    void CreateHitEffectAt(Vector3 pos, int nums = 1,bool rand= true,int which= 0)
-    {
-        Quaternion rot = new Quaternion
-        {
-            eulerAngles = new Vector3(0, 0, Random.Range(0, 180))
-        };
-        Instantiate(HitEffects[Random.Range(0, HitEffects.Length)],pos,rot);
     }
     #endregion
 
