@@ -4,26 +4,27 @@ using ZoneDepict;
 using ZoneDepict.Rule;
 using ZoneDepict.Map;
 
-public class Ruso : CrossTrackCharacter
-{       
+public class Digang : CrossTrackCharacter
+{
     #region UNITY
     protected new void Start()
     {
         base.Start();
         AttackDamage = new float[] { 10, 20, 15, 30 };
-        SkillMana = new float[]{ 5, 20, 30, 60 };
+        SkillMana = new float[] { 5, 20, 30, 60 };
         MaxSkillCD = new float[] { 0.25f, 3f, 6f, 10 };
     }
 
     protected new void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             Hurt(100);
         }
     }
     #endregion
+
 
     #region  CrossMoveCharacter Override
     public override void AttackEventN(int Phase)
@@ -33,7 +34,7 @@ public class Ruso : CrossTrackCharacter
         switch (Phase)
         {
             case 0:
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this,EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this, EObjectType.ADamage));
                 break;
         }
         ApplyDamage(AllHitObject, EAttackType.N);

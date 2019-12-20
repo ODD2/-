@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace ZoneDepict.Rule
 {
+    #region enum Feild
     public enum EAttackType
     {
-        N, A, B, R, Cancel
+        N, A, B, R, Skill
     }
 
     public enum EActorType
@@ -60,6 +61,7 @@ namespace ZoneDepict.Rule
         CharacterInfo = -3,
         MainCamera = -5,
     }
+    #endregion
 
     public static class CustomPropsKey
     {
@@ -266,10 +268,11 @@ namespace ZoneDepict.Rule
                     Type = EAttackType.A;
                     break;
                 case 270:
-                    Type = EAttackType.Cancel;
+                    //Type = EAttackType.Cancel;
+                    Type = EAttackType.Skill;
                     break;
                 default:
-                    Type = EAttackType.Cancel;
+                    Type = EAttackType.Skill;
                     break;
             }
             return Type;

@@ -57,7 +57,6 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     protected float[] SkillMana = new float[4];
     protected float[] SkillCD = new float[4];
 
-    protected int PosZLayer = 1;
     #endregion
 
     #region Getters/Setters

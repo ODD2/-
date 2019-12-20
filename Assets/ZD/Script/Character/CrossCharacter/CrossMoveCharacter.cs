@@ -64,7 +64,6 @@ public class CrossMoveCharacter : Character
         switch (Type)
         {
             case EAttackType.N:
-                // Play clip and Trigger notify
                 animator.SetTrigger("AttackN");
                 break;
             case EAttackType.A:
@@ -131,7 +130,7 @@ public class CrossMoveCharacter : Character
             {
                 transform.position = new Vector3(SprintDestination.x,
                                                  SprintDestination.y,
-                                                 PosZLayer);
+                                                 transform.position.z);
                 Velocity = Vector2.zero;
                 NewDestination = false;
                 if (audioSource && audioSource.isPlaying) audioSource.Stop();
@@ -140,7 +139,9 @@ public class CrossMoveCharacter : Character
             else
             {
                 Vector3 NewPos = transform.position;
-                transform.position = new Vector3(NewPos.x + MoveDelta.x, NewPos.y += MoveDelta.y,PosZLayer);
+                NewPos.x += MoveDelta.x;
+                NewPos.y += MoveDelta.y;
+                transform.position = NewPos;
                 //Adjust Facing Direction
                 if (!MoveDelta.x.Equals(0)) sprite.flipX = MoveDelta.x > 0 ? true : false;
             }

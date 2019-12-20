@@ -217,7 +217,7 @@ namespace ZoneDepict
         bool hasOpenGame;
 
         //OpenGame State Deps
-        public float CountDownTime = 1.0f;
+        public float CountDownTime = 4.0f;
 
         //Play State Deps
         const int ZoneWaves = 5;
@@ -237,9 +237,11 @@ namespace ZoneDepict
         //Audio Clips
         public AudioClip EndGameMusic;
         //Scene Objects
+        [Header("Scene Views")]
         public GameObject Lose;
         public GameObject Victory;
-        public GameObject StartGameView;
+        public GameObject LoadingView;
+        public GameObject CountDownView; 
 
         #endregion
 
@@ -248,7 +250,7 @@ namespace ZoneDepict
         {
             if (Instance && Instance != this) Destroy(this);
             else Instance = this;
-
+            
             //Initialize Static Values.
             gameState = ZDGameState.Initialize;
             playerProps = new PlayerProps();
@@ -267,10 +269,7 @@ namespace ZoneDepict
             {
                 MasterClientRoutine();
             }
-            else
-            {
-
-            }
+            
         }
 
         void MasterClientRoutine()
@@ -513,12 +512,12 @@ namespace ZoneDepict
             float CountDown = CountDownTime;
             while(CountDown > 0)
             {
+                CountDownView.SetActive(true);
                 Debug.Log("CountDown");
                 Debug.Log(CountDown);
                 yield return new WaitForSeconds(1);
                 CountDown -= 1.0f;
             }
-            StartGameView.SetActive(false);
             if (PhotonNetwork.IsMasterClient)
             {
                 SendGameEvent(ZDGameEvent.StartGame);
@@ -708,6 +707,7 @@ namespace ZoneDepict
             switch ((ZDGameEvent)photonEvent.Code)
             {
                 case ZDGameEvent.OpenGame:
+                    Destroy(LoadingView);
                     OpenGame();
                     break;
                 case ZDGameEvent.StartGame:

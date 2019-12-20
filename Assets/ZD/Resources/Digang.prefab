@@ -27,11 +27,11 @@ GameObject:
   - component: {fileID: 7923946618289324828}
   - component: {fileID: -5332454856049956278}
   - component: {fileID: -7998073615777067078}
-  - component: {fileID: 6417891796267716473}
+  - component: {fileID: 7258473532984548266}
   - component: {fileID: 573215057273481693}
   - component: {fileID: 6503172055990386607}
   m_Layer: 0
-  m_Name: Ruso
+  m_Name: Digang
   m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,11 +133,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 6417891796267716473}
+  - {fileID: 7258473532984548266}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &6417891796267716473
+--- !u!114 &7258473532984548266
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7575852524050853603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75c4d539ad77e49c09d6d1696a3134b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c1e5f78f269d4940ae28e9fbb2deebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ActorType: 6

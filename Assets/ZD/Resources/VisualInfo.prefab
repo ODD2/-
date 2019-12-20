@@ -987,7 +987,7 @@ GameObject:
   - component: {fileID: 7101257850436815560}
   - component: {fileID: 22844450460789621}
   m_Layer: 0
-  m_Name: Test
+  m_Name: VisualInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1023,7 +1023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HealthBar: {fileID: 2942331615968815197}
   ManaBar: {fileID: 4126254354220764244}
-  TrackAngleIndicator: {fileID: 0}
+  TrackIndicator: {fileID: 0}
   SoulImgSource: {fileID: 21300000, guid: 1ff8219af345b4671a7199141ba5c6be, type: 3}
   Soul: {fileID: 8967924041011204839}
 --- !u!1 &8967924041011204839

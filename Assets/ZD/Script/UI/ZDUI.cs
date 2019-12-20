@@ -8,9 +8,7 @@ namespace ZoneDepict.UI
 {
     public class ZDUI : MonoBehaviour
     {
-        
         static public ZDUI Instance;
-        
 
         [Header("The Indicator img of Attacking")]
         public GameObject AttackIndicator;
@@ -25,9 +23,6 @@ namespace ZoneDepict.UI
         private float FrameFix = 0.01f;
         private float[] ArrowScale = { 0, 0, 0, 0, 0, 0 };
         
-
-        
-
         // Start is called before the first frame update
         void Start()
         {
@@ -96,9 +91,9 @@ namespace ZoneDepict.UI
 
         private void OnDestroy()
         {
-	    if(Instance == this){
+	        if(Instance == this){
             	Instance = null;
-	    }
+	        }
         }
 
     }

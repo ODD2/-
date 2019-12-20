@@ -32,7 +32,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public Button ReadyBut;
     public Text StateTxt;
     
-
     private GameObject[] CastCharactors;
     private string CharacterName;
     private bool ReadyBool = false;
@@ -104,6 +103,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
     public void Ready()
     {
         if (CharacterName == null) return;
@@ -260,7 +260,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
         
     }
-
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log("Create Room!!!!");
@@ -316,6 +315,5 @@ public class RoomManager : MonoBehaviourPunCallbacks
         EntryUpdate(otherPlayer,true);
     }
     
-
     #endregion
 }
