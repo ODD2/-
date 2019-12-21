@@ -18,7 +18,6 @@ public class ZDController : MonoBehaviour
 
     #region Check Bools
     private bool IsMovingCharacter; // To judge if do click/touch on target
-    private bool IsActivateAttackCircle;
     private bool IsSelectingAttack;
     private bool IsTouchMove; // To judge if did "Drag" or not
     private bool IsDidMovePhase;
@@ -28,7 +27,7 @@ public class ZDController : MonoBehaviour
     #region Fix const
     private const float ClickOnFix = 0.8f; // To fix the radius of "TochOn Circle"
     private const float TouchMoveFix = 1.7f; // To fix what is "Move"
-    private const float TapOrSlide = 0.1f; //Greater than TapOrSlide is Slide
+    private const float TapOrSlide = 1.7f; //Greater than TapOrSlide is Slide
     #endregion
 
     #region UI CallBack Class
@@ -36,23 +35,14 @@ public class ZDController : MonoBehaviour
     private BagController BagClass;
     #endregion
 
-    private int Frame;
-
+    #region Unity
     void Start()
     {
-        if (Instance != null)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
+        if (Instance != null) Destroy(this);
+        else Instance = this;
         TargetCharacter = ZDGameManager.GetPlayerProps().Script;
         ZDUIClass = GameObject.Find("ZDUI").GetComponent<ZDUI>();
         BagClass = GameObject.Find("Item").GetComponent<BagController>();
-   
-        //StartCoroutine(WaitToActive());
     }
 
     void Update()
@@ -61,7 +51,6 @@ public class ZDController : MonoBehaviour
         {
             if (IsPhoneTest)
             {
-                //Debug.Log(BagClass.GetHover());
                 #region Touch Input for Single Touch
                 if (Input.touchCount == 1 && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
                 {
@@ -80,21 +69,24 @@ public class ZDController : MonoBehaviour
                     Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
 
                     List<ZDObject> HitObjects;
-                    if (TouchTemp.phase == TouchPhase.Began)
+                    if (IsMovingCharacter)
                     {
-                        if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) != null)
+                        Vector2 Direction = TouchPos - CharactorPos;
+                        float Degree = ZDGameRule.QuadAngle(Direction);
+                        Vector3 Distance = ZDGameRule.WorldToUnit(TouchPos) - ZDGameRule.WorldToUnit(CharactorPos);
+                        ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
+                    }
+                    if (TouchTemp.phase == TouchPhase.Began)
+                    {   
+                        if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UNIT_IN_WORLD * ClickOnFix)
+                        {
+                            IsMovingCharacter = true;
+                            return;
+                        }
+                        else if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) != null)
                         {
                             List<ZDObject> HitCharacter = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.Character);
-                            bool CharacterOccupy = false;
-                            if (HitCharacter != null)
-                            {
-                                foreach(var obj in HitCharacter)
-                                {
-                                    if ((Character)obj == TargetCharacter) break;
-                                    else CharacterOccupy = true;
-                                }
-                                if (CharacterOccupy) return;
-                            }
+                            if (HitCharacter != null) return;
                             foreach (var obj in HitObjects)
                             {
                                 if (obj is IACollectObject)
@@ -112,10 +104,6 @@ public class ZDController : MonoBehaviour
                             }
                             return;
                         }
-                        else if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UNIT_IN_WORLD * ClickOnFix)
-                        {
-                            IsMovingCharacter = true;
-                        }
                         else
                         {
                             // Activate Attack System
@@ -123,8 +111,6 @@ public class ZDController : MonoBehaviour
                             if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) == null && !BagClass.GetHover())
                             {
                                 IsSelectingAttack = true;
-                                IsActivateAttackCircle = true;
-                                ZDUIClass.SetAttackIndicator(TouchPos);
                                 TouchPosRecord = TouchPos;
                             }
                         }
@@ -142,69 +128,34 @@ public class ZDController : MonoBehaviour
                             return;
                         }
                         // DoMove
-                        if ((TouchTemp.deltaPosition.magnitude >= TouchMoveFix) && IsDidMovePhase)
-                        {
-                            IsTouchMove = true;
-                        }
-                        else
-                        {
-                            IsTouchMove = false;
-                        }
+                        if ((TouchTemp.deltaPosition.magnitude >= TouchMoveFix) && IsDidMovePhase) IsTouchMove = true;
+                        else IsTouchMove = false;
+
                         if (IsMovingCharacter && IsTouchMove)
                         {
                             TargetCharacter.InputSprint(TouchPos);
                             IsTouchMove = false;
+                            IsMovingCharacter = false;
+                            IsDidMovePhase = false;
+                            return;
                         }
                         else if (IsSelectingAttack)
                         {
-                            ZDUIClass.CancelAttackIndicator();
                             IsSelectingAttack = false;
-                            IsActivateAttackCircle = false;
                             Vector2 TouchDelta = TouchPos - TouchPosRecord;
+                            // Tap Normal Attack or Slide Skill Attack
                             if (TouchDelta.magnitude < TapOrSlide) // This Distance is to judge how is "Tap"
                             {
-                                TargetCharacter.InputAttack(TouchPosRecord - (Vector2)TargetCharacter.transform.position, EAttackType.N);
+                                TargetCharacter.InputAttack(TouchPos - (Vector2)TargetCharacter.transform.position, EAttackType.N);
                             }
                             else
                             {
-                                TargetCharacter.InputAttack(TouchDelta, ZDGameRule.DirectionToType(TouchDelta));
+                                TargetCharacter.InputAttack(TouchDelta, EAttackType.Skill);
                             }
                         }
-                        // Tap for Normal attack
-                        if (Frame <= ZDGameRule.TOUCH_TAP_BOUND_FRAMES && !IsTouchMove && !IsMovingCharacter)
-                        {
-                            TargetCharacter.InputAttack(TouchPos - CharactorPos, EAttackType.N);
-
-                        }
-                        else if (!IsMovingCharacter) // Other Type Attack
-                        {
-                            Vector2 Direction = TouchPosRecord - CharactorPos;
-                            TargetCharacter.InputAttack(Direction, ZDGameRule.DirectionToType(TouchPos - TouchPosRecord));
-                        }
-                        IsMovingCharacter = false;
-                        IsDidMovePhase = false;
-                        IsActivateAttackCircle = false;
-                        Frame = 0;
                     }
 
-
-                    if (IsActivateAttackCircle)
-                    {
-                        Vector2 Direction = TouchPos - TouchPosRecord;
-                        ZDUIClass.UpdateAttackCircle(ZDGameRule.DirectionToType(Direction));
-                    }
-
-                    if (IsMovingCharacter)
-                    {
-                        Vector2 Direction = TouchPos - CharactorPos;
-                        float Degree = ZDGameRule.QuadAngle(Direction);
-                        Vector3 Distance = ZDGameRule.WorldToUnit(TouchPos) - ZDGameRule.WorldToUnit(CharactorPos);
-                        ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
-                    }
-                    else
-                    {
-                        ZDUIClass.SetAttackOpacity(Frame);
-                    }
+                    
                 }
 
                 #endregion
@@ -219,6 +170,7 @@ public class ZDController : MonoBehaviour
             Instance = null;
         }
     }
+    #endregion
 
     static public Character GetTargetCharacter()
     {

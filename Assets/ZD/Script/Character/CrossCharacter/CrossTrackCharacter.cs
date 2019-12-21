@@ -68,7 +68,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
             default:
                 if (Soul > 0)
                 {
-                    if(Soul > (int)EAttackType.R) base.InputAttack(AttackDirection, EAttackType.R);
+                    if (Soul > (int)EAttackType.R) base.InputAttack(AttackDirection, EAttackType.R);
                     else base.InputAttack(AttackDirection, (EAttackType)Soul);
                 }
                 break;

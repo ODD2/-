@@ -176,6 +176,7 @@ public class CrossMoveCharacter : Character
         // Set Animation Direction
         animator.SetInteger("AtkVertical",(int)Direction.y);
         animator.SetInteger("AtkHorizontal",(int)Direction.x);
+        Debug.Log("Direction" + new Vector2(Direction.x, Direction.y));
     }
 
     Vector2 GetValidDest(Vector2 Destination)

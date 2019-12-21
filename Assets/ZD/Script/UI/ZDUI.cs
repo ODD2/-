@@ -9,11 +9,6 @@ namespace ZoneDepict.UI
     public class ZDUI : MonoBehaviour
     {
         static public ZDUI Instance;
-
-        [Header("The Indicator img of Attacking")]
-        public GameObject AttackIndicator;
-        public Sprite[] AttackSources;
-        
         
         [Header("The Indicator img of Moving")]
         public GameObject MoveIndicator;
@@ -31,10 +26,7 @@ namespace ZoneDepict.UI
 
             MoveIndicator = Instantiate(MoveIndicator);
             MoveIndicator.transform.position += new Vector3(0, 0, -4);
-            AttackIndicator = Instantiate(AttackIndicator);
             MoveIndicator.SetActive(false);
-            AttackIndicator.SetActive(false);
-            Attack = AttackIndicator.GetComponent<Transform>();
             Move = MoveIndicator.GetComponent<Transform>();
 
             for (int i = 0; i < 6; i++)
@@ -42,24 +34,6 @@ namespace ZoneDepict.UI
                 ArrowScale[i] = ((ZDGameRule.UNIT_IN_WORLD / 3) * i);
             }
             MoveIndicator.transform.localScale = new Vector3(ZDGameRule.UNIT_IN_WORLD, ZDGameRule.UNIT_IN_WORLD, 1);
-        }
-
-        public void SetAttackIndicator(Vector2 Position)
-        {
-            // World Position
-            Attack.position = Position;
-            AttackIndicator.SetActive(true);
-        }
-
-        public void CancelAttackIndicator()
-        {
-            AttackIndicator.SetActive(false);
-        }
-
-        public void UpdateAttackCircle(EAttackType Type)
-        {
-            AttackIndicator.GetComponent<SpriteRenderer>().sprite = AttackSources[(int)Type];
-            
         }
 
         public void SetMoveIndicator(Vector2 Pos, float Degree, float Scale)
@@ -76,17 +50,6 @@ namespace ZoneDepict.UI
         public void CancelMoveIndicator()
         {
             MoveIndicator.SetActive(false);
-        }
-
-        public void SetAttackOpacity(int Frame)
-        {
-            AttackIndicator.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, Frame * FrameFix);
-        }
-
-        private void Update()
-        {
-            
-            
         }
 
         private void OnDestroy()

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using Photon.Pun.UtilityScripts;
 using ExitGames.Client.Photon;
 using ZoneDepict.Rule;
 using ZoneDepict.Map;
-using ZoneDepict.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
 
