@@ -24,6 +24,7 @@ namespace ZoneDepict
         [SerializeField]
         protected EActorType ActorType;
         protected bool InShelter = false;
+        protected float ActorCustomDepthShift;
         private float ActorTypeDepth = 0.0f;
         public ObjectConfig[] Configs ;
         public Dictionary<Vector2Int, HashSet<EObjectType>> Regions;
@@ -38,7 +39,7 @@ namespace ZoneDepict
             }
 
             //Cache ActorTypeDepth
-            ActorTypeDepth = ZDGameRule.ActorDepth(ActorType);
+            ActorTypeDepth = ZDGameRule.ActorDepth(ActorType)+ActorCustomDepthShift;
 
             //Forced Update to set object depth with type depth;
             SetActorDepth();

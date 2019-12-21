@@ -159,6 +159,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
         Debug.LogFormat("Player Received {0} Damage.", Damage);
         if (photonView.IsMine && !GetHP().Equals(0))
         {
+            if (animator && animator.GetCurrentAnimatorStateInfo(0).IsTag("NM")) return;
             SetHP(GetHP() - Damage);
             if (GetHP().Equals(0))
             {

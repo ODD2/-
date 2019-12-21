@@ -198,16 +198,16 @@ namespace ZoneDepict
                 flipX = true,
                 flipY = true,
             },
-            new SpawnObjectConfig
-            {
-                name = "SpawnPoint",
-                pos = new Vector2[]
-                {
-                    new Vector2(-9,7),
-                },
-                flipX = true,
-                flipY = true,
-            },
+            //new SpawnObjectConfig
+            //{
+            //    name = "SpawnPoint",
+            //    pos = new Vector2[]
+            //    {
+            //        new Vector2(-9,7),
+            //    },
+            //    flipX = true,
+            //    flipY = true,
+            //},
         };
         private string ZoneObjectName = ZDAssetTable.GetPath("ZoneRestrict");
 

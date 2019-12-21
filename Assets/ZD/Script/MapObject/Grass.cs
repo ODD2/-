@@ -6,22 +6,28 @@ using ZoneDepict;
 using ZoneDepict.Rule;
 using ZoneDepict.Map;
 using ZoneDepict.Audio;
+using Random = UnityEngine.Random;
 
 
 public class Grass : StationaryMapObject
 {
-    public AudioClip InGrassAudio;
+    
     protected uint InGrassCount;
+    public AudioClip InGrassAudio;
     protected AudioSource audioSource;
+    protected Animator animator;
 
 
 
     protected new void Start()
     {
+        ActorCustomDepthShift = (int)ZDGameRule.WorldToUnit(transform.position).x % 2 == 0 ?
+                         -1e-5f :1e-5f ;
         base.Start();
-        StartCoroutine(PauseAndPlay());
+        animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         ZDAudioSource.SetupAudioSource(audioSource);
+        //StartCoroutine(PauseAndPlay());
     }
 
     protected new void Update()
@@ -49,11 +55,15 @@ public class Grass : StationaryMapObject
         {
             audioSource.PlayOneShot(InGrassAudio);
         }
+        if (animator)
+        {
+            animator.SetTrigger("Move");
+        }
     }
 
     IEnumerator PauseAndPlay()
     {
-        Animator animator = GetComponent<Animator>();
+       
         if (animator != null)
         {
             animator.enabled = false;

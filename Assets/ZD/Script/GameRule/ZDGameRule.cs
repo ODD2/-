@@ -81,6 +81,7 @@ namespace ZoneDepict.Rule
         public const float MAP_HEIGHT_WORLD = MAP_HEIGHT_UNIT * UNIT_IN_WORLD;
         public const int TOUCH_TAP_BOUND_FRAMES = 20;
         public const float SINGLE_ACTOR_DEPTH = 0.00003051757f;
+        //public const float SINGLE_ACTOR_DEPTH = 1e-5f;
         public const float UNIT_DEPTH = SINGLE_ACTOR_DEPTH * (int)EActorType.Total;
 
         //Audio

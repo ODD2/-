@@ -26,11 +26,14 @@ public class CrossMoveCharacter : Character
     {
         
         Destination = GetValidDest(Destination);
-        float RequireMana = (Destination - (Vector2)transform.position).magnitude / ZDGameRule.UNIT_IN_WORLD * MoveMana;
-        if (photonView.IsMine && !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") && RequireMana < GetMP())
+        if (!Destination.Equals(this.transform.position))
         {
-            SetMP(GetMP() - RequireMana * basicValues.ReduceManaCost);
-            photonView.RPC("SprintRPC", RpcTarget.All,Destination);
+            float RequireMana = (Destination - (Vector2)transform.position).magnitude / ZDGameRule.UNIT_IN_WORLD * MoveMana;
+            if (photonView.IsMine && !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") && RequireMana < GetMP())
+            {
+                SetMP(GetMP() - RequireMana * basicValues.ReduceManaCost);
+                photonView.RPC("SprintRPC", RpcTarget.All, Destination);
+            }
         }
     }
 
@@ -73,6 +76,7 @@ public class CrossMoveCharacter : Character
                 animator.SetTrigger("AttackB");
                 break;
             case EAttackType.R:
+                animator.SetTrigger("AttackR");
                 break;
             default:
                 break;
@@ -95,7 +99,7 @@ public class CrossMoveCharacter : Character
                         {
                             continue;
                         }
-                        HitObj.Hurt(AttackDamage[(int)Type] * basicValues.AttackBuff);
+                        HitObj.Hurt(GetFinalAttackDamage(Type));
                         CreateHitEffectAt(Obj.transform.position);
                     }
                 }
@@ -202,6 +206,11 @@ public class CrossMoveCharacter : Character
             }
         }
         return transform.position;
+    }
+
+    protected float GetFinalAttackDamage(EAttackType Type)
+    {
+        return AttackDamage[(int)Type] * basicValues.AttackBuff;
     }
     #endregion
 

@@ -100,6 +100,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
         TrackInfoChanged?.Invoke(this, new TrackInfoChangeArgs(TrackAvailable, TrackAngles[0]));
         //Debug.Break();
     }
+
     private void TrackMissionSuccess()
     {
         SetSoul(Soul + 1);
@@ -116,20 +117,27 @@ public class CrossTrackCharacter : CrossMoveCharacter
         TrackAvailable = false;
         TrackInfoChanged?.Invoke(this, new TrackInfoChangeArgs(TrackAvailable, 0));
         yield return new WaitForSeconds(ZDGameRule.CrossTrack.NextTrackDelay + AdditionTime);
+        while (GetSoul() >= GetMaxSoul())
+        {
+            yield return new WaitForSeconds(2);
+        }
         SpawnNewTrackMission();
     }
 
     private void SpawnNewTrackMission()
     {
-        TrackAvailable = true;
-        TrackDurationTime = (GetMaxSoul() - GetSoul())*TrackDurationConst;
-        TrackRemainTime = TrackDurationTime;
-        TrackAngles.Clear();
-        for( int i = 0 , _i = (GetSoul()+1)*TrackCountsConst; i < _i; ++i)
+        if(GetSoul() < GetMaxSoul())
         {
-            TrackAngles.Add(ZDGameRule.QuadAngle(Random.Range(0, 359)));
+            TrackAvailable = true;
+            TrackDurationTime = (GetMaxSoul() - GetSoul()) * TrackDurationConst;
+            TrackRemainTime = TrackDurationTime;
+            TrackAngles.Clear();
+            for (int i = 0, _i = (GetSoul() + 1) * TrackCountsConst; i < _i; ++i)
+            {
+                TrackAngles.Add(ZDGameRule.QuadAngle(Random.Range(0, 359)));
+            }
+            TrackInfoChanged?.Invoke(this, new TrackInfoChangeArgs(TrackAvailable, TrackAngles[0]));
         }
-        TrackInfoChanged?.Invoke(this, new TrackInfoChangeArgs(TrackAvailable, TrackAngles[0]));
     }
     #endregion
 

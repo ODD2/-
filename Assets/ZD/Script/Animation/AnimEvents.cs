@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ZoneDepict;
+using ZoneDepict.Rule;
+using ZoneDepict.Map;
 
 public class AnimEvents : MonoBehaviour
 {
@@ -12,6 +15,19 @@ public class AnimEvents : MonoBehaviour
     void RandomInterval()
     {
        StartCoroutine(PauseAndPlay());
+    }
+
+    void AttackInPosition(float Damage)
+    {
+        Vector3 UnitPos = ZDGameRule.WorldToUnit(transform.position);
+        List<ZDObject> HitList = ZDMap.HitAtUnit(UnitPos, EObjectType.ADamage);
+        if(HitList != null)
+        {
+            foreach(var obj in HitList)
+            {
+                ((IADamageObject)obj).Hurt(Damage);
+            }
+        }
     }
 
     #region HELPER
