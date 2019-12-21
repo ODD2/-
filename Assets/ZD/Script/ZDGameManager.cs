@@ -69,10 +69,10 @@ namespace ZoneDepict
         //Spawn Points
         public static Vector2[] TeamSpawnUnit =
         {
-            //new Vector2(-9,7),
-            //new Vector2(9,-7),
-            new Vector2(0,0),
-            new Vector2(0,0),
+            new Vector2(-9,7),
+            new Vector2(9,-7),
+            //new Vector2(0,0),
+            //new Vector2(0,0),
         };
 
         //Map Object Configs

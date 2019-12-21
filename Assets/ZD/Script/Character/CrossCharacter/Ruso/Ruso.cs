@@ -35,6 +35,23 @@ public class Ruso : CrossTrackCharacter
     }
     #endregion
 
+    #region Character Override
+    public override void InputAttack(Vector2 AttackDirection, EAttackType Type)
+    {
+        switch (Type)
+        {
+            case EAttackType.N:
+                break;
+            default:
+                if (Soul == (int)EAttackType.A &&
+                    !ZDGameRule.QuadrifyDirection(AttackDirection).y.Equals(0))
+                    return;
+                break;
+        }
+        base.InputAttack(AttackDirection, Type);
+    }
+    #endregion
+
     #region  CrossMoveCharacter Override
     public override void AttackEventN(int Phase)
     {

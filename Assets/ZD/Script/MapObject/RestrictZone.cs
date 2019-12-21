@@ -101,7 +101,7 @@ class RestrictZone : MonoBehaviourPun , IOnEventCallback, IPunObservable
                         ZDController.GetTargetCharacter().Hurt(10);
                     }
                 }
-                else if(cachedState.InZoneSeconds.Equals(0))
+                else if(!cachedState.InZoneSeconds.Equals(0))
                 {
                     cachedState.InZoneSeconds = 0;
                 }

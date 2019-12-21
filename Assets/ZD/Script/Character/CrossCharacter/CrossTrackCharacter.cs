@@ -74,6 +74,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
                 break;
         }
     }
+
     protected override void Attack(Vector2 Direction, EAttackType Type)
     {
         if (photonView.IsMine)

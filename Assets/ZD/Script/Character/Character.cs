@@ -22,7 +22,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     [Tooltip("Tooltip")]
     public AudioClip DeathSound;
     public AudioClip MoveSound;
-    public AudioClip HurtSound;
+    //public AudioClip HurtSound;
     #endregion
 
     #region Input Wrappers
