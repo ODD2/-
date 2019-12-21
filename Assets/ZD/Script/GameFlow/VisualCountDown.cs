@@ -25,6 +25,7 @@ public class VisualCountDown : MonoBehaviour
         MaxCountTime = GameManager.CountDownTime+1;
         CountDownTime = GameManager.CountDownTime+1;
         RemainTime = MaxCountTime-1;
+        MaxCountTime -= 1;
         StartCoroutine(CountDown());
     }
 
@@ -43,6 +44,7 @@ public class VisualCountDown : MonoBehaviour
     {
         while(CountDownTime > 0)
         {
+            Debug.Log(CountDownTime);
             CountDownCircleView[(int)CountDownTime - 1].SetActive(true);
             yield return new WaitForSeconds(1);
             CountDownTime -= 1;
