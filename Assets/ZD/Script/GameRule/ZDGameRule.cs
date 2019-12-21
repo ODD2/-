@@ -167,22 +167,6 @@ namespace ZoneDepict.Rule
             {
                 return new Vector2(0, input.y < 0 ? -1 : 1);
             }
-            //float degree = Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg;
-            //degree = (degree + 45) % 360;
-            //degree = (degree < 0 ? 3 - (int)Mathf.Abs(degree) / 90 : (int)Mathf.Abs(degree) / 90);
-            //switch ((int)degree)
-            //{
-            //    case 0:
-            //        return new Vector2(1, 0);
-            //    case 1:
-            //        return new Vector2(0, 1);
-            //    case 2:
-            //        return new Vector2(-1, 0);
-            //    case 3:
-            //        return new Vector2(0, -1);
-            //    default:
-            //        return new Vector2(0, 0);
-            //}
         }
 
         //Constraint the input vector to the four directions.
@@ -243,39 +227,6 @@ namespace ZoneDepict.Rule
             int x = Mathf.RoundToInt(Mathf.Cos(degree) * input.x - Mathf.Sin(degree) * input.y);
             int y = Mathf.RoundToInt(Mathf.Sin(degree) * input.x + Mathf.Cos(degree) * input.y);
             return new Vector2(x, y);
-        }
-        //static public float CalculateDistance(Vector2 ThisPos,Vector2 Target)
-        //{
-        //    return Mathf.Sqrt(Mathf.Pow(ThisPos.x - Target.x, 2) + Mathf.Pow(ThisPos.y - Target.y, 2));
-        //}
-        //static public float CalculateDistance(Vector2 ThisPos)
-        //{
-        //    return CalculateDistance(ThisPos, new Vector2(0, 0));
-        //}
-        static public EAttackType DirectionToType(Vector2 Direction)
-        {
-            // Customer to set where should be N,A,B or R
-            EAttackType Type;
-            switch (QuadAngle(Direction))
-            {
-                case 0:
-                    Type = EAttackType.B;
-                    break;
-                case 90:
-                    Type = EAttackType.R;
-                    break;
-                case 180:
-                    Type = EAttackType.A;
-                    break;
-                case 270:
-                    //Type = EAttackType.Cancel;
-                    Type = EAttackType.Skill;
-                    break;
-                default:
-                    Type = EAttackType.Skill;
-                    break;
-            }
-            return Type;
         }
     }
 }

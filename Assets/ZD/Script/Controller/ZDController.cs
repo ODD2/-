@@ -69,21 +69,24 @@ public class ZDController : MonoBehaviour
                     Vector2 CharactorPos = new Vector2(TargetCharacter.transform.position.x, TargetCharacter.transform.position.y);
 
                     List<ZDObject> HitObjects;
+                    if (IsMovingCharacter)
+                    {
+                        Vector2 Direction = TouchPos - CharactorPos;
+                        float Degree = ZDGameRule.QuadAngle(Direction);
+                        Vector3 Distance = ZDGameRule.WorldToUnit(TouchPos) - ZDGameRule.WorldToUnit(CharactorPos);
+                        ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
+                    }
                     if (TouchTemp.phase == TouchPhase.Began)
-                    {   //Hit at UI or Item
-                        if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) != null)
+                    {   
+                        if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UNIT_IN_WORLD * ClickOnFix)
+                        {
+                            IsMovingCharacter = true;
+                            return;
+                        }
+                        else if ((HitObjects = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.ACollect)) != null)
                         {
                             List<ZDObject> HitCharacter = ZDMap.HitAtUnit(UnitTouchPos, EObjectType.Character);
-                            bool CharacterOccupy = false;
-                            if (HitCharacter != null)
-                            {
-                                foreach(var obj in HitCharacter)
-                                {
-                                    if ((Character)obj == TargetCharacter) break;
-                                    else CharacterOccupy = true;
-                                }
-                                if (CharacterOccupy) return;
-                            }
+                            if (HitCharacter != null) return;
                             foreach (var obj in HitObjects)
                             {
                                 if (obj is IACollectObject)
@@ -101,12 +104,6 @@ public class ZDController : MonoBehaviour
                             }
                             return;
                         }
-                        //Hit At Character
-                        else if ((TouchPos - (Vector2)TargetCharacter.transform.position).magnitude < ZDGameRule.UNIT_IN_WORLD * ClickOnFix)
-                        {
-                            IsMovingCharacter = true;
-                        }
-                        //Hit At other pos to Activate Attack
                         else
                         {
                             // Activate Attack System
@@ -158,13 +155,7 @@ public class ZDController : MonoBehaviour
                         }
                     }
 
-                    if (IsMovingCharacter)
-                    {
-                        Vector2 Direction = TouchPos - CharactorPos;
-                        float Degree = ZDGameRule.QuadAngle(Direction);
-                        Vector3 Distance = ZDGameRule.WorldToUnit(TouchPos) - ZDGameRule.WorldToUnit(CharactorPos);
-                        ZDUIClass.SetMoveIndicator(TargetCharacter.transform.position, Degree, Distance.magnitude);
-                    }
+                    
                 }
 
                 #endregion

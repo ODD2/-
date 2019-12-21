@@ -50,7 +50,8 @@ MonoBehaviour:
   EndGameMusic: {fileID: 8300000, guid: 7ef5118ddea5446d088794b0cdf92714, type: 3}
   Lose: {fileID: 0}
   Victory: {fileID: 0}
-  StartGameView: {fileID: 0}
+  LoadingView: {fileID: 0}
+  CountDownView: {fileID: 0}
 --- !u!82 &8074271086645641486
 AudioSource:
   m_ObjectHideFlags: 0
