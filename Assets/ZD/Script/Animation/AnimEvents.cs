@@ -4,6 +4,7 @@ using UnityEngine;
 using ZoneDepict;
 using ZoneDepict.Rule;
 using ZoneDepict.Map;
+using ZoneDepict.Audio;
 
 public class AnimEvents : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class AnimEvents : MonoBehaviour
                 ((IADamageObject)obj).Hurt(Damage);
             }
         }
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        ZDAudioSource.PlayAtPoint(clip, transform.position,1.0f);
     }
 
     #region HELPER

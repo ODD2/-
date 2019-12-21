@@ -8,8 +8,8 @@ public class VisualCountDown : MonoBehaviour
 {
     private Image Img;
     private ZDGameManager GameManager;
-    private float MaxCountTime;
-    private float CountDownTime;
+    private int MaxCountTime;
+    private int CountDownTime;
     private float RemainTime;
     private GameObject WhiteBG;
     [Header("CountDown Numbers")]
@@ -22,8 +22,8 @@ public class VisualCountDown : MonoBehaviour
         WhiteBG = GameObject.Find("WhiteBG");
         Debug.Log(WhiteBG);
         GameManager = GameObject.Find("GameManager").GetComponent<ZDGameManager>();
-        MaxCountTime = GameManager.CountDownTime;
-        CountDownTime = GameManager.CountDownTime;
+        MaxCountTime = GameManager.CountDownTime+1;
+        CountDownTime = GameManager.CountDownTime+1;
         RemainTime = MaxCountTime-1;
         StartCoroutine(CountDown());
     }
@@ -45,7 +45,7 @@ public class VisualCountDown : MonoBehaviour
         {
             CountDownCircleView[(int)CountDownTime - 1].SetActive(true);
             yield return new WaitForSeconds(1);
-            CountDownTime -= 1.0f;
+            CountDownTime -= 1;
             CountDownCircleView[(int)CountDownTime].SetActive(false);
         }
         Destroy(WhiteBG);

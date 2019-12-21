@@ -45,12 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91bd28081a9343c6b0df0859c4efd10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DoRestrictZone: 0
-  CountDownTime: 1
-  EndGameMusic: {fileID: 8300000, guid: 7ef5118ddea5446d088794b0cdf92714, type: 3}
+  DoRestrictZone: 1
+  CountDownTime: 4
+  EndGameVictoryMusic: {fileID: 8300000, guid: 7ef5118ddea5446d088794b0cdf92714, type: 3}
+  EndGameLoseMusic: {fileID: 8300000, guid: 8c3dcea75121b4cb7b463647b34baf2b, type: 3}
+  CountDownSingle: {fileID: 8300000, guid: 0cdbe140f74e24e2885b9e723da9bcbb, type: 3}
+  StartGameMusic: {fileID: 8300000, guid: 391f13e4207004fd6bbf28a435d00de0, type: 3}
   Lose: {fileID: 0}
   Victory: {fileID: 0}
-  StartGameView: {fileID: 0}
+  LoadingView: {fileID: 0}
+  CountDownView: {fileID: 0}
 --- !u!82 &8074271086645641486
 AudioSource:
   m_ObjectHideFlags: 0
@@ -63,7 +67,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 236876e28e42345c283376c63ce1f2bc, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.1
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0

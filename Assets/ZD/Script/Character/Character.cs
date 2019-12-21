@@ -22,6 +22,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     [Tooltip("Tooltip")]
     public AudioClip DeathSound;
     public AudioClip MoveSound;
+    public AudioClip HurtSound;
     #endregion
 
     #region Input Wrappers
@@ -362,6 +363,11 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
                         "ItemNum: {2}\n"+
                         "Soul: {3}\n",
                         GetHP(),GetMP(),Inventory.Count,Soul);
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        if (audioSource) audioSource.PlayOneShot(clip);
     }
     #endregion
 

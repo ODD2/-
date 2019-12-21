@@ -151,8 +151,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorType: 0
   Configs: []
-  DeathSound: {fileID: 0}
-  MoveSound: {fileID: 0}
+  DeathSound: {fileID: 8300000, guid: 031561a75cf6f4b308883cb92adde322, type: 3}
+  MoveSound: {fileID: 8300000, guid: d5aa8fa3396354e06a2b1ab8df8aa3dc, type: 3}
+  HurtSound: {fileID: 0}
   HitEffects:
   - {fileID: 616462768845263527, guid: 9d9391ca01dda4a0899e55c242866f9e, type: 3}
   - {fileID: 4694221737807659796, guid: 470d970b858ac4307823c8755a149108, type: 3}

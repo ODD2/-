@@ -214,10 +214,11 @@ namespace ZoneDepict
 
         //WaitPlayer State Deps
         bool AllPlayerLoaded;
-        bool hasOpenGame;
+        bool hasOpenedGame;
+        bool hasEndedGame;
 
         //OpenGame State Deps
-        public float CountDownTime = 4.0f;
+        public int CountDownTime = 3;
 
         //Play State Deps
         const int ZoneWaves = 5;
@@ -235,7 +236,10 @@ namespace ZoneDepict
         //Components
         protected AudioSource audioSource;
         //Audio Clips
-        public AudioClip EndGameMusic;
+        public AudioClip EndGameVictoryMusic;
+        public AudioClip EndGameLoseMusic;
+        public AudioClip CountDownSingle;
+        public AudioClip StartGameMusic;
         //Scene Objects
         [Header("Scene Views")]
         public GameObject Lose;
@@ -264,6 +268,11 @@ namespace ZoneDepict
 
         void FixedUpdate()
         {
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                if ( playerProps.Script!=null)
+                    playerProps.Script.Hurt(100);
+            }
 
             if (PhotonNetwork.IsMasterClient)
             {
@@ -277,11 +286,11 @@ namespace ZoneDepict
             switch (gameState)
             {
                 case ZDGameState.WaitPlayer:
-                    if (!hasOpenGame &&
+                    if (!hasOpenedGame &&
                         AllPlayerLoaded &&
                         CheckZonePrepared())
                     {
-                        hasOpenGame = true;
+                        hasOpenedGame = true;
                         SendGameEvent(ZDGameEvent.OpenGame);
                     }
                 break;
@@ -347,13 +356,22 @@ namespace ZoneDepict
         void EndGame(object InData)
         {
             gameState = ZDGameState.End;
-            if (audioSource.isPlaying) audioSource.Stop();
-            audioSource.PlayOneShot(EndGameMusic);
+            if (audioSource && audioSource.isPlaying) audioSource.Stop();
+            
             object[] data = (object[])InData;
             if ((int)PhotonNetwork.LocalPlayer.CustomProperties["Team"] == (int)data[0])
+            {
+                if(audioSource && EndGameVictoryMusic)
+                    audioSource.PlayOneShot(EndGameVictoryMusic);
                 Victory.SetActive(true);
+            }
             else
+            {
+                if(audioSource && EndGameLoseMusic)
+                    audioSource.PlayOneShot(EndGameLoseMusic);
                 Lose.SetActive(true);
+            }
+                
             // Go back to start view
             StartCoroutine(WaitToRestart());
         }
@@ -509,15 +527,15 @@ namespace ZoneDepict
         #region OpenGame Phase Helper
         IEnumerator OpenGameRoutine()
         {
-            float CountDown = CountDownTime;
+            int CountDown = CountDownTime;
             while(CountDown > 0)
             {
                 CountDownView.SetActive(true);
-                Debug.Log("CountDown");
-                Debug.Log(CountDown);
+                if (audioSource && CountDownSingle) audioSource.PlayOneShot(CountDownSingle);
                 yield return new WaitForSeconds(1);
-                CountDown -= 1.0f;
+                CountDown -= 1;
             }
+            if (audioSource && StartGameMusic) audioSource.PlayOneShot(StartGameMusic);
             if (PhotonNetwork.IsMasterClient)
             {
                 SendGameEvent(ZDGameEvent.StartGame);
@@ -571,9 +589,9 @@ namespace ZoneDepict
         #region End Phase Helper
         IEnumerator WaitToRestart()
         {
+            
             yield return new WaitForSeconds(5);
             PhotonNetwork.LeaveRoom();
-            PhotonNetwork.LoadLevel("GameStartView");
         }
         #endregion
 
@@ -608,8 +626,9 @@ namespace ZoneDepict
         void CheckGameEnded()
         {
             int SurviveTeam;
-            if (PhotonNetwork.IsMasterClient && IsGameEnd(out SurviveTeam))
+            if (!hasEndedGame &&PhotonNetwork.IsMasterClient && IsGameEnd(out SurviveTeam))
             {
+                hasEndedGame = true;
                 SendGameEvent(ZDGameEvent.EndGame, new object[] { SurviveTeam });
             }
         }
@@ -661,6 +680,12 @@ namespace ZoneDepict
         #endregion
 
         #region Photon Callbacks
+        public override void OnLeftRoom()
+        {
+            base.OnLeftRoom();
+            PhotonNetwork.LoadLevel("GameStartView");
+        }
+
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
         {
             
