@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 19900000}
   - component: {fileID: 11400000}
   - component: {fileID: -6697083481338413652}
+  - component: {fileID: 2831154650579054475}
   m_Layer: 0
   m_Name: AttackBoost
   m_TagString: Untagged
@@ -44,7 +45,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100000}
   serializedVersion: 6
-  lengthInSec: 1
+  lengthInSec: 0.6
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
@@ -118,8 +119,8 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 0.4
+      minMaxState: 0
+      scalar: 0.6
       minScalar: 0.3
       maxCurve:
         serializedVersion: 2
@@ -4750,6 +4751,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ba3d18bc00c42f2ba428167d0e8b5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2831154650579054475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 210c6492d6974374b9b754cf2b4033a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -4899,7 +4912,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4050346657215325532}
   serializedVersion: 6
-  lengthInSec: 1
+  lengthInSec: 0.6
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
@@ -4974,7 +4987,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.6
       minScalar: 5
       maxCurve:
         serializedVersion: 2
