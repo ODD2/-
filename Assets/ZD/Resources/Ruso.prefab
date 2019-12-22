@@ -92,7 +92,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e70e75aeeb70c084c9bd07cadb0e23bd, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.91764706, g: 0.8784314, b: 0.8666667, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -283,16 +283,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4640384758273475457}
     m_Modifications:
-    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
-        type: 3}
-      propertyPath: m_Name
-      value: TrackAngleIndicator
-      objectReference: {fileID: 0}
-    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3115550694428683838, guid: 5ca716847a17746b38af0e32aecf32af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -358,6 +348,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
+        type: 3}
+      propertyPath: m_Name
+      value: TrackAngleIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4667417012646888634, guid: 5ca716847a17746b38af0e32aecf32af,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -396,11 +396,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4640384758273475457}
     m_Modifications:
-    - target: {fileID: 7101257850436815563, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
-        type: 3}
-      propertyPath: m_Name
-      value: VisualInfo
-      objectReference: {fileID: 0}
     - target: {fileID: 7101257850436815560, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -465,6 +460,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 7101257850436815563, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: m_Name
+      value: VisualInfo
       objectReference: {fileID: 0}
     - target: {fileID: 2068717161607393347, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}
