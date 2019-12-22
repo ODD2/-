@@ -24,7 +24,7 @@ public abstract class ItemContainerBase : ZDRegisterObject, IADamageObject, IPun
         //Setup Component
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        Durability = 10;
+        Durability = 30;
 
         //Setup ZDObjectt Unit World  Scale
         Vector3 NewScale = transform.localScale;
@@ -60,7 +60,7 @@ public abstract class ItemContainerBase : ZDRegisterObject, IADamageObject, IPun
         if (photonView.IsMine && Durability > float.Epsilon)
         {
             Durability -= damaged;
-            if (Durability < 1.0)
+            if (Durability < float.Epsilon)
             {
                 Broken();
             }

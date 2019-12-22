@@ -31,34 +31,6 @@ AnimationClip:
       value: {fileID: 21300000, guid: c87ac9b13273f46908f75a707a9dae85, type: 3}
     - time: 1
       value: {fileID: 21300000, guid: b1fb0de559b914e92bb5f83a25377d86, type: 3}
-    - time: 1.2166667
-      value: {fileID: 21300000, guid: 38ae0202bd69c444185c3458fdf3c334, type: 3}
-    - time: 1.4166666
-      value: {fileID: 21300000, guid: bd66b71ddfa5f4a26b485921a42e5fd3, type: 3}
-    - time: 1.6333333
-      value: {fileID: 21300000, guid: de50192786dac45fb9503a095f2bf259, type: 3}
-    - time: 1.8333334
-      value: {fileID: 21300000, guid: c87ac9b13273f46908f75a707a9dae85, type: 3}
-    - time: 2
-      value: {fileID: 21300000, guid: b1fb0de559b914e92bb5f83a25377d86, type: 3}
-    - time: 2.2166667
-      value: {fileID: 21300000, guid: 38ae0202bd69c444185c3458fdf3c334, type: 3}
-    - time: 2.4166667
-      value: {fileID: 21300000, guid: bd66b71ddfa5f4a26b485921a42e5fd3, type: 3}
-    - time: 2.6333334
-      value: {fileID: 21300000, guid: de50192786dac45fb9503a095f2bf259, type: 3}
-    - time: 2.8333333
-      value: {fileID: 21300000, guid: c87ac9b13273f46908f75a707a9dae85, type: 3}
-    - time: 3
-      value: {fileID: 21300000, guid: b1fb0de559b914e92bb5f83a25377d86, type: 3}
-    - time: 3.2166667
-      value: {fileID: 21300000, guid: 38ae0202bd69c444185c3458fdf3c334, type: 3}
-    - time: 3.4166667
-      value: {fileID: 21300000, guid: bd66b71ddfa5f4a26b485921a42e5fd3, type: 3}
-    - time: 3.6333334
-      value: {fileID: 21300000, guid: de50192786dac45fb9503a095f2bf259, type: 3}
-    - time: 3.8333333
-      value: {fileID: 21300000, guid: c87ac9b13273f46908f75a707a9dae85, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -84,26 +56,12 @@ AnimationClip:
     - {fileID: 21300000, guid: de50192786dac45fb9503a095f2bf259, type: 3}
     - {fileID: 21300000, guid: c87ac9b13273f46908f75a707a9dae85, type: 3}
     - {fileID: 21300000, guid: b1fb0de559b914e92bb5f83a25377d86, type: 3}
-    - {fileID: 21300000, guid: 38ae0202bd69c444185c3458fdf3c334, type: 3}
-    - {fileID: 21300000, guid: bd66b71ddfa5f4a26b485921a42e5fd3, type: 3}
-    - {fileID: 21300000, guid: de50192786dac45fb9503a095f2bf259, type: 3}
-    - {fileID: 21300000, guid: c87ac9b13273f46908f75a707a9dae85, type: 3}
-    - {fileID: 21300000, guid: b1fb0de559b914e92bb5f83a25377d86, type: 3}
-    - {fileID: 21300000, guid: 38ae0202bd69c444185c3458fdf3c334, type: 3}
-    - {fileID: 21300000, guid: bd66b71ddfa5f4a26b485921a42e5fd3, type: 3}
-    - {fileID: 21300000, guid: de50192786dac45fb9503a095f2bf259, type: 3}
-    - {fileID: 21300000, guid: c87ac9b13273f46908f75a707a9dae85, type: 3}
-    - {fileID: 21300000, guid: b1fb0de559b914e92bb5f83a25377d86, type: 3}
-    - {fileID: 21300000, guid: 38ae0202bd69c444185c3458fdf3c334, type: 3}
-    - {fileID: 21300000, guid: bd66b71ddfa5f4a26b485921a42e5fd3, type: 3}
-    - {fileID: 21300000, guid: de50192786dac45fb9503a095f2bf259, type: 3}
-    - {fileID: 21300000, guid: c87ac9b13273f46908f75a707a9dae85, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 3.85
+    m_StopTime: 1.0166667
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -130,7 +88,14 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.28333333
+  - time: 0.16666667
+    functionName: AttackEventR
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.33333334
     functionName: AttackEventR
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -138,69 +103,6 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.5
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.85
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.95
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 1.5333333
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 1.9
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 2.2
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 2.7
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 2.95
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 3.45
-    functionName: AttackEventR
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 3.7666667
     functionName: AttackEventR
     data: 
     objectReferenceParameter: {fileID: 0}

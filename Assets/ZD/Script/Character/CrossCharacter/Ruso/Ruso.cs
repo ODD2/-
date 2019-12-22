@@ -14,14 +14,14 @@ using Random = UnityEngine.Random;
 public class Ruso : CrossTrackCharacter
 {
     public GameObject RusoREffectSample;
-    protected int RusoAttackRRange = 4;
+    protected int RusoAttackRRange = 3;
 
     #region UNITY
     protected new void Start()
     {
         base.Start();
-        AttackDamage = new float[] { 10, 20, 15, 30 };
-        SkillMana = new float[]{ 5, 20, 30, 60 };
+        AttackDamage = new float[] { 15, 30, 40, 60 };
+        SkillMana = new float[]{ 10, 30, 40, 50 };
         MaxSkillCD = new float[] { 0.25f, 3f, 6f, 10 };
     }
 
@@ -108,17 +108,28 @@ public class Ruso : CrossTrackCharacter
     {
         if (photonView.IsMine)
         {
-            int x, y;
-            do
-            {
-                x = Random.Range(-RusoAttackRRange, RusoAttackRRange);
-                y = Random.Range(-RusoAttackRRange, RusoAttackRRange);
-            } while (x == 0 && x == y);
-            Vector2 UnitPos = (Vector2)ZDGameRule.WorldToUnit(transform.position) + new Vector2(x, y);
-            photonView.RPC("CreateAttackREffect",RpcTarget.All,UnitPos);
+            StartCoroutine(CreateThunder());
         }
     }
     #endregion
+
+    IEnumerator CreateThunder()
+    {
+        int i = Random.Range(3, 5);
+        int x, y;
+        while (i > 0)
+        {
+            --i;
+            yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
+            do
+            {
+                x = Random.Range(-RusoAttackRRange, RusoAttackRRange + 1);
+                y = Random.Range(-RusoAttackRRange, RusoAttackRRange + 1);
+            } while (x == 0 && x == y);
+            Vector2 UnitPos = (Vector2)ZDGameRule.WorldToUnit(transform.position) + new Vector2(x, y);
+            photonView.RPC("CreateAttackREffect", RpcTarget.All, UnitPos);
+        }
+    }
 
     [PunRPC]
     void CreateAttackREffect(Vector2 UnitPos)

@@ -149,8 +149,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34410d26368914cbeaeeb2ed96cb10d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActorType: 0
-  Configs: []
+  ActorType: 3
+  Configs:
+  - ObjectType: 0
+    Terrain: []
   DeathSound: {fileID: 8300000, guid: 031561a75cf6f4b308883cb92adde322, type: 3}
   MoveSound: {fileID: 8300000, guid: d5aa8fa3396354e06a2b1ab8df8aa3dc, type: 3}
   HitEffects:
@@ -283,6 +285,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4640384758273475457}
     m_Modifications:
+    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
+        type: 3}
+      propertyPath: m_Name
+      value: TrackAngleIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3115550694428683838, guid: 5ca716847a17746b38af0e32aecf32af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -348,16 +360,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
-        type: 3}
-      propertyPath: m_Name
-      value: TrackAngleIndicator
-      objectReference: {fileID: 0}
-    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4667417012646888634, guid: 5ca716847a17746b38af0e32aecf32af,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -396,6 +398,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4640384758273475457}
     m_Modifications:
+    - target: {fileID: 7101257850436815563, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: m_Name
+      value: VisualInfo
+      objectReference: {fileID: 0}
     - target: {fileID: 7101257850436815560, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -460,11 +467,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 7101257850436815563, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
-        type: 3}
-      propertyPath: m_Name
-      value: VisualInfo
       objectReference: {fileID: 0}
     - target: {fileID: 2068717161607393347, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}

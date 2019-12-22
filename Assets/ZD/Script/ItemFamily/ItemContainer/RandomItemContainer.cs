@@ -17,7 +17,6 @@ public class RandomItemContainer : ItemContainerBase
     public new void Start()
     {
         base.Start();
-        Durability = 10.0f;
         //隨機產生道具
         randomNum = Random.Range(0, DropPrefabs.Length);
         Debug.LogFormat("Random type: {0}", randomNum);

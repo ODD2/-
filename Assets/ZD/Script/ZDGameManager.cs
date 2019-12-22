@@ -219,12 +219,12 @@ namespace ZoneDepict
         //Play State Deps
         const int ZoneWaves = 5;
         const float ZoneRestrictSpeed = 5;
-        readonly float[] ZoneInterval = {2 + ZoneRestrictSpeed,
-                                         2 + ZoneRestrictSpeed,
-                                         2 + ZoneRestrictSpeed,
-                                         2 + ZoneRestrictSpeed,
-                                         2 + ZoneRestrictSpeed };
-        readonly float[] ZoneSizeRate = { 0.9f, 0.7f, 0.5f, 0.3f, 0.2f};
+        readonly float[] ZoneInterval = {15 + ZoneRestrictSpeed,
+                                         30 + ZoneRestrictSpeed,
+                                         30 + ZoneRestrictSpeed,
+                                         30 + ZoneRestrictSpeed,
+                                         30 + ZoneRestrictSpeed };
+        readonly float[] ZoneSizeRate = { 0.95f, 0.85f, 0.7f, 0.5f, 0.3f};
         int CurrentWave;
 
 
@@ -268,6 +268,11 @@ namespace ZoneDepict
             {
                 if ( playerProps.Script!=null)
                     playerProps.Script.Hurt(100);
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                if (playerProps.Script != null)
+                    playerProps.Script.SetSoul(5);
             }
 
             if (PhotonNetwork.IsMasterClient)
