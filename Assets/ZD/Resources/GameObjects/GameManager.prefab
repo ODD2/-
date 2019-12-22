@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoRestrictZone: 1
-  CountDownTime: 4
+  CountDownTime: 3
   EndGameVictoryMusic: {fileID: 8300000, guid: 7ef5118ddea5446d088794b0cdf92714, type: 3}
   EndGameLoseMusic: {fileID: 8300000, guid: 8c3dcea75121b4cb7b463647b34baf2b, type: 3}
   CountDownSingle: {fileID: 8300000, guid: 0cdbe140f74e24e2885b9e723da9bcbb, type: 3}
