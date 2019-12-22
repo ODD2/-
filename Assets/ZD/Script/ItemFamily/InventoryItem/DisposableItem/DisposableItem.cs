@@ -31,8 +31,8 @@ public class DisposableItem : ItemBase
 
     public override string ItemState()
     {
-       
-        return Amount.ToString();
+        
+        return "";
     }
 
     public override void Use(Character Caller)

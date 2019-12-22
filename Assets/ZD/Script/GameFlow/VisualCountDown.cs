@@ -24,6 +24,7 @@ public class VisualCountDown : MonoBehaviour
         GameManager = GameObject.Find("GameManager").GetComponent<ZDGameManager>();
         MaxCountTime = GameManager.CountDownTime+1;
         CountDownTime = GameManager.CountDownTime+1;
+        
         RemainTime = MaxCountTime-1;
         StartCoroutine(CountDown());
     }
@@ -42,7 +43,7 @@ public class VisualCountDown : MonoBehaviour
     IEnumerator CountDown()
     {
         while(CountDownTime > 0)
-        {
+        {        
             CountDownCircleView[(int)CountDownTime - 1].SetActive(true);
             yield return new WaitForSeconds(1);
             CountDownTime -= 1;

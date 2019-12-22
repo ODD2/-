@@ -219,7 +219,19 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
                 }
             }
         }
-        Inventory.Add(i);
+        if (i.canReuse())
+        {
+            Inventory.Add(i);
+        }
+        else
+        {
+            int amount = i.Amount;
+            i.Amount = 1;
+            for (int c = 0; c < amount; c++)
+            {
+                Inventory.Add(i);
+            }
+        }     
     }
     #endregion
 
