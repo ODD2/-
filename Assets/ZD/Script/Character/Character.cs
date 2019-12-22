@@ -228,6 +228,10 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
            
             for (int c = 0; c < i.Amount; c++)
             {
+                if (Inventory.Count == 3)
+                {
+                    return;
+                }
                 ItemBase itemcopy;
                 switch (i.id)
                 {
@@ -246,6 +250,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
                 }
                 itemcopy.Amount = 1;
                 Inventory.Add(itemcopy);
+                
             }
         }     
     }

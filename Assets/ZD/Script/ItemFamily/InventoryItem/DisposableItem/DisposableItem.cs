@@ -29,10 +29,9 @@ public class DisposableItem : ItemBase
 
     }
 
-    public override string ItemState()
-    {
-        
-        return "";
+    public override float ItemState()
+    {     
+        return 0.0f;
     }
 
     public override void Use(Character Caller)
