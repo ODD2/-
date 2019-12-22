@@ -225,11 +225,27 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
         }
         else
         {
-            int amount = i.Amount;
-            i.Amount = 1;
-            for (int c = 0; c < amount; c++)
+           
+            for (int c = 0; c < i.Amount; c++)
             {
-                Inventory.Add(i);
+                ItemBase itemcopy;
+                switch (i.id)
+                {
+                    case 0:
+                        itemcopy = new HpRecover();
+                        break;
+                    case 1:
+                        itemcopy = new MpRecover();
+                        break;
+                    case 2:
+                        itemcopy = new BoostAttack();
+                        break;
+                    default:
+                        Debug.Log("item error!");
+                        return;
+                }
+                itemcopy.Amount = 1;
+                Inventory.Add(itemcopy);
             }
         }     
     }
