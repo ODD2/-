@@ -219,7 +219,40 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
                 }
             }
         }
-        Inventory.Add(i);
+        if (i.canReuse())
+        {
+            Inventory.Add(i);
+        }
+        else
+        {
+           
+            for (int c = 0; c < i.Amount; c++)
+            {
+                if (Inventory.Count == 3)
+                {
+                    return;
+                }
+                ItemBase itemcopy;
+                switch (i.id)
+                {
+                    case 0:
+                        itemcopy = new HpRecover();
+                        break;
+                    case 1:
+                        itemcopy = new MpRecover();
+                        break;
+                    case 2:
+                        itemcopy = new BoostAttack();
+                        break;
+                    default:
+                        Debug.Log("item error!");
+                        return;
+                }
+                itemcopy.Amount = 1;
+                Inventory.Add(itemcopy);
+                
+            }
+        }     
     }
     #endregion
 

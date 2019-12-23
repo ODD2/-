@@ -13,7 +13,7 @@ public class HpRecover : DisposableItem
     {
         id = 0;
         ItemCD = 1.0f;
-        Amount = Random.Range(1, 3);
+        Amount = Random.Range(4, 10);
     }
 
     public override void ItemEffect(Character Caller)
