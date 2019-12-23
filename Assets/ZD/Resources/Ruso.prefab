@@ -493,6 +493,18 @@ PrefabInstance:
       propertyPath: TrackIndicator
       value: 
       objectReference: {fileID: 7076002209027354510}
+    - target: {fileID: 22844450460789621, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: HPBar_G
+      value: 
+      objectReference: {fileID: 21300000, guid: 8b39f6054f7164d568e518c389885571,
+        type: 3}
+    - target: {fileID: 22844450460789621, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: HPBar_R
+      value: 
+      objectReference: {fileID: 21300000, guid: 89ada5b505d6b40abb4249ee65be31d0,
+        type: 3}
     - target: {fileID: 4845607936205503897, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -593,6 +605,12 @@ PrefabInstance:
       propertyPath: m_FillAmount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2942331615968815197, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 89ada5b505d6b40abb4249ee65be31d0,
+        type: 3}
     - target: {fileID: 3179131898974995082, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}
       propertyPath: m_IsActive
@@ -797,6 +815,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 793129049559451644, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e, type: 3}

@@ -17,7 +17,9 @@ public class CharacterUI : MonoBehaviour
     [Header("Object of Soul")]
     public Sprite SoulImgSource;
     public GameObject Soul;
-
+    [Header("Green and Red HP Bar")]
+    public Sprite HPBar_G;
+    public Sprite HPBar_R;
     protected Character Owner;
 
     //About Soul
@@ -25,11 +27,11 @@ public class CharacterUI : MonoBehaviour
     private GameObject[] Souls;
 
     private GameObject Temp;
-
+    private GameObject HPBar;
     void Start()
     {
         Owner = gameObject.GetComponentInParent<Character>();
-
+        HPBar = gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
         if (Owner == null)
         {
             Destroy(gameObject);
@@ -60,6 +62,18 @@ public class CharacterUI : MonoBehaviour
 
 
         Temp = gameObject.transform.gameObject.transform.GetChild(0).gameObject;
+        if(Owner && Owner.photonView.Owner.CustomProperties.ContainsKey("Team"))
+        {
+            if ((int)Owner.photonView.Owner.CustomProperties["Team"] == 0)
+            {
+                SetHPColor("Green");
+            }
+            else
+            {
+                SetHPColor("Red");
+            }
+        }
+        
     }
     
     protected void ShelterStateUpdated(object sender, ZDObject.ShelterStateChangeArgs args)
@@ -84,6 +98,21 @@ public class CharacterUI : MonoBehaviour
     {
         //ManaBar.sizeDelta = new Vector2((maxMP / ManaBarBG.rect.width) * MP, ManaBar.rect.height);
         ManaBar.fillAmount = MP / maxMP;
+    }
+
+    public void SetHPColor(string color)
+    {
+        switch (color)
+        {
+            case "Red":
+                HPBar.GetComponent<Image>().sprite = HPBar_R;
+                break;
+            case "Green":
+                HPBar.GetComponent<Image>().sprite = HPBar_G;
+                break;
+            default:
+                break;
+        }
     }
 
     private void Update()

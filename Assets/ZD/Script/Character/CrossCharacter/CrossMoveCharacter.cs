@@ -159,11 +159,14 @@ public class CrossMoveCharacter : Character
     #region Helper Functions
     void CreateHitEffectAt(Vector3 pos, int nums = 1, bool rand = true, int which = 0)
     {
-        Quaternion rot = new Quaternion
+        if (HitEffects.Length > 0)
         {
-            eulerAngles = new Vector3(0, 0, Random.Range(0, 180))
-        };
-        Instantiate(HitEffects[Random.Range(0, HitEffects.Length)], pos, rot);
+            Quaternion rot = new Quaternion
+            {
+                eulerAngles = new Vector3(0, 0, Random.Range(0, 180))
+            };
+            Instantiate(HitEffects[Random.Range(0, HitEffects.Length)], pos, rot);
+        }
     }
 
     void FaceTo(Vector2 Direction)

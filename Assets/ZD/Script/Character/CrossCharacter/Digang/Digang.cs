@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System;
+using System.Collections;
 using UnityEngine;
 using ZoneDepict;
 using ZoneDepict.Rule;
@@ -11,7 +13,7 @@ public class Digang : CrossTrackCharacter
     protected new void Start()
     {
         base.Start();
-        AttackDamage = new float[] { 10, 20, 15, 30 };
+        AttackDamage = new float[] { 10, 30, 40, 20 };
         SkillMana = new float[] { 5, 20, 30, 60 };
         MaxSkillCD = new float[] { 0.25f, 3f, 6f, 10 };
     }
@@ -22,18 +24,6 @@ public class Digang : CrossTrackCharacter
         if (Input.GetKeyDown(KeyCode.Z))
         {
             Hurt(100);
-        }
-        if(R)
-        {
-            List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();
-            AllHitObject.Add(ZDMap.HitAt(new Vector2(0, 2), this, EObjectType.ADamage));
-            AllHitObject.Add(ZDMap.HitAt(new Vector2(0, -2), this, EObjectType.ADamage));
-            AllHitObject.Add(ZDMap.HitAt(new Vector2(2, 0), this, EObjectType.ADamage));
-            AllHitObject.Add(ZDMap.HitAt(new Vector2(-2, 0), this, EObjectType.ADamage));
-            AllHitObject.Add(ZDMap.HitAt(new Vector2(1, 1), this, EObjectType.ADamage));
-            AllHitObject.Add(ZDMap.HitAt(new Vector2(1, -1), this, EObjectType.ADamage));
-            AllHitObject.Add(ZDMap.HitAt(new Vector2(-1, 1), this, EObjectType.ADamage));
-            AllHitObject.Add(ZDMap.HitAt(new Vector2(-1, -1), this, EObjectType.ADamage));
         }
     }
     #endregion
@@ -112,16 +102,38 @@ public class Digang : CrossTrackCharacter
 
     public override void AttackEventR(int Phase)
     {
-        Debug.Log("Here");
         switch (Phase)
         {
             case 0:
-                R = true;
+                StartCoroutine(AttackingR());
                 break;
             case 1:
                 R = false;
                 break;
         }
+        
     }
     #endregion
+    IEnumerator AttackingR()
+    {
+        if (!R)
+        {
+            Debug.Log("Here");
+            R = true;
+            while (R)
+            {
+                yield return new WaitForSeconds(0.25f);
+                List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();
+                AllHitObject.Add(ZDMap.HitAt(new Vector2(0, 1), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(new Vector2(0, -1), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(new Vector2(1, 0), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(new Vector2(-1, 0), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(new Vector2(1, 1), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(new Vector2(1, -1), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(new Vector2(-1, 1), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(new Vector2(-1, -1), this, EObjectType.ADamage));
+                ApplyDamage(AllHitObject, EAttackType.R);
+            }
+        }
+    }
 }
