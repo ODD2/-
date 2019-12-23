@@ -89,7 +89,10 @@ namespace ZoneDepict.Rule
 
         public static class CrossTrack
         {
-            public const float NextTrackDelay = 2.0f;
+            public const float NextTrackDelay = 3.0f;
+            public const float TrackDurationConst = 10.0f;
+            public const int TrackCountsConst = 2;
+            public const float MissionFailedPunish = 5.0f;
         }
 
         public static class RestrictZone

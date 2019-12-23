@@ -158,9 +158,6 @@ MonoBehaviour:
   HitEffects:
   - {fileID: 616462768845263527, guid: 9d9391ca01dda4a0899e55c242866f9e, type: 3}
   - {fileID: 4694221737807659796, guid: 470d970b858ac4307823c8755a149108, type: 3}
-  TrackDurationConst: 10
-  TrackCountsConst: 2
-  MissionFailedPunish: 5
   RusoREffectSample: {fileID: 8791417306661751759, guid: e7abb0c03de2b4bb9805d734722bfb75,
     type: 3}
 --- !u!95 &573215057273481693

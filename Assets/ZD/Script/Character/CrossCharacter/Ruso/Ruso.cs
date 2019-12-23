@@ -20,7 +20,7 @@ public class Ruso : CrossTrackCharacter
     protected new void Start()
     {
         base.Start();
-        AttackDamage = new float[] { 15, 30, 40, 60 };
+        AttackDamage = new float[] { 15, 30, 40, 30 };
         SkillMana = new float[]{ 10, 30, 40, 50 };
         MaxSkillCD = new float[] { 0.25f, 3f, 6f, 10 };
     }

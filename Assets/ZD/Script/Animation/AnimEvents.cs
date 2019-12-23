@@ -8,6 +8,7 @@ using ZoneDepict.Audio;
 
 public class AnimEvents : MonoBehaviour
 {
+    float PlaySoundVolume = 1.0f;
     void SelfDestroy()
     {
         Destroy(this.gameObject);
@@ -31,9 +32,14 @@ public class AnimEvents : MonoBehaviour
         }
     }
 
+    public void SetPlaySoundVolume(float vol)
+    {
+        PlaySoundVolume = vol;
+    }
+
     public void PlaySound(AudioClip clip)
     {
-        ZDAudioSource.PlayAtPoint(clip, transform.position,1.0f);
+        ZDAudioSource.PlayAtPoint(clip, transform.position,PlaySoundVolume);
     }
 
     #region HELPER
