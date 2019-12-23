@@ -27,9 +27,9 @@ GameObject:
   - component: {fileID: 7923946618289324828}
   - component: {fileID: -5332454856049956278}
   - component: {fileID: -7998073615777067078}
-  - component: {fileID: 7258473532984548266}
   - component: {fileID: 573215057273481693}
   - component: {fileID: 6503172055990386607}
+  - component: {fileID: 2350388253706607233}
   m_Layer: 0
   m_Name: Digang
   m_TagString: Character
@@ -133,34 +133,10 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 7258473532984548266}
+  - {fileID: 2350388253706607233}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &7258473532984548266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7575852524050853603}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c1e5f78f269d4940ae28e9fbb2deebe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ActorType: 6
-  Configs:
-  - ObjectType: 0
-    Terrain: []
-  DeathSound: {fileID: 8300000, guid: a381c0619eb284ab29687e36e50c380a, type: 3}
-  MoveSound: {fileID: 8300000, guid: f94e662993d4640f69d867ae4ddc2bd7, type: 3}
-  HitEffects:
-  - {fileID: 616462768845263527, guid: 9d9391ca01dda4a0899e55c242866f9e, type: 3}
-  - {fileID: 4694221737807659796, guid: 470d970b858ac4307823c8755a149108, type: 3}
-  TrackDurationConst: 10
-  TrackCountsConst: 2
-  MissionFailedPunish: 5
 --- !u!95 &573215057273481693
 Animator:
   serializedVersion: 3
@@ -276,6 +252,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2350388253706607233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7575852524050853603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47217be564584718a2bf50d02e0d628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActorType: 0
+  Configs: []
+  DeathSound: {fileID: 0}
+  MoveSound: {fileID: 0}
+  HitEffects: []
+  TrackDurationConst: 10
+  TrackCountsConst: 2
+  MissionFailedPunish: 5
 --- !u!1001 &3543976917034182067
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -283,6 +279,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4640384758273475457}
     m_Modifications:
+    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
+        type: 3}
+      propertyPath: m_Name
+      value: TrackAngleIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3115550694428683838, guid: 5ca716847a17746b38af0e32aecf32af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -348,16 +354,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
-        type: 3}
-      propertyPath: m_Name
-      value: TrackAngleIndicator
-      objectReference: {fileID: 0}
-    - target: {fileID: 5989152804385966653, guid: 5ca716847a17746b38af0e32aecf32af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4667417012646888634, guid: 5ca716847a17746b38af0e32aecf32af,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -396,6 +392,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4640384758273475457}
     m_Modifications:
+    - target: {fileID: 7101257850436815563, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: m_Name
+      value: VisualInfo
+      objectReference: {fileID: 0}
     - target: {fileID: 7101257850436815560, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -460,11 +461,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 7101257850436815563, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
-        type: 3}
-      propertyPath: m_Name
-      value: VisualInfo
       objectReference: {fileID: 0}
     - target: {fileID: 2068717161607393347, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}

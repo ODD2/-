@@ -2611,6 +2611,11 @@ PrefabInstance:
       propertyPath: CountDownTime
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8074271086645641480, guid: 496c1b05bd96c4688927670c7873d2e7,
+        type: 3}
+      propertyPath: DoRestrictZone
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8074271086645641484, guid: 496c1b05bd96c4688927670c7873d2e7,
         type: 3}
       propertyPath: viewIdField

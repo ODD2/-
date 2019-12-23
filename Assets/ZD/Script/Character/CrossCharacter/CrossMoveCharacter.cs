@@ -38,7 +38,8 @@ public class CrossMoveCharacter : Character
     }
 
     public override void InputAttack(Vector2 AttackDirection, EAttackType Type)
-    { 
+    {
+        Debug.Log(Type);
         if (photonView.IsMine &&
             !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") &&
             SkillMana[(int)Type] < GetMP() &&
