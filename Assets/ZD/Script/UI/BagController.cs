@@ -32,6 +32,8 @@ namespace ZoneDepict.UI
         int Bagsize;
         //拷貝player的道具包
         List<ItemBase> inventory;
+
+        public List<Image> masks;
         #endregion
         // Start is called before the first frame update
         void Start()
@@ -111,13 +113,22 @@ namespace ZoneDepict.UI
                 {
                     if (i < inventory.Count)
                     {
-                        showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];
-                        showItem[i].GetComponentInChildren<Text>().text = inventory[i].ItemState();
+                        showItem[i].GetComponent<Image>().sprite = icons[inventory[i].id];            
+                        if (inventory[i].canReuse())
+                        {
+                            Debug.LogFormat("cd:{0}", (inventory[i].ItemState()) / inventory[i].ItemCD);
+                            masks[i].fillAmount = (inventory[i].ItemState()) / inventory[i].ItemCD;
+                        }
+                        else
+                        {
+                            masks[i].fillAmount = (inventory[i].ItemState());
+                        }
+                        
                     }
                     else
-                    {
-                        showItem[i].GetComponentInChildren<Text>().text = "";
+                    {                      
                         showItem[i].GetComponent<Image>().sprite = defaultSprite;
+                        masks[i].fillAmount = 0.0f;
                     }
                 }
             }

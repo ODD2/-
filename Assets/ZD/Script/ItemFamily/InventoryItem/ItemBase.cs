@@ -12,8 +12,8 @@ public abstract class ItemBase
     //Item cooldown in seconds;
     public int Amount;
     [SerializeField]
-    protected float ItemCD; // 每次使用間隔
-    protected float NextValidTime;
+    public float ItemCD; // 每次使用間隔
+    public float NextValidTime;
     //初始化道具
 
     #region Class Methods
@@ -36,7 +36,7 @@ public abstract class ItemBase
     public abstract bool IsGarbage();
 
     //回傳狀態 可重複利用者回傳剩餘CD 其他回傳數量
-    public abstract string ItemState();
+    public abstract float ItemState();
     #endregion
 
     protected void SendEffectEvent(string effectName,Vector3 Pos, Quaternion Rot)

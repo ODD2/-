@@ -18,9 +18,8 @@ public class MpRecover : ReusableItem
     }
     public override void ItemEffect(Character Caller)
     {
-        Caller.SetMP(Caller.GetMP() + 30);
+       Caller.SetMP(Caller.GetMP() + 30);
         SendEffectEvent("MpRecoveredEffect", Caller.transform.position, Quaternion.identity);              
-        //Caller.basicValues.SetLastValue("MpRecoverRate", 10.0f, 5.0f);
     }
 
 
