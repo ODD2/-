@@ -275,6 +275,11 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
         audioSource = GetComponent<AudioSource>();
         ZDAudioSource.SetupAudioSource(audioSource);
 
+        //debug
+       /* Inventory.Add(new HpRecover());
+        Inventory.Add(new BoostAttack());
+        Inventory.Add(new MpRecover());*/
+
         //Setup TeamID.
         if (photonView.Owner.CustomProperties.ContainsKey("Team"))
         {
