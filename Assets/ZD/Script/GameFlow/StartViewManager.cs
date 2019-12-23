@@ -30,6 +30,7 @@ public class StartViewManager : MonoBehaviourPunCallbacks
     // [0] = BGM , [1] = start , [2] = but sound
     [Header("Audio array = {BGM,Start Audio,But Sound}")]
     public AudioSource[] StartViewAudio;
+    bool AutoEnterGame;
 
     private string[] ServersName = { "jp", "asia" ,"eu","us"};
     void Start()
@@ -83,8 +84,7 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         Teaching.SetActive(false);
     }
 
-    #region PUN CallBack
-    public override void OnConnectedToMaster()
+    void EnterPlayerRoom()
     {
         ExitGames.Client.Photon.Hashtable PlayerProps = new ExitGames.Client.Photon.Hashtable();
         PlayerProps.Add("Alive", true);
@@ -94,7 +94,13 @@ public class StartViewManager : MonoBehaviourPunCallbacks
         PhotonNetwork.SetPlayerCustomProperties(PlayerProps);
         //PhotonNetwork.JoinLobby();
         PhotonNetwork.LoadLevel("GameRoomView");
+    }
 
+
+    #region PUN CallBack
+    public override void OnConnectedToMaster()
+    {
+        EnterPlayerRoom();
     }
 
     public override void OnJoinedLobby()

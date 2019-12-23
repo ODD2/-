@@ -684,6 +684,7 @@ namespace ZoneDepict
         public override void OnLeftRoom()
         {
             base.OnLeftRoom();
+            PhotonNetwork.Disconnect();
             PhotonNetwork.LoadLevel("GameStartView");
         }
 
