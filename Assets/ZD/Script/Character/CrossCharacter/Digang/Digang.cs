@@ -13,9 +13,7 @@ public class Digang : CrossTrackCharacter
     protected new void Start()
     {
         base.Start();
-        AttackDamage = new float[] { 10, 30, 40, 20 };
-        SkillMana = new float[] { 5, 20, 30, 60 };
-        MaxSkillCD = new float[] { 0.25f, 3f, 6f, 10 };
+        AttackDamage = new float[] { 10, 25, 35, 5 };
     }
 
     protected new void Update()
@@ -122,7 +120,7 @@ public class Digang : CrossTrackCharacter
             R = true;
             while (R)
             {
-                yield return new WaitForSeconds(0.25f);
+                yield return new WaitForSeconds(0.33f);
                 List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();
                 AllHitObject.Add(ZDMap.HitAt(new Vector2(0, 1), this, EObjectType.ADamage));
                 AllHitObject.Add(ZDMap.HitAt(new Vector2(0, -1), this, EObjectType.ADamage));
