@@ -218,12 +218,12 @@ namespace ZoneDepict
 
         //Play State Deps
         const int ZoneWaves = 5;
-        const float ZoneRestrictSpeed = 5;
-        readonly float[] ZoneInterval = {15 + ZoneRestrictSpeed,
-                                         30 + ZoneRestrictSpeed,
-                                         30 + ZoneRestrictSpeed,
-                                         30 + ZoneRestrictSpeed,
-                                         30 + ZoneRestrictSpeed };
+        const float ZoneRestrictSpeed = 15;
+        readonly float[] ZoneInterval = {10 + ZoneRestrictSpeed,
+                                         15 + ZoneRestrictSpeed,
+                                         15 + ZoneRestrictSpeed,
+                                         15 + ZoneRestrictSpeed,
+                                         15 + ZoneRestrictSpeed };
         readonly float[] ZoneSizeRate = { 0.95f, 0.85f, 0.7f, 0.5f, 0.3f};
         int CurrentWave;
 
