@@ -15,6 +15,7 @@ public class BoostAttack : DisposableItem
 
     public override void ItemEffect(Character Caller)
     {
+        Caller.basicValues.AttackBuff = 1.3f;
         SendEffectEvent("AttackBoostEffect", Caller.transform.position, Quaternion.identity);
     }
    
