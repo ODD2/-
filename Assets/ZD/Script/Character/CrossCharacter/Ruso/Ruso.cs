@@ -91,14 +91,35 @@ public class Ruso : CrossTrackCharacter
         switch (Phase)
         {
             case 0:
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-2, 2), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, 2), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 2), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 2), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(2, 2), AttackRad), this, EObjectType.ADamage));
+
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-2, 1), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, 1), AttackRad), this, EObjectType.ADamage));
                 AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 1), AttackRad), this, EObjectType.ADamage));
                 AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 1), AttackRad), this, EObjectType.ADamage));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this, EObjectType.ADamage));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, -1), AttackRad), this, EObjectType.ADamage));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, -1), AttackRad), this, EObjectType.ADamage));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, -1), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(2, 1), AttackRad), this, EObjectType.ADamage));
+
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-2, 0), AttackRad), this, EObjectType.ADamage));
                 AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, 0), AttackRad), this, EObjectType.ADamage));
-                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, 1), AttackRad), this, EObjectType.ADamage));
+                //AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, 0), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, 0), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(2, 0), AttackRad), this, EObjectType.ADamage));
+
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-2, -1), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, -1), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, -1), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, -1), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(2, -1), AttackRad), this, EObjectType.ADamage));
+
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-2, -2), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(-1, -2), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(0, -2), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(1, -2), AttackRad), this, EObjectType.ADamage));
+                AllHitObject.Add(ZDMap.HitAt(ZDGameRule.RotateVector2(new Vector2(2, -2), AttackRad), this, EObjectType.ADamage));
                 break;
         }
         ApplyDamage(AllHitObject, EAttackType.B);
