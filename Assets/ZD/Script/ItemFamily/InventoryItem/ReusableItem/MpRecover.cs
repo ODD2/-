@@ -12,7 +12,7 @@ public class MpRecover : ReusableItem
     public MpRecover()
     {
         id = 1;
-        ItemCD = 5f;
+        ItemCD = 10.0f;
         MaxAmount = -1;
         Amount = MaxAmount;
     }
