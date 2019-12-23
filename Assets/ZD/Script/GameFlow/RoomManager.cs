@@ -30,6 +30,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public AudioSource Choose;
     [Header("Other")]
     public Button ReadyBut;
+    public Sprite Lock;
+    public Sprite UnLock;
     public Text StateTxt;
     
     private GameObject[] CastCharactors;
@@ -111,6 +113,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (!ReadyBool)
         {
             ReadyBool = true;
+            ReadyBut.GetComponent<Image>().sprite = UnLock;
             Debug.Log("Confirm with " + CharacterName);
             Hashtable props = new Hashtable
             {
@@ -122,6 +125,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         else
         {
             ReadyBool = false;
+            ReadyBut.GetComponent<Image>().sprite = Lock;
             Debug.Log("Cancel Ready");
             foreach (var obj in CastCharactors)
             {
