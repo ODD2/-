@@ -266,7 +266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorType: 0
   Configs: []
-  DeathSound: {fileID: 8300000, guid: 782a2ba93e1034d56a0821b9474bdf53, type: 3}
+  DeathSound: {fileID: 8300000, guid: 031561a75cf6f4b308883cb92adde322, type: 3}
   MoveSound: {fileID: 8300000, guid: d5aa8fa3396354e06a2b1ab8df8aa3dc, type: 3}
   HitEffects: []
 --- !u!1001 &3543976917034182067

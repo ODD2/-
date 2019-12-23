@@ -14,15 +14,14 @@ using Random = UnityEngine.Random;
 public class Ruso : CrossTrackCharacter
 {
     public GameObject RusoREffectSample;
-    protected int RusoAttackRRange = 3;
+    protected const int RusoAttackRRangeWidth = 4;
+    protected const int RusoAttackRRangeHeight = 2;
 
     #region UNITY
     protected new void Start()
     {
         base.Start();
-        AttackDamage = new float[] { 15, 30, 40, 30 };
-        SkillMana = new float[]{ 10, 30, 40, 50 };
-        MaxSkillCD = new float[] { 0.25f, 3f, 6f, 10 };
+        AttackDamage = new float[] { 15, 25, 35, 30 };
     }
 
     protected new void Update()
@@ -136,16 +135,16 @@ public class Ruso : CrossTrackCharacter
 
     IEnumerator CreateThunder()
     {
-        int i = Random.Range(3, 5);
+        int i = Random.Range(10, 15);
         int x, y;
         while (i > 0)
         {
             --i;
-            yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
+            yield return new WaitForSeconds(Random.Range(0.05f, 0.2f));
             do
             {
-                x = Random.Range(-RusoAttackRRange, RusoAttackRRange + 1);
-                y = Random.Range(-RusoAttackRRange, RusoAttackRRange + 1);
+                x = Random.Range(-RusoAttackRRangeWidth, RusoAttackRRangeWidth + 1);
+                y = Random.Range(-RusoAttackRRangeHeight, RusoAttackRRangeHeight + 1);
             } while (x == 0 && x == y);
             Vector2 UnitPos = (Vector2)ZDGameRule.WorldToUnit(transform.position) + new Vector2(x, y);
             photonView.RPC("CreateAttackREffect", RpcTarget.All, UnitPos);

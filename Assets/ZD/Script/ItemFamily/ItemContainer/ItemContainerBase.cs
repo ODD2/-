@@ -24,7 +24,7 @@ public abstract class ItemContainerBase : ZDRegisterObject, IADamageObject, IPun
         //Setup Component
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        Durability = 30;
+        Durability = 20;
 
         //Setup ZDObjectt Unit World  Scale
         Vector3 NewScale = transform.localScale;

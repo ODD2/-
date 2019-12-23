@@ -28,7 +28,7 @@ public class CharacterValue
     public float HP { get; set; } = 100f;
     public float MP { get; set; } = 100f;
     public float RegHP { get; set; } = 0f;
-    public float RegMP { get; set; } = 2.0f;
+    public float RegMP { get; set; } = 1.8f;
     public float MaxHP { get; set; } = 100f;
     public float MaxMP { get; set; } = 100f;
 

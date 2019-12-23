@@ -43,7 +43,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
 
     public CharacterValue basicValues = new CharacterValue();
 
-    protected int Soul = 0;
+    protected int Soul;
     protected const int MaxSoul = 5;
 
     protected Vector2 Velocity = new Vector2(0, 0);

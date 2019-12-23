@@ -18,11 +18,15 @@ public class CrossTrackCharacter : CrossMoveCharacter
     #region Unity
     protected new void Start()
     {
+        MaxSkillCD = new float[] { 0.25f, 0.25f, 0.25f, 0.25f };
+        SkillMana = new float[] { 0, 0, 0, 0};
+
         base.Start();
         if (photonView.IsMine)
         {
             StartCoroutine(WaitSecondsToGenerateTrack(0));
         }
+        
     }
 
     protected new void FixedUpdate()
