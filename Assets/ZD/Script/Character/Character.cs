@@ -292,6 +292,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     {
         //Calls ZDObject Update()
         base.Update();
+
     }
 
     protected void FixedUpdate()

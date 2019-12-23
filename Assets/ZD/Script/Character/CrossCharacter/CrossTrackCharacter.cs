@@ -10,10 +10,6 @@ using Random = UnityEngine.Random;
 public class CrossTrackCharacter : CrossMoveCharacter
 {
     //TrackCharacter Setup.
-    public float TrackDurationConst = 10.0f;
-    public int TrackCountsConst = 2;
-    public float MissionFailedPunish = 5.0f;
-
     public bool TrackAvailable { get; protected set; }
     public List<float> TrackAngles { get; protected set; } = new List<float>();
     public float TrackRemainTime { get; protected set; }
@@ -110,7 +106,7 @@ public class CrossTrackCharacter : CrossMoveCharacter
 
     private void TrackMissionFailed()
     {
-        StartCoroutine(WaitSecondsToGenerateTrack(MissionFailedPunish));
+        StartCoroutine(WaitSecondsToGenerateTrack(ZDGameRule.CrossTrack.MissionFailedPunish));
     }
 
     private IEnumerator WaitSecondsToGenerateTrack(float AdditionTime)
@@ -130,10 +126,10 @@ public class CrossTrackCharacter : CrossMoveCharacter
         if(GetSoul() < GetMaxSoul())
         {
             TrackAvailable = true;
-            TrackDurationTime = (GetMaxSoul() - GetSoul()) * TrackDurationConst;
+            TrackDurationTime = (GetMaxSoul() - GetSoul()) * ZDGameRule.CrossTrack.TrackDurationConst;
             TrackRemainTime = TrackDurationTime;
             TrackAngles.Clear();
-            for (int i = 0, _i = (GetSoul() + 1) * TrackCountsConst; i < _i; ++i)
+            for (int i = 0, _i = (GetSoul() + 1) * ZDGameRule.CrossTrack.TrackCountsConst; i < _i; ++i)
             {
                 TrackAngles.Add(ZDGameRule.QuadAngle(Random.Range(0, 359)));
             }

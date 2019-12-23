@@ -158,9 +158,6 @@ MonoBehaviour:
   HitEffects:
   - {fileID: 616462768845263527, guid: 9d9391ca01dda4a0899e55c242866f9e, type: 3}
   - {fileID: 4694221737807659796, guid: 470d970b858ac4307823c8755a149108, type: 3}
-  TrackDurationConst: 10
-  TrackCountsConst: 2
-  MissionFailedPunish: 5
   RusoREffectSample: {fileID: 8791417306661751759, guid: e7abb0c03de2b4bb9805d734722bfb75,
     type: 3}
 --- !u!95 &573215057273481693
@@ -651,6 +648,11 @@ PrefabInstance:
       propertyPath: m_FillMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 793129049559451644, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7740095314330263439, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
         type: 3}
       propertyPath: m_Sprite
@@ -815,11 +817,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 793129049559451644, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75b2fa6aa0b4143ed94b5a6b7c60325e, type: 3}
