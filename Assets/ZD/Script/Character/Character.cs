@@ -276,7 +276,7 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
         ZDAudioSource.SetupAudioSource(audioSource);
 
         //debug
-       /* Inventory.Add(new HpRecover());
+       /*Inventory.Add(new HpRecover());
         Inventory.Add(new BoostAttack());
         Inventory.Add(new MpRecover());*/
 
