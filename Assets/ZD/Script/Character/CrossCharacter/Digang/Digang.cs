@@ -108,6 +108,7 @@ public class Digang : CrossTrackCharacter
                 StartCoroutine(AttackingR());
                 break;
             case 1:
+                Debug.Log("Hi");
                 R = false;
                 break;
         }
@@ -118,7 +119,6 @@ public class Digang : CrossTrackCharacter
     {
         if (!R)
         {
-            Debug.Log("Here");
             R = true;
             while (R)
             {
