@@ -280,6 +280,12 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
         {
             TeamID = (int)photonView.Owner.CustomProperties["Team"];
         }
+        else
+        {
+            TeamID = -1;
+        }
+        //Register To GameManager.
+        if (ZDGameManager.Instance) ZDGameManager.Instance.CharacterList.Add(this);
 
         //Setup Depth
         if (photonView.IsMine) ActorType = EActorType.LocalCharacter;
@@ -317,6 +323,9 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
     {
         //Calls ZDObject OnDestroy()
         base.OnDestroy();
+
+        //Unrigster from GameManager.
+        if (ZDGameManager.Instance) ZDGameManager.Instance.CharacterList.Remove(this);
     }
 
     private void UpdateAnimParams()
@@ -407,5 +416,4 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
 
     #region Routines
     #endregion
-
 }

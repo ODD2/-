@@ -8,12 +8,12 @@ using ZoneDepict.Map;
 
 public class Digang : CrossTrackCharacter
 {
-    private bool R = false;
+    private bool Ulting = false;
     #region UNITY
     protected new void Start()
     {
         base.Start();
-        AttackDamage = new float[] { 10, 25, 35, 5 };
+        AttackDamage = new float[] { 10, 25, 35, 10 };
     }
 
     protected new void Update()
@@ -107,18 +107,23 @@ public class Digang : CrossTrackCharacter
                 break;
             case 1:
                 Debug.Log("Hi");
-                R = false;
+                Ulting = false;
                 break;
         }
         
     }
+
+    protected override bool IsInputAttackValid(Vector2 AttackDirection, EAttackType Type)
+    {
+        return base.IsInputAttackValid(AttackDirection, Type) && !Ulting;
+    }
     #endregion
     IEnumerator AttackingR()
     {
-        if (!R)
+        if (!Ulting)
         {
-            R = true;
-            while (R)
+            Ulting = true;
+            while (Ulting)
             {
                 yield return new WaitForSeconds(0.33f);
                 List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();

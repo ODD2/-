@@ -30,4 +30,9 @@ public class CameraController : MonoBehaviour
             transform.position = NewPos;
         }
     }
+
+    private void OnDestroy()
+    {
+        target = null;
+    }
 }

@@ -40,10 +40,7 @@ public class CrossMoveCharacter : Character
     public override void InputAttack(Vector2 AttackDirection, EAttackType Type)
     {
         Debug.Log(Type);
-        if (photonView.IsMine &&
-            !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") &&
-            SkillMana[(int)Type] < GetMP() &&
-            !(SkillCD[(int)Type] > float.Epsilon))
+        if (photonView.IsMine && IsInputAttackValid(AttackDirection,Type))
         {
             SetMP(GetMP() - SkillMana[(int)Type] * basicValues.ReduceManaCost);
             SkillCD[(int)Type] = MaxSkillCD[(int)Type] * basicValues.CDR;
@@ -224,6 +221,13 @@ public class CrossMoveCharacter : Character
     public virtual void AttackEventA(int Phase) { }
     public virtual void AttackEventB(int Phase) { }
     public virtual void AttackEventR(int Phase) { }
+
+    protected virtual bool IsInputAttackValid(Vector2 AttackDirection, EAttackType Type)
+    {
+        return !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") &&
+                SkillMana[(int)Type] < GetMP() &&
+                !(SkillCD[(int)Type] > float.Epsilon);
+    }
     #endregion
 
     #region PUN RPC

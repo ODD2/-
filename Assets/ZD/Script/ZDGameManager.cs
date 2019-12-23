@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -58,7 +59,7 @@ namespace ZoneDepict
     {
         //Test Params
         public bool DoRestrictZone;
-
+        public HashSet<Character> CharacterList = new HashSet<Character>();
 
         #region Feilds
         //Saved Infos
@@ -555,6 +556,17 @@ namespace ZoneDepict
                 Hashtable NewSetting = new Hashtable();
                 NewSetting.Add("Alive", false);
                 PhotonNetwork.SetPlayerCustomProperties(NewSetting);
+                //Setup Camera To Follow Teammate
+                foreach (var character in CharacterList)
+                {
+                    if (character == playerProps.Script) continue;
+
+                    if (character.TeamID == playerProps.Script.TeamID)
+                    {
+                        CameraController.SetTarget(character.gameObject);
+                        break;
+                    }
+                }
                 if (PhotonNetwork.IsMasterClient)
                 {
                     CheckGameEnded();
