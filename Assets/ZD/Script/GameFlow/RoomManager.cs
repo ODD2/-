@@ -225,38 +225,60 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        
-        int T0 = 0;
-        int T1 = 0;
-        foreach(var p in PhotonNetwork.PlayerList)
+        //int T0 = 0;
+        //int T1 = 0;
+        //foreach(var p in PhotonNetwork.PlayerList)
+        //{
+        //    if (p == PhotonNetwork.LocalPlayer) continue;
+        //    if (p.CustomProperties.ContainsKey("Team"))
+        //    {
+        //        if ((ZDTeams)p.CustomProperties["Team"] == ZDTeams.T0)
+        //        {
+        //            T0++;
+        //        }
+        //        else if ((ZDTeams)p.CustomProperties["Team"] == ZDTeams.T1)
+        //        {
+        //            T1++;
+        //        }
+        //        else
+        //        {
+        //            continue;
+        //        }
+        //    }
+        //}
+        //ZDTeams teams = T0 > T1 ? ZDTeams.T1 : ZDTeams.T0;
+        //if (teams == ZDTeams.T0) T0++;
+        //else T1++;
+        //if (T0 == T1) IsBalance = true;
+        //else IsBalance = false;
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("T0") && PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("T1"))
         {
-            if (p == PhotonNetwork.LocalPlayer) continue;
-            if(p.CustomProperties.ContainsKey("Team"))
+            ZDTeams teams;
+            if ((int)PhotonNetwork.CurrentRoom.CustomProperties["T0"] > (int)PhotonNetwork.CurrentRoom.CustomProperties["T1"])
             {
-                if ((ZDTeams)p.CustomProperties["Team"] == ZDTeams.T0)
+                teams = ZDTeams.T1;
+                Hashtable Roomprops = new Hashtable
                 {
-                    T0++;
-                }
-                else if ((ZDTeams)p.CustomProperties["Team"] == ZDTeams.T1)
-                {
-                    T1++;
-                }
-                else
-                {
-                    continue;
-                }
+                    {"T1", (int)PhotonNetwork.CurrentRoom.CustomProperties["T1"]+1}
+                };
+                PhotonNetwork.CurrentRoom.SetCustomProperties(Roomprops);
             }
+            else
+            {
+                teams = ZDTeams.T0;
+                Hashtable Roomprops = new Hashtable
+                {
+                    {"T0", (int)PhotonNetwork.CurrentRoom.CustomProperties["T0"]+1}
+                };
+                PhotonNetwork.CurrentRoom.SetCustomProperties(Roomprops);
+            }
+            Hashtable props = new Hashtable
+            {
+                {"Team", teams}
+            };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
-        ZDTeams teams = T0 > T1 ? ZDTeams.T1 : ZDTeams.T0;
-        if (teams == ZDTeams.T0) T0++;
-        else T1++;
-        if (T0 == T1) IsBalance = true;
-        else IsBalance = false;
-        Hashtable props = new Hashtable
-        {
-            {"Team", teams}
-        };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
 
         if(PlayerListEntries == null)
         {
@@ -269,9 +291,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Debug.Log("Create Room!!!!");
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = MaxPlayers;
-        string[] roomPropsInLobby = { "Running Game" };
+        string[] roomPropsInLobby = { "Running Game","T0","T1" };
         roomOptions.CustomRoomPropertiesForLobby = roomPropsInLobby;
-        roomOptions.CustomRoomProperties = new Hashtable { { "Running Game", false } };
+        roomOptions.CustomRoomProperties = new Hashtable { { "Running Game", false } ,{"T0",0 },{ "T1",0} };
         
         PhotonNetwork.CreateRoom("DemoRoom"+Random.Range(1000,10000).ToString(), roomOptions, null);
     }
