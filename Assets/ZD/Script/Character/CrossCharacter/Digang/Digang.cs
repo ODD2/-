@@ -117,13 +117,20 @@ public class Digang : CrossTrackCharacter
     {
         return base.IsInputAttackValid(AttackDirection, Type) && !Ulting;
     }
+
+    protected override bool IsMotionInterruptValid()
+    {
+        return base.IsMotionInterruptValid() && !Ulting;
+    }
     #endregion
     IEnumerator AttackingR()
     {
         if (!Ulting)
         {
             Ulting = true;
-            while (Ulting)
+            while (Ulting &&
+                    (animator.GetCurrentAnimatorStateInfo(0).IsName("AttackR_Loop")||
+                     animator.GetCurrentAnimatorStateInfo(0).IsName("AttackR_Start")))
             {
                 yield return new WaitForSeconds(0.33f);
                 List<List<ZDObject>> AllHitObject = new List<List<ZDObject>>();
@@ -137,6 +144,7 @@ public class Digang : CrossTrackCharacter
                 AllHitObject.Add(ZDMap.HitAt(new Vector2(-1, -1), this, EObjectType.ADamage));
                 ApplyDamage(AllHitObject, EAttackType.R);
             }
+            Ulting = false;
         }
     }
 }

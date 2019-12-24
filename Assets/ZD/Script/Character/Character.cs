@@ -160,15 +160,17 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
         Debug.LogFormat("Player Received {0} Damage.", Damage);
         if (photonView.IsMine && !GetHP().Equals(0))
         {
-            if (animator && animator.GetCurrentAnimatorStateInfo(0).IsTag("NM")) return;
-            SetHP(GetHP() - Damage);
-            if (GetHP().Equals(0))
+            if (IsVulnerable())
             {
-                Dead();
-            }
-            else
-            {
-                photonView.RPC("DoHurtRpc", RpcTarget.AllViaServer);
+                SetHP(GetHP() - Damage);
+                if (GetHP().Equals(0))
+                {
+                    Dead();
+                }
+                else if(IsMotionInterruptValid())
+                {
+                    photonView.RPC("DoHurtRpc", RpcTarget.AllViaServer);
+                }
             }
         }
     }
@@ -253,6 +255,27 @@ public class Character : ZDObject, IPunObservable, IADamageObject, IPunInstantia
                 
             }
         }     
+    }
+    #endregion
+
+    #region Character Validations
+    protected virtual bool IsInputAttackValid(Vector2 AttackDirection, EAttackType Type)
+    {
+        return !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") &&
+                SkillMana[(int)Type] < GetMP() &&
+                !(SkillCD[(int)Type] > float.Epsilon);
+    }
+
+    protected virtual bool IsMotionInterruptValid()
+    {
+        if (animator && animator.GetCurrentAnimatorStateInfo(0).IsTag("NM")) return false;
+        return true;
+    }
+
+    protected virtual bool IsVulnerable()
+    {
+        if (animator && animator.GetCurrentAnimatorStateInfo(0).IsTag("NM")) return false;
+        return true;
     }
     #endregion
 

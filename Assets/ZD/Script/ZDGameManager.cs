@@ -268,7 +268,7 @@ namespace ZoneDepict
             if (Input.GetKeyDown(KeyCode.K))
             {
                 if ( playerProps.Script!=null)
-                    playerProps.Script.Hurt(100);
+                    playerProps.Script.Hurt(10);
             }
             if (Input.GetKeyDown(KeyCode.S))
             {

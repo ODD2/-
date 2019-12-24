@@ -221,13 +221,6 @@ public class CrossMoveCharacter : Character
     public virtual void AttackEventA(int Phase) { }
     public virtual void AttackEventB(int Phase) { }
     public virtual void AttackEventR(int Phase) { }
-
-    protected virtual bool IsInputAttackValid(Vector2 AttackDirection, EAttackType Type)
-    {
-        return !animator.GetCurrentAnimatorStateInfo(0).IsTag("NM") &&
-                SkillMana[(int)Type] < GetMP() &&
-                !(SkillCD[(int)Type] > float.Epsilon);
-    }
     #endregion
 
     #region PUN RPC
