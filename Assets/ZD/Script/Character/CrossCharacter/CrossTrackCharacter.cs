@@ -133,7 +133,10 @@ public class CrossTrackCharacter : CrossMoveCharacter
             TrackDurationTime = (GetMaxSoul() - GetSoul()) * ZDGameRule.CrossTrack.TrackDurationConst;
             TrackRemainTime = TrackDurationTime;
             TrackAngles.Clear();
-            for (int i = 0, _i = (GetSoul() + 1) * ZDGameRule.CrossTrack.TrackCountsConst; i < _i; ++i)
+            
+            for (int i = 0, _i = (int)Mathf.Pow(ZDGameRule.CrossTrack.TrackCountsConst,GetSoul() + 1);
+                 i < _i;
+                 ++i)
             {
                 TrackAngles.Add(ZDGameRule.QuadAngle(Random.Range(0, 359)));
             }

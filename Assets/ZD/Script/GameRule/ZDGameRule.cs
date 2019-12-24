@@ -91,7 +91,7 @@ namespace ZoneDepict.Rule
         {
             public const float NextTrackDelay = 3.0f;
             public const float TrackDurationConst = 10.0f;
-            public const int TrackCountsConst = 2;
+            public const float TrackCountsConst = 1.6f;
             public const float MissionFailedPunish = 5.0f;
         }
 
